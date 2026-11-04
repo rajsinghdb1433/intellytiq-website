@@ -109,7 +109,7 @@ function buildNav() {
   const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
   onScroll(); addEventListener('scroll', onScroll, {passive: true});
   burger.addEventListener('click', () => { const o = menu.classList.toggle('open'); burger.classList.toggle('open', o); burger.setAttribute('aria-expanded', o); });
-  $('.drop > a')?.addEventListener('click', e => { if (matchMedia('(max-width:940px)').matches) { e.preventDefault(); $('.drop').classList.toggle('open'); } });
+  $('.drop > a')?.addEventListener('click', e => { if (matchMedia('(max-width:980px)').matches) { e.preventDefault(); $('.drop').classList.toggle('open'); } });
 }
 
 function buildFooter(s = {}) {

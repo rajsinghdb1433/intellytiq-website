@@ -369,7 +369,7 @@ footer .about{color:var(--muted);margin:18px 0 22px;max-width:340px;font-size:15
   .story{grid-template-columns:1fr}.story .stick{position:relative;top:0}
   .contact{grid-template-columns:1fr}.featured{grid-template-columns:1fr}
 }
-@media (max-width:940px){
+@media (max-width:980px){
   .burger{display:block}
   .menu{position:fixed;inset:var(--nav-h) 0 auto 0;flex-direction:column;align-items:stretch;gap:2px;padding:16px 20px 28px;background:var(--menubg);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);transform:translateY(-12px);opacity:0;visibility:hidden;transition:.35s var(--ease);max-height:calc(100vh - var(--nav-h));overflow:auto}
   .menu.open{opacity:1;visibility:visible;transform:none}
