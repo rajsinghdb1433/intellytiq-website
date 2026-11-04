@@ -1,0 +1,51 @@
+<title>Intellytiq Site Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one narrow column, a launch list grouped by public pages and admin. */
+:root{--bg:#f6f7fb;--fg:#12141c;--muted:#5d6379;--card:#fff;--line:#e0e3ee;--accent:#4f46e5;--accent-fg:#fff;--warn-bg:#fff6dd;--warn-fg:#7a5a00;
+--font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d14;--fg:#eef0f7;--muted:#9aa1b8;--card:#141826;--line:#252b3f;--accent:#8b8cff;--accent-fg:#0b0d14;--warn-bg:#2b2410;--warn-fg:#f3d98b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0d14;--fg:#eef0f7;--muted:#9aa1b8;--card:#141826;--line:#252b3f;--accent:#8b8cff;--accent-fg:#0b0d14;--warn-bg:#2b2410;--warn-fg:#f3d98b;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.55;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+main{max-width:760px;margin:0 auto;display:grid;gap:28px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+p{color:var(--muted);max-width:62ch}
+.start{display:inline-block;justify-self:start;background:var(--accent);color:var(--accent-fg);padding:13px 22px;border-radius:10px;font-weight:600;text-decoration:none}
+.start:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.list a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--fg);text-decoration:none;font-weight:600;min-width:0}
+.list a small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.list a:hover{border-color:var(--accent)}
+.note{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;padding:14px 16px;font-size:14.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<main>
+  <header>
+    <h1>Intellytiq Solutions website preview</h1>
+    <p>A click-through copy of the new site. It runs fully in your browser, so the contact form and admin panel work in a demo mode without a server. Use the sun/moon button in the top bar to switch between the bright and dark themes.</p>
+  </header>
+  <a class="start" href="home.html">Open the website</a>
+  <section aria-labelledby="pub">
+    <h2 id="pub">Public pages</h2>
+    <div class="list">
+      <a href="home.html">Home<small>Hero video, services, pipeline video</small></a>
+      <a href="about.html">About<small>Mission, values, timeline</small></a>
+      <a href="services.html">Services<small>Eight service pages</small></a>
+      <a href="technologies.html">Technologies<small>Fabric, Databricks, Snowflake</small></a>
+      <a href="team.html">Team<small>Raj, Pooja, CB and open roles</small></a>
+      <a href="blog.html">Blog<small>Grid and list views, search</small></a>
+      <a href="case-studies.html">Case studies<small>Sample engagements</small></a>
+      <a href="careers.html">Careers<small>Open positions</small></a>
+      <a href="engagement.html">Engagement models<small>Project, squad, staffing</small></a>
+      <a href="industries.html">Industries<small>Sectors served</small></a>
+      <a href="faq.html">FAQ<small>Common questions</small></a>
+      <a href="contact.html">Contact<small>Working demo form</small></a>
+    </div>
+  </section>
+  <section aria-labelledby="adm">
+    <h2 id="adm">Admin panel</h2>
+    <div class="list"><a href="admin/home.html">Admin sign-in<small>User admin, password admin</small></a></div>
+  </section>
+  <p class="note">Demo mode saves your edits, messages and password change in this browser only. Use the Reset demo button at the bottom left of any page to start over. The real site saves to the server instead.</p>
+</main>
