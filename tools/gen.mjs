@@ -20,6 +20,7 @@ const shell = ({ file, page, title, desc, body, extra = '' }) => `<!doctype html
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Intellytiq Solutions">
 <link rel="canonical" href="${SITE}/${file === 'index.html' ? '' : file}">
 <link rel="icon" href="${FAV}">
+<script>try{var t=localStorage.getItem("iq-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/extra.css">
 ${extra}
@@ -51,16 +52,12 @@ const add = (p) => pages.push(p);
 /* ---------------- HOME ---------------- */
 add({ file: 'index.html', page: 'home', title: 'Intellytiq Solutions | Microsoft Fabric, Databricks, Snowflake & Azure Data Engineering', desc: 'Intellytiq Solutions delivers Microsoft Fabric, Databricks, Snowflake, MS SQL, data engineering, warehousing and Azure cloud expertise to companies worldwide, 100% remote.',
 body: `
-<section class="hero"><div class="halo"><i></i><i></i><i></i></div><canvas class="net"></canvas>
+<section class="hero has-video"><div class="hero-media" aria-hidden="true"><video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/video/hero.jpg"><source src="assets/video/hero.mp4" type="video/mp4"></video></div><div class="halo"><i></i><i></i><i></i></div><canvas class="net"></canvas>
   <div class="wrap"><div class="tag rv"><b></b> Open for remote engagements worldwide</div>
     <h1 class="rv" style="--d:.08s">Data platforms,<br>engineered for<span class="wordline"><span class="grad"><span class="rot" id="rot">Microsoft Fabric</span></span><span class="caret"></span></span></h1>
     <p class="lead rv" style="--d:.16s">Intellytiq Solutions gives companies the technical capability and senior skillsets to design, build and run modern data estates on Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure.</p>
     <div class="cta rv" style="--d:.24s"><a class="btn primary" href="contact.html">Book a free consultation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div></div>
-  <div class="float" aria-hidden="true">
-    <div class="fcard"><div class="ic" style="background:linear-gradient(135deg,#22d3ee,#2563eb)">Fb</div><div><b>OneLake sync</b><small>Lakehouse · gold layer</small><div class="bar"><i></i></div></div></div>
-    <div class="fcard"><div class="ic" style="background:linear-gradient(135deg,#f97316,#ef4444)">Db</div><div><b>Delta pipeline</b><small>Streaming · 12 tables</small><div class="bar"><i style="animation-delay:-1s"></i></div></div></div>
-    <div class="fcard"><div class="ic" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9)">Sf</div><div><b>Warehouse</b><small>Auto-suspend · optimised</small><div class="bar"><i style="animation-delay:-2s"></i></div></div></div>
-  </div><div class="scrollcue" aria-hidden="true"></div></section>
+  <div class="hero-art" aria-hidden="true"><img src="assets/img/lakehouse.svg" alt="" width="600" height="560"><div class="chip-f c1">Fabric</div><div class="chip-f c2">Databricks</div><div class="chip-f c3">Snowflake</div></div><div class="scrollcue" aria-hidden="true"></div></section>
 
 <div class="marq" data-render="tech-marquee" aria-label="Technologies we work with"></div>
 
@@ -87,6 +84,13 @@ body: `
     <div class="steps" data-render="process"></div></div></div></section>
 
 <section class="sec alt"><div class="wrap"><div class="stats" data-render="stats"></div></div></section>
+
+<section class="sec dk showcase"><div class="wrap"><div class="story" style="align-items:center">
+  <div><div class="eyebrow rv">See it in motion</div><h2 class="rv" style="--d:.07s">Pipelines that run <span class="grad">while you sleep.</span></h2>
+  <p class="lead rv" style="--d:.14s;margin-top:20px">Orchestrated, observable and cost-aware from day one. Every run reports throughput, data quality and spend.</p>
+  <ul class="ticks rv" style="--d:.2s"><li>Live lineage from source to dashboard</li><li>Automated quality gates on every layer</li><li>Cost guardrails with FinOps reporting</li></ul>
+  <div style="margin-top:28px" class="rv"><a class="btn primary" href="services.html">Explore our services ${ARROW}</a></div></div>
+  <div class="vframe rv right"><video autoplay muted loop playsinline preload="metadata" poster="assets/video/pipeline.jpg"><source src="assets/video/pipeline.mp4" type="video/mp4"></video></div></div></div></section>
 
 <section class="sec"><div class="wrap story" style="align-items:center">
   <div><div class="eyebrow rv">Engineering-first</div><h2 class="rv" style="--d:.07s">Code you can read.<br>Pipelines you can trust.</h2>
@@ -131,6 +135,7 @@ ${cta()}`});
 add({ file: 'about.html', page: 'about', title: 'About Us | Intellytiq Solutions', desc: 'Learn about Intellytiq Solutions: a remote-first data engineering and cloud consultancy specialising in Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure.',
 body: `${phero('We are <span class="grad">Intellytiq</span>.', 'A remote-first team of data and cloud specialists helping companies worldwide turn raw data into reliable, governed, decision-ready platforms.', 'About')}
 <section class="sec" style="padding-top:20px"><div class="wrap story" style="align-items:center">
+  <div class="illus rv left"><img src="assets/img/dashboard.svg" alt="Analytics dashboard" loading="lazy"></div>
   <div><div class="eyebrow rv">Our mission</div><h2 class="rv" style="--d:.07s">Make enterprise-grade data engineering accessible to every company.</h2></div>
   <div><p class="lead rv" style="--d:.1s;margin-bottom:22px">Intellytiq Solutions provides the technical capabilities and skillsets companies need: Microsoft Fabric, Databricks, Snowflake, MS SQL, data engineering, warehousing and Azure cloud services.</p>
   <p class="lead rv" style="--d:.16s">We are open to all kinds of remote IT work, from short specialist engagements to long-term dedicated squads, and we hold ourselves to one standard: ship work that your team is proud to own.</p></div></div></section>
@@ -143,6 +148,7 @@ ${cta('Meet the people behind the platforms.', 'Say hello to our team, or tell u
 /* ---------------- SERVICES ---------------- */
 add({ file: 'services.html', page: 'services', title: 'Services | Intellytiq Solutions', desc: 'Microsoft Fabric, Databricks, Snowflake, data engineering, data warehousing, MS SQL Server, Azure cloud, BI and remote IT staffing services.',
 body: `${phero('Services built for the <span class="grad">modern data estate</span>.', 'Strategy, engineering and operations across the platforms that matter, delivered by senior specialists, remotely and worldwide.', 'Services')}
+<section class="sec" style="padding-top:20px"><div class="wrap story" style="align-items:center"><div class="illus rv left"><img src="assets/img/lakehouse.svg" alt="Bronze, silver and gold lakehouse layers" loading="lazy"></div><div><div class="eyebrow rv">Our approach</div><h2 class="rv" style="--d:.07s">Every layer, engineered with care.</h2><p class="lead rv" style="--d:.14s;margin-top:18px">From raw ingestion to curated, governed insight, we build the medallion layers your analytics depend on.</p></div></div></section>
 <section class="sec" style="padding-top:20px"><div class="wrap"><div class="grid g3" data-render="services-grid"></div></div></section>
 <section class="sec light"><div class="wrap">${head('Delivery', 'A process you can see.', 'Five stages. Zero black boxes.')}
   <div class="story"><div class="stick rv left"><div class="diagram" style="background:#07080d"><svg viewBox="0 0 400 360" fill="none"><g stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path class="flow" d="M150 66H250"/><path class="flow" d="M280 90C280 130 230 130 215 158"/><path class="flow" d="M170 214C150 240 110 240 100 268"/><path class="flow" d="M230 214C250 240 290 240 300 268"/></g>
@@ -162,7 +168,8 @@ ${cta()}`});
 add({ file: 'technologies.html', page: 'tech', title: 'Technologies | Intellytiq Solutions', desc: 'The technology stack Intellytiq Solutions works with: Microsoft Fabric, Databricks, Snowflake, SQL Server, Azure, Spark, dbt, Power BI, Kafka and Terraform.',
 body: `${phero('The stack we <span class="grad">master</span>.', 'Deep, hands-on expertise across lakehouse, warehouse, streaming, orchestration, governance and DevOps tooling.', 'Technologies')}
 <div class="marq" data-render="tech-marquee"></div>
-<section class="sec"><div class="wrap"><div class="tiles" data-render="tech-tiles"></div></div></section>
+<section class="sec" style="padding-top:20px"><div class="wrap story" style="align-items:center"><div class="illus rv left"><img src="assets/img/cloud.svg" alt="Cloud platform connected to data services" loading="lazy"></div><div><div class="eyebrow rv">One connected stack</div><h2 class="rv" style="--d:.07s">Cloud-native from the ground up.</h2><p class="lead rv" style="--d:.14s;margin-top:18px">Fabric, Databricks, Snowflake and Azure services working together, secured and governed as one platform.</p></div></div></section>
+<section class="sec" style="padding-top:20px"><div class="wrap"><div class="tiles" data-render="tech-tiles"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Architecture', 'Open formats. No lock-in.', 'We favour Delta, Parquet and Iceberg-compatible patterns so your data stays yours.')}
   <div class="grid g3"><div class="card rv"><h3>Lakehouse</h3><p>Medallion layers on Delta Lake across Fabric OneLake and Databricks with Unity Catalog governance.</p></div><div class="card rv" style="--d:.1s"><h3>Warehouse</h3><p>Dimensional and Data Vault models on Snowflake, Fabric Warehouse and SQL Server.</p></div><div class="card rv" style="--d:.2s"><h3>Real-time</h3><p>Event-driven designs with Kafka, Event Hubs, Fabric Eventstreams and Structured Streaming.</p></div></div></div></section>
 ${cta()}`});
@@ -188,7 +195,7 @@ ${cta('Want to work with us?', 'See open roles or send us your profile.')}`});
 /* ---------------- CAREERS ---------------- */
 add({ file: 'careers.html', page: 'careers', title: 'Careers | Intellytiq Solutions', desc: 'Remote careers in data engineering, Microsoft Fabric, Snowflake, SQL Server and Azure at Intellytiq Solutions.',
 body: `${phero('Build the future of <span class="grad">data</span> with us.', 'Remote-first roles for engineers who love clean pipelines, clear thinking and great teammates.', 'Careers')}
-<section class="sec" style="padding-top:20px"><div class="wrap"><div class="grid g3">
+<section class="sec" style="padding-top:20px"><div class="wrap"><div class="illus rv" style="max-width:520px;margin:0 auto 40px"><img src="assets/img/globe.svg" alt="Globe with connected locations" loading="lazy"></div><div class="grid g3">
 <div class="card rv"><h3>Work from anywhere</h3><p>Remote by default, outcome-focused, with flexible hours.</p></div><div class="card rv" style="--d:.08s"><h3>Learn & certify</h3><p>Support for Microsoft, Databricks and Snowflake certifications.</p></div><div class="card rv" style="--d:.16s"><h3>Meaningful projects</h3><p>Real platforms for real companies, not busywork.</p></div></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Open positions', 'Find your role.')}<div style="display:grid;gap:14px" data-render="careers"></div></div></section>
 ${cta('Don’t see your role?', 'Send us your profile and we’ll keep you in mind for upcoming engagements.')}`});
@@ -216,7 +223,7 @@ body: `<section class="phero" style="padding-bottom:40px"><div class="wrap" styl
 add({ file: 'contact.html', page: 'contact', title: 'Contact Us | Intellytiq Solutions', desc: 'Contact Intellytiq Solutions for Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure consulting or remote IT talent.',
 body: `${phero('Let’s <span class="grad">talk</span>.', 'Tell us what you’re building. A senior engineer, not a salesperson, will respond within one business day.', 'Contact')}
 <section class="sec" style="padding-top:20px"><div class="wrap contact">
-  <div class="info" data-render="contactinfo"></div>
+  <div><div class="illus rv left" style="margin-bottom:26px"><img src="assets/img/globe.svg" alt="Globe with connected locations" loading="lazy"></div><div class="info" data-render="contactinfo"></div></div>
   <form class="form card rv" data-contact novalidate style="padding:clamp(24px,4vw,44px)"><h3 style="margin-bottom:6px">Send us a message</h3>
     <div class="row"><div class="field"><input id="f1" name="name" placeholder=" " required autocomplete="name"><label for="f1">Full name</label></div><div class="field"><input id="f2" type="email" name="email" placeholder=" " required autocomplete="email"><label for="f2">Work email</label></div></div>
     <div class="row"><div class="field"><input id="f3" name="company" placeholder=" " autocomplete="organization"><label for="f3">Company</label></div>

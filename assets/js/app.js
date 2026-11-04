@@ -75,8 +75,13 @@ function buildNav() {
       ${NAV.map(([h, t, d]) => d
         ? `<div class="drop"><a class="m ${isActive(h) ? 'active' : ''}" href="${h}">${t} ▾</a><div class="panel" id="navServices"></div></div>`
         : `<a class="m ${isActive(h) ? 'active' : ''}" href="${h}">${t}</a>`).join('')}
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch between light and dark theme"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg></button>
       <a class="btn primary" href="contact.html">Contact us</a>
     </nav></div></header>`;
+  $('#themeBtn').addEventListener('click', () => {
+    const root = document.documentElement, next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next); try { localStorage.setItem('iq-theme', next); } catch (e) {}
+  });
   const nav = $('#siteNav'), burger = $('.burger'), menu = $('#menu');
   const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
   onScroll(); addEventListener('scroll', onScroll, {passive: true});
@@ -291,15 +296,15 @@ function network() {
     cv.parentElement.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
     new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) draw(); }).observe(cv);
     const draw = () => {
-      if (!vis) return; ctx.clearRect(0, 0, W, H);
+      if (!vis) return; ctx.clearRect(0, 0, W, H); const L = document.documentElement.getAttribute('data-theme') === 'dark' ? 65 : 45;
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
         const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy); if (d < 140) { p.x += dx / d * .8; p.y += dy / d * .8; }
       }
       for (let i = 0; i < pts.length; i++) {
         const a = pts[i];
-        for (let j = i + 1; j < pts.length; j++) { const b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 135) { ctx.strokeStyle = `hsla(${a.h},90%,65%,${(1 - d / 135) * .35})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } }
-        ctx.fillStyle = `hsla(${a.h},95%,70%,.9)`; ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
+        for (let j = i + 1; j < pts.length; j++) { const b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 135) { ctx.strokeStyle = `hsla(${a.h},90%,${L}%,${(1 - d / 135) * .35})`; ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } }
+        ctx.fillStyle = `hsla(${a.h},95%,${L + 5}%,.9)`; ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
       }
       raf = requestAnimationFrame(draw);
     };
