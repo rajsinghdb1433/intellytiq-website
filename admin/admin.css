@@ -69,3 +69,10 @@ select option{color:#000}
 .cap-t{background:none;color:var(--muted);font-size:13px;text-align:left;text-decoration:underline;padding:2px 0}
 .cap-t:hover{color:var(--text)}
 footer .cap-slot{margin-top:10px;max-width:340px}
+
+.imgrow{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.imgprev{width:104px;height:104px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.06);border:1px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:12px;flex:none}
+.imgprev img{width:100%;height:100%;object-fit:cover;display:block}
+.imgbtns{display:grid;gap:10px;min-width:0;flex:1}
+.filebtn{cursor:pointer}
+.lbl{font-size:13px;color:var(--muted);font-weight:600;display:block;margin-bottom:8px}

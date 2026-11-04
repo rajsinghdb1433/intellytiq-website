@@ -1,5 +1,6 @@
 /* Demo mode: emulates api.php in the browser (localStorage) so the site can be tested without PHP. Preview builds only. */
 (() => {
+  window.__IQ_DEMO = true;
   const real = window.fetch.bind(window);
   const defaultsURL = new URL('../../data/defaults.json', document.currentScript.src).href;
   const KEY = 'iq_demo_v1';
@@ -52,6 +53,7 @@
       case 'mail_save': { const x = need(); if (x) return x; const o = st.mail || {}; st.mail = {host: body.host, port: body.port, secure: body.secure, user: body.user, from: body.from, to: body.to, pass: body.pass || o.pass || ''}; save(); return json({ok: true}); }
       case 'mail_test': { const x = need(); if (x) return x; return json({ok: false, via: 'none', error: 'Demo mode cannot send real email. Email works on the live PHP server (Admin > Email there).', to: (st.mail || {}).to || ''}); }
       case 'passwd': { const x = need(true); if (x) return x; if (body.current !== (st.pw || 'admin')) return json({error: 'Current password is incorrect'}, 403); const nw = String(body.new || ''); if (nw.length < 12) return json({error: 'The new password must be at least 12 characters.'}, 422); if (!/[A-Za-z]/.test(nw) || !/\d/.test(nw)) return json({error: 'Use both letters and numbers in the new password.'}, 422); if (nw.toLowerCase() === 'admin' || nw === body.current) return json({error: 'Choose a password that is different from the current one.'}, 422); st.pw = nw; save(); return json({ok: true, csrf: 'demo'}); }
+      case 'upload': { const x = need(); if (x) return x; if (!/^data:image\/(jpeg|png|webp);base64,/.test(String(body.data || ''))) return json({error: 'Please choose a JPG, PNG or WebP image.'}, 422); return json({ok: true, url: body.data}); }
       case 'audit': { const x = need(); if (x) return x; return json({events: [{t: new Date().toISOString(), ip: 'demo', event: 'login success'}]}); }
     }
     return json({error: 'Not found'}, 404);

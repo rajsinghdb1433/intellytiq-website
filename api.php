@@ -216,6 +216,7 @@ function clean_value($v, string $key = '', int $depth = 0) {
     $s = mb_substr($s, 0, 8000);
     if (in_array($key, ['c1', 'c2'], true)) return preg_match('/^#[0-9a-f]{3,8}$/i', $s) ? $s : '#6366f1';
     if ($key === 'color') return preg_match('/^[#a-zA-Z0-9(),.%\s\-]{1,200}$/', $s) && !preg_match('/url\s*\(|expression|javascript|;|\{|\}/i', $s) ? $s : 'linear-gradient(135deg,#22d3ee,#6366f1)';
+    if ($key === 'photo') return preg_match('#^uploads/team/[a-f0-9]{16,40}\.(jpg|png|webp)$#', $s) ? $s : '';
     if ($key === 'file' || $key === 'poster') return preg_match('#^[A-Za-z0-9_\-./]{1,200}$#', $s) && strpos($s, '..') === false && preg_match('/\.(mp4|webm|jpg|jpeg|png|webp)$/i', $s) ? $s : '';
     if ($key === 'link') return preg_match('#^(https?://[^\s"\'<>]+|[a-z0-9_\-./?=&\#%]+)$#i', $s) ? $s : '';
     if ($key === 'video' || $key === 'key') return preg_replace('/[^a-z0-9\-]/', '', strtolower($s));
@@ -223,6 +224,32 @@ function clean_value($v, string $key = '', int $depth = 0) {
     if (in_array($key, ['linkedin', 'github', 'twitter'], true)) return $s === '' ? '' : (preg_match('#^https?://#i', $s) && filter_var($s, FILTER_VALIDATE_URL) ? $s : '');
     if ($key === 'email') return $s === '' || filter_var($s, FILTER_VALIDATE_EMAIL) ? $s : '';
     return $s;
+}
+
+/* ---------- image uploads (team photos): re-encoded server side, stored where code can never run ---------- */
+function uploads_dir(): string {
+    $dir = __DIR__ . '/uploads/team';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
+        @file_put_contents(__DIR__ . '/uploads/.htaccess',
+            "Options -ExecCGI -Indexes\n<IfModule mod_php.c>\nphp_flag engine off\n</IfModule>\n<IfModule mod_php7.c>\nphp_flag engine off\n</IfModule>\n<IfModule mod_php8.c>\nphp_flag engine off\n</IfModule>\nRemoveHandler .php .phtml .phar .php5 .php7 .php8\nRemoveType .php .phtml .phar\n<FilesMatch \"(?i)\\.(php[0-9]?|phtml|phar|pl|py|cgi|sh|html?|js|svg)$\">\n<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n</FilesMatch>\n");
+        @file_put_contents(__DIR__ . '/uploads/index.html', '');
+    }
+    return $dir;
+}
+function photos_in_use(): array {
+    global $root;
+    $used = [];
+    foreach ([read_json('content.json', [])['team'] ?? [], read_json_file($root . '/data/defaults.json')['team'] ?? []] as $team) {
+        foreach ($team as $m) if (!empty($m['photo'])) $used[basename((string)$m['photo'])] = true;
+    }
+    return $used;
+}
+function cleanup_photos(): void {                 // remove replaced/removed photos once they are an hour old
+    $used = photos_in_use();
+    foreach (glob(uploads_dir() . '/*.{jpg,png,webp}', GLOB_BRACE) ?: [] as $f) {
+        if (!isset($used[basename($f)]) && filemtime($f) < time() - 3600) @unlink($f);
+    }
 }
 
 /* ---------- outgoing email: authenticated SMTP (preferred) or PHP mail() fallback ---------- */
@@ -461,6 +488,31 @@ switch ($a) {
         session_regenerate_id(true); $_SESSION['csrf'] = bin2hex(random_bytes(16));
         audit('password changed');
         out(['ok' => true, 'csrf' => $_SESSION['csrf']]);
+    }
+
+    case 'upload': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        throttle('upload', 40, 3600);
+        $d = body(MAX_BODY_ADMIN); $data = (string)($d['data'] ?? '');
+        if (($d['kind'] ?? 'team') !== 'team') out(['error' => 'Unknown upload type'], 422);
+        if (!preg_match('#^data:image/(jpeg|png|webp);base64,#', $data, $m)) out(['error' => 'Please choose a JPG, PNG or WebP image.'], 422);
+        $bin = base64_decode(substr($data, strlen($m[0])), true);
+        if ($bin === false || $bin === '') out(['error' => 'That image could not be read.'], 422);
+        if (strlen($bin) > 1_100_000) out(['error' => 'The image is too large after resizing. Try a smaller photo.'], 413);
+        $info = @getimagesizefromstring($bin);
+        if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true) || $info[0] > 6000 || $info[1] > 6000 || $info[0] < 40 || $info[1] < 40) out(['error' => 'That does not look like a valid photo.'], 422);
+        if (!function_exists('imagecreatefromstring') || !function_exists('imagejpeg')) out(['error' => 'Image processing is not available on this server.'], 500);
+        $im = @imagecreatefromstring($bin);
+        if (!$im) out(['error' => 'That image could not be processed.'], 422);
+        $w = imagesx($im); $h = imagesy($im); $s = min($w, $h);                    // centre-crop to a square, then re-encode (drops metadata and any hidden payload)
+        $out = imagecreatetruecolor(640, 640); imagefilledrectangle($out, 0, 0, 640, 640, imagecolorallocate($out, 255, 255, 255));
+        imagecopyresampled($out, $im, 0, 0, intdiv($w - $s, 2), intdiv($h - $s, 2), 640, 640, $s, $s);
+        $name = bin2hex(random_bytes(12)) . '.jpg'; $path = uploads_dir() . '/' . $name;
+        if (!@imagejpeg($out, $path, 86)) out(['error' => 'Could not save the photo. Check folder permissions.'], 500);
+        @chmod($path, 0644); imagedestroy($im); imagedestroy($out);
+        cleanup_photos(); audit('team photo uploaded');
+        out(['ok' => true, 'url' => 'uploads/team/' . $name]);
     }
 
     case 'mail_get': {

@@ -74,6 +74,7 @@ const cover = (p, i = 0) => {
   return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(p.title)}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 85% 22%)"/><stop offset="1" stop-color="hsl(${h2} 80% 38%)"/></linearGradient><radialGradient id="${id}r" cx=".75" cy=".2" r=".7"><stop offset="0" stop-color="hsl(${h2} 100% 70%)" stop-opacity=".55"/><stop offset="1" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/><rect width="400" height="250" fill="url(#${id}r)"/><g stroke="#fff" stroke-opacity=".22">${lines}</g><g fill="#fff" fill-opacity=".8">${nodes}</g><circle cx="${60 + r() * 280}" cy="${40 + r() * 170}" r="${50 + r() * 40}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/></svg>`;
 };
 const fmtDate = d => { try { return new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); } catch (e) { return d; } };
+const photoUrl = u => (/^uploads\/team\/[a-f0-9]{16,40}\.(jpg|png|webp)$/.test(u || '') || (window.__IQ_DEMO && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u || ''))) ? u : '';
 const initials = n => n.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
 /* ---------- layout ---------- */
@@ -180,7 +181,7 @@ const R = {
     const members = d.team.filter(m => !m.open), open = d.team.filter(m => m.open);
     const card = (m, i) => m.open
       ? `<a class="person rv" href="careers.html" style="--d:${(i % 4) * .07}s;border-style:dashed"><div class="avatar" style="--av:rgba(255,255,255,.07);font-size:38px">+</div><h3>${esc(m.role)}</h3><div class="role">We’re hiring</div><p>${esc(m.bio)}</p><div class="sk">${(m.skills || []).map(s => `<span>${esc(s)}</span>`).join('')}</div></a>`
-      : `<article class="person rv ${m.lead ? 'lead-p' : ''}" style="--d:${(i % 4) * .07}s"><div class="avatar" style="--av:linear-gradient(135deg,${esc(m.c1 || '#22d3ee')},${esc(m.c2 || '#6366f1')})">${esc(initials(m.name))}</div><div><h3>${esc(m.name)}</h3><div class="role">${esc(m.role)}</div><p>${esc(m.bio)}</p><div class="sk">${(m.skills || []).map(s => `<span>${esc(s)}</span>`).join('')}</div></div></article>`;
+      : `<article class="person rv ${m.lead ? 'lead-p' : ''}" style="--d:${(i % 4) * .07}s"><div class="avatar ${photoUrl(m.photo) ? 'has-photo' : ''}" style="--av:linear-gradient(135deg,${esc(m.c1 || '#22d3ee')},${esc(m.c2 || '#6366f1')})">${photoUrl(m.photo) ? `<img src="${esc(photoUrl(m.photo))}" alt="${esc(m.name)}" width="170" height="170" loading="lazy">` : esc(initials(m.name))}</div><div><h3>${esc(m.name)}</h3><div class="role">${esc(m.role)}</div><p>${esc(m.bio)}</p><div class="sk">${(m.skills || []).map(s => `<span>${esc(s)}</span>`).join('')}</div></div></article>`;
     el.innerHTML = members.map(card).join('');
     const o = $('#openRoles'); if (o) o.innerHTML = open.map(card).join('');
   },

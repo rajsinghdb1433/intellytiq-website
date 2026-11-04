@@ -25,7 +25,7 @@ const SCHEMA = {
   services: {title: 'Services', sub: 'Service pages and the home-page bento grid.', label: i => i.title, meta: i => i.slug, blank: () => ({slug: '', icon: 'layers', title: '', summary: '', body: '', features: [], tags: []}),
     fields: [T('title', 'Title'), T('slug', 'URL slug'), {k: 'icon', label: 'Icon', type: 'select', opts: ['layers', 'bolt', 'snow', 'flow', 'db', 'server', 'cloud', 'chart', 'globe']}, {k: 'tags', label: 'Tags', type: 'tags'}, {k: 'summary', label: 'Summary', type: 'textarea', full: true}, {k: 'body', label: 'Description', type: 'textarea', full: true}, {k: 'features', label: 'Capabilities (one per line)', type: 'lines', full: true}]},
   team: {title: 'Team', sub: 'People shown on the Team page. Tick “Open role” to show a hiring card.', label: i => i.open ? `${i.role} (open role)` : i.name, meta: i => i.role, blank: () => ({name: '', role: '', bio: '', skills: [], lead: false, open: false, c1: '#22d3ee', c2: '#6366f1'}),
-    fields: [T('name', 'Name'), T('role', 'Role'), {k: 'lead', label: 'Large leadership card', type: 'bool'}, {k: 'open', label: 'Open role (hiring card)', type: 'bool'}, T('c1', 'Avatar colour 1', {hint: 'e.g. #22d3ee'}), T('c2', 'Avatar colour 2'), {k: 'skills', label: 'Skills', type: 'tags'}, {k: 'bio', label: 'Bio', type: 'textarea', full: true}]},
+    fields: [{k: 'photo', label: 'Photo', type: 'image', full: true}, T('name', 'Name'), T('role', 'Role'), {k: 'lead', label: 'Large leadership card', type: 'bool'}, {k: 'open', label: 'Open role (hiring card)', type: 'bool'}, T('c1', 'Avatar colour 1', {hint: 'e.g. #22d3ee'}), T('c2', 'Avatar colour 2'), {k: 'skills', label: 'Skills', type: 'tags'}, {k: 'bio', label: 'Bio', type: 'textarea', full: true}]},
   videos: {title: 'Videos', sub: 'Looping videos shown on the home, services and other pages. Upload the files to the Intellytiq-Videos folder first.', label: i => i.title, meta: i => i.key, blank: () => ({key: '', file: 'Intellytiq-Videos/', poster: '', title: '', tag: '', text: '', link: 'services.html'}),
     fields: [T('title', 'Title'), T('key', 'Key (lowercase letters and dashes)'), T('tag', 'Label'), T('link', 'Link when clicked'), T('file', 'Video file path', {full: true, hint: 'e.g. Intellytiq-Videos/my-video.mp4'}), T('poster', 'Poster image path (optional)', {full: true}), {k: 'text', label: 'Short description', type: 'textarea', full: true}]},
   technologies: {title: 'Technologies', sub: 'Tiles on the Technologies page and the marquee.', label: i => i.name, meta: i => i.group, blank: () => ({name: '', mono: '', color: 'linear-gradient(135deg,#22d3ee,#6366f1)', desc: '', group: 'Platform'}),
@@ -45,6 +45,28 @@ const SCHEMA = {
 const TABS = [['dashboard', 'Dashboard'], ['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team'], ['videos', 'Videos'], ['technologies', 'Technologies'], ['projects', 'Case studies'], ['careers', 'Careers'], ['testimonials', 'Testimonials'], ['faqs', 'FAQs'], ['industries', 'Industries'], ['process', 'Process'], ['values', 'Values'], ['timeline', 'Timeline'], ['settings', 'Site settings'], ['email', 'Email'], ['messages', 'Messages'], ['security', 'Security']];
 
 /* ---------- field rendering ---------- */
+const imgSrc = v => /^uploads\//.test(v || '') ? '../' + v : v;
+async function shrinkImage(file) {
+  const bmp = await createImageBitmap(file); const s = Math.min(bmp.width, bmp.height);
+  const c = document.createElement('canvas'); c.width = c.height = 800; const x = c.getContext('2d');
+  x.fillStyle = '#fff'; x.fillRect(0, 0, 800, 800); x.drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, 800, 800);
+  return c.toDataURL('image/jpeg', 0.88);
+}
+function bindImages(form) {
+  $$('.imgfield', form).forEach(box => {
+    const inp = $('[data-file]', box), hid = $('input[type=hidden]', box), prev = $('[data-prev]', box), clr = $('[data-clear]', box), msg = $('[data-msg]', box);
+    inp.addEventListener('change', async () => {
+      const f = inp.files[0]; if (!f) return;
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { msg.textContent = 'Please choose a JPG, PNG or WebP image.'; inp.value = ''; return; }
+      if (f.size > 15e6) { msg.textContent = 'That file is too large (15 MB maximum).'; inp.value = ''; return; }
+      msg.textContent = 'Uploading…';
+      try { const r = await api('upload', {kind: 'team', data: await shrinkImage(f)}); hid.value = r.url; prev.innerHTML = `<img src="${esc(imgSrc(r.url))}" alt="">`; clr.hidden = false; msg.textContent = 'Photo ready. Click Save changes to publish it.'; }
+      catch (e) { msg.textContent = e.message; }
+      inp.value = '';
+    });
+    clr.addEventListener('click', () => { hid.value = ''; prev.innerHTML = '<span>No photo</span>'; clr.hidden = true; msg.textContent = 'Photo removed. Click Save changes to publish.'; });
+  });
+}
 function fieldHTML(f, v) {
   const id = 'f_' + f.k, hint = f.hint ? `<span class="hint">${esc(f.hint)}</span>` : '';
   const wrap = inner => `<label ${f.full ? 'style="grid-column:1/-1"' : ''}>${esc(f.label)}${inner}${hint}</label>`;
@@ -56,6 +78,7 @@ function fieldHTML(f, v) {
     case 'bool': return `<label style="flex-direction:row;display:flex;gap:10px;align-items:center;color:#fff"><input type="checkbox" name="${f.k}" ${v ? 'checked' : ''} style="width:auto"> ${esc(f.label)}</label>`;
     case 'tags': return wrap(`<input name="${f.k}" value="${esc((v || []).join(', '))}" placeholder="comma, separated">`);
     case 'lines': return wrap(`<textarea name="${f.k}">${esc((v || []).join('\n'))}</textarea>`);
+    case 'image': return `<div style="grid-column:1/-1" class="imgfield"><span class="lbl">${esc(f.label)}</span><div class="imgrow"><div class="imgprev" data-prev>${v ? `<img src="${esc(imgSrc(v))}" alt="">` : '<span>No photo</span>'}</div><div class="imgbtns"><div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn ghost sm filebtn">Choose photo<input type="file" accept="image/jpeg,image/png,image/webp" data-file hidden></label><button type="button" class="btn ghost sm" data-clear ${v ? '' : 'hidden'}>Remove photo</button></div><span class="hint" data-msg>Square photos with the face in the middle look best. Large photos are resized automatically.</span></div><input type="hidden" name="${f.k}" value="${esc(v)}"></div></div>`;
     case 'select': return wrap(`<select name="${f.k}">${f.opts.map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select>`);
     default: return wrap(`<input name="${f.k}" value="${esc(v)}">`);
   }
@@ -100,7 +123,7 @@ function viewEdit(key, idx) {
   setHead((isNew ? 'New ' : 'Edit ') + sc.title.replace(/s$/, ''), '', `<button class="btn ghost sm" id="back">← Back to list</button>`);
   $('#back').onclick = () => viewList(key);
   $('#panel').innerHTML = `<form class="card formcard" id="ef"><div class="grid2">${sc.fields.map(f => fieldHTML(f, item[f.k])).join('')}</div><div class="note" id="en"></div><div style="display:flex;gap:10px"><button class="btn primary">${isNew ? 'Create' : 'Save changes'}</button><button type="button" class="btn ghost" id="cancel">Cancel</button></div></form>`;
-  const form = $('#ef'); bindToolbar(form);
+  const form = $('#ef'); bindToolbar(form); bindImages(form);
   $('#cancel').onclick = () => viewList(key);
   form.onsubmit = async e => {
     e.preventDefault(); const out = readForm(form, sc.fields, item);

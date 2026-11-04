@@ -140,3 +140,7 @@ footer .cap-slot{margin-top:10px;max-width:340px}
 .bgvid{width:100%;height:100%;object-fit:cover;opacity:.32;mix-blend-mode:screen}
 @media (max-width:860px){.vbento{grid-template-columns:1fr}.vbento>.vtile{grid-column:auto!important;grid-row:auto!important;min-height:260px}.vwide{aspect-ratio:16/9}}
 @media (prefers-reduced-motion:reduce){.vtile,.vtile video{transition:none}}
+
+/* ---- team photos ---- */
+.avatar.has-photo{font-size:0}
+.avatar img{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
