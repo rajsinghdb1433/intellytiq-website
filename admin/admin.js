@@ -21,50 +21,88 @@ const slugify = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace
 const T = (k, label, extra = {}) => ({k, label, type: 'text', ...extra});
 const SCHEMA = {
   posts: {title: 'Blog posts', sub: 'Articles shown on the Blog page and home page.', label: i => i.title, meta: i => `${i.category || ''} · ${i.date || ''}`, blank: () => ({slug: '', title: '', category: 'Data Engineering', excerpt: '', author: 'Raj Singh', date: new Date().toISOString().slice(0, 10), read: 5, featured: false, hue: Math.floor(Math.random() * 360), tags: [], content: '<p>Write your article here.</p>'}),
-    fields: [T('title', 'Title'), T('slug', 'URL slug', {hint: 'Auto-generated from the title if left empty'}), T('category', 'Category'), T('author', 'Author'), {k: 'date', label: 'Date', type: 'date'}, {k: 'read', label: 'Minutes to read', type: 'number'}, {k: 'hue', label: 'Cover colour (0–360)', type: 'number'}, {k: 'featured', label: 'Featured on blog page', type: 'bool'}, {k: 'tags', label: 'Tags', type: 'tags'}, {k: 'excerpt', label: 'Excerpt', type: 'textarea', full: true}, {k: 'content', label: 'Article body (HTML)', type: 'html', full: true}]},
+    fields: [{k: 'image', label: 'Cover image (optional, replaces the generated cover)', type: 'image', kind: 'cover', full: true}, {k: 'videoFile', label: 'Article video (optional, shown at the top of the article)', type: 'video', full: true}, T('title', 'Title'), T('slug', 'URL slug', {hint: 'Auto-generated from the title if left empty'}), T('category', 'Category'), T('author', 'Author'), {k: 'date', label: 'Date', type: 'date'}, {k: 'read', label: 'Minutes to read', type: 'number'}, {k: 'hue', label: 'Cover colour (0–360)', type: 'number'}, {k: 'featured', label: 'Featured on blog page', type: 'bool'}, {k: 'tags', label: 'Tags', type: 'tags'}, {k: 'excerpt', label: 'Excerpt', type: 'textarea', full: true}, {k: 'content', label: 'Article body (HTML)', type: 'html', full: true}]},
   services: {title: 'Services', sub: 'Service pages and the home-page bento grid.', label: i => i.title, meta: i => i.slug, blank: () => ({slug: '', icon: 'layers', title: '', summary: '', body: '', features: [], tags: []}),
-    fields: [T('title', 'Title'), T('slug', 'URL slug'), {k: 'icon', label: 'Icon', type: 'select', opts: ['layers', 'bolt', 'snow', 'flow', 'db', 'server', 'cloud', 'chart', 'globe']}, {k: 'tags', label: 'Tags', type: 'tags'}, {k: 'summary', label: 'Summary', type: 'textarea', full: true}, {k: 'body', label: 'Description', type: 'textarea', full: true}, {k: 'features', label: 'Capabilities (one per line)', type: 'lines', full: true}]},
+    fields: [{k: 'image', label: 'Card picture (optional, replaces the icon)', type: 'image', kind: 'cover', full: true}, T('title', 'Title'), T('slug', 'URL slug'), {k: 'icon', label: 'Icon', type: 'select', opts: ['layers', 'bolt', 'snow', 'flow', 'db', 'server', 'cloud', 'chart', 'globe']}, {k: 'tags', label: 'Tags', type: 'tags'}, {k: 'summary', label: 'Summary', type: 'textarea', full: true}, {k: 'body', label: 'Description', type: 'textarea', full: true}, {k: 'features', label: 'Capabilities (one per line)', type: 'lines', full: true}]},
   team: {title: 'Team', sub: 'People shown on the Team page. Tick “Open role” to show a hiring card.', label: i => i.open ? `${i.role} (open role)` : i.name, meta: i => i.role, blank: () => ({name: '', role: '', bio: '', skills: [], lead: false, open: false, c1: '#22d3ee', c2: '#6366f1'}),
-    fields: [{k: 'photo', label: 'Photo', type: 'image', full: true}, T('name', 'Name'), T('role', 'Role'), {k: 'lead', label: 'Large leadership card', type: 'bool'}, {k: 'open', label: 'Open role (hiring card)', type: 'bool'}, T('c1', 'Avatar colour 1', {hint: 'e.g. #22d3ee'}), T('c2', 'Avatar colour 2'), {k: 'skills', label: 'Skills', type: 'tags'}, {k: 'bio', label: 'Bio', type: 'textarea', full: true}]},
+    fields: [{k: 'photo', label: 'Photo', type: 'image', kind: 'team', full: true}, T('name', 'Name'), T('role', 'Role'), {k: 'lead', label: 'Large leadership card', type: 'bool'}, {k: 'open', label: 'Open role (hiring card)', type: 'bool'}, T('c1', 'Avatar colour 1', {hint: 'e.g. #22d3ee'}), T('c2', 'Avatar colour 2'), {k: 'skills', label: 'Skills', type: 'tags'}, {k: 'bio', label: 'Bio', type: 'textarea', full: true}]},
   videos: {title: 'Videos', sub: 'Looping videos shown on the home, services and other pages. Upload the files to the Intellytiq-Videos folder first.', label: i => i.title, meta: i => i.key, blank: () => ({key: '', file: 'Intellytiq-Videos/', poster: '', title: '', tag: '', text: '', link: 'services.html'}),
-    fields: [T('title', 'Title'), T('key', 'Key (lowercase letters and dashes)'), T('tag', 'Label'), T('link', 'Link when clicked'), T('file', 'Video file path', {full: true, hint: 'e.g. Intellytiq-Videos/my-video.mp4'}), T('poster', 'Poster image path (optional)', {full: true}), {k: 'text', label: 'Short description', type: 'textarea', full: true}]},
+    fields: [T('title', 'Title'), T('key', 'Key (lowercase letters and dashes)'), T('tag', 'Label'), T('link', 'Link when clicked'), {k: 'file', label: 'Video file', type: 'video', full: true}, {k: 'poster', label: 'Poster image (optional, shown before the video loads)', type: 'image', kind: 'cover', full: true}, {k: 'text', label: 'Short description', type: 'textarea', full: true}]},
   technologies: {title: 'Technologies', sub: 'Tiles on the Technologies page and the marquee.', label: i => i.name, meta: i => i.group, blank: () => ({name: '', mono: '', color: 'linear-gradient(135deg,#22d3ee,#6366f1)', desc: '', group: 'Platform'}),
-    fields: [T('name', 'Name'), T('mono', 'Short mark (2–3 letters)'), T('group', 'Group'), T('desc', 'Short tagline'), T('color', 'CSS gradient', {full: true}), {k: 'summary', label: 'Card description (1–2 sentences)', type: 'textarea', full: true}, {k: 'long', label: 'Popup description', type: 'textarea', full: true}, {k: 'does', label: 'What we deliver (one per line)', type: 'lines', full: true}, {k: 'usecases', label: 'Typical use cases (one per line)', type: 'lines', full: true}]},
+    fields: [{k: 'image', label: 'Logo image (optional, replaces the letters)', type: 'image', kind: 'logo', hint: 'A square logo on a transparent background works best.', full: true}, T('name', 'Name'), T('mono', 'Short mark (2–3 letters)'), T('group', 'Group'), T('desc', 'Short tagline'), T('color', 'CSS gradient', {full: true}), {k: 'summary', label: 'Card description (1–2 sentences)', type: 'textarea', full: true}, {k: 'long', label: 'Popup description', type: 'textarea', full: true}, {k: 'does', label: 'What we deliver (one per line)', type: 'lines', full: true}, {k: 'usecases', label: 'Typical use cases (one per line)', type: 'lines', full: true}]},
   projects: {title: 'Case studies', sub: 'Engagement stories. Use only approved client information.', label: i => i.title, meta: i => i.industry, blank: () => ({title: '', industry: '', challenge: '', solution: '', results: [], tech: []}),
-    fields: [T('title', 'Title', {full: true}), T('industry', 'Industry'), {k: 'tech', label: 'Technologies', type: 'tags'}, {k: 'challenge', label: 'Challenge', type: 'textarea', full: true}, {k: 'solution', label: 'Solution', type: 'textarea', full: true}, {k: 'results', label: 'Results (one per line)', type: 'lines', full: true}]},
+    fields: [{k: 'image', label: 'Cover image (optional)', type: 'image', kind: 'cover', full: true}, T('title', 'Title', {full: true}), T('industry', 'Industry'), {k: 'tech', label: 'Technologies', type: 'tags'}, {k: 'challenge', label: 'Challenge', type: 'textarea', full: true}, {k: 'solution', label: 'Solution', type: 'textarea', full: true}, {k: 'results', label: 'Results (one per line)', type: 'lines', full: true}]},
   careers: {title: 'Careers', sub: 'Open positions on the Careers page.', label: i => i.title, meta: i => i.type, blank: () => ({title: '', type: 'Contract · Remote', level: 'Senior', location: 'Worldwide', summary: ''}),
     fields: [T('title', 'Job title', {full: true}), T('type', 'Type'), T('level', 'Level'), T('location', 'Location'), {k: 'summary', label: 'Summary', type: 'textarea', full: true}]},
   testimonials: {title: 'Testimonials', sub: 'Replace the sample quotes with real, approved feedback.', label: i => i.name, meta: i => i.role, blank: () => ({quote: '', name: '', role: ''}),
-    fields: [T('name', 'Name / title'), T('role', 'Company'), {k: 'quote', label: 'Quote', type: 'textarea', full: true}]},
-  faqs: {title: 'FAQs', sub: 'Shown on the home, services and FAQ pages.', label: i => i.q, meta: () => '', blank: () => ({q: '', a: ''}), fields: [T('q', 'Question', {full: true}), {k: 'a', label: 'Answer', type: 'textarea', full: true}]},
-  industries: {title: 'Industries', sub: '', label: i => i.title, meta: () => '', blank: () => ({title: '', text: ''}), fields: [T('title', 'Industry'), {k: 'text', label: 'Description', type: 'textarea', full: true}]},
+    fields: [{k: 'photo', label: 'Photo or company logo (optional)', type: 'image', kind: 'avatar', full: true}, T('name', 'Name / title'), T('role', 'Company'), {k: 'quote', label: 'Quote', type: 'textarea', full: true}]},
+  faqs: {title: 'FAQs', sub: 'Shown on the home, services and FAQ pages.', label: i => i.q, meta: () => '', blank: () => ({q: '', a: ''}), fields: [T('q', 'Question', {full: true}), {k: 'a', label: 'Answer', type: 'textarea', full: true}, {k: 'image', label: 'Picture shown in the answer (optional)', type: 'image', kind: 'cover', full: true}, {k: 'videoFile', label: 'Video shown in the answer (optional)', type: 'video', full: true}]},
+  industries: {title: 'Industries', sub: '', label: i => i.title, meta: () => '', blank: () => ({title: '', text: ''}), fields: [{k: 'image', label: 'Picture (optional)', type: 'image', kind: 'cover', full: true}, T('title', 'Industry'), {k: 'text', label: 'Description', type: 'textarea', full: true}]},
   process: {title: 'Process steps', sub: 'The “How we work” timeline.', label: i => `${i.n} · ${i.title}`, meta: () => '', blank: () => ({n: '', title: '', text: ''}), fields: [T('n', 'Number (e.g. 06)'), T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}]},
   values: {title: 'Company values', sub: '', label: i => i.title, meta: () => '', blank: () => ({title: '', text: ''}), fields: [T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}]},
-  timeline: {title: 'Timeline', sub: 'Our story on the About page.', label: i => i.title, meta: i => i.year, blank: () => ({year: '', title: '', text: ''}), fields: [T('year', 'Label / year'), T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}]}
+  timeline: {title: 'Timeline', sub: 'Our story on the About page.', label: i => i.title, meta: i => i.year, blank: () => ({year: '', title: '', text: ''}), fields: [T('year', 'Label / year'), T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}, {k: 'image', label: 'Picture (optional)', type: 'image', kind: 'cover', full: true}]}
 };
 const TABS = [['dashboard', 'Dashboard'], ['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team'], ['videos', 'Videos'], ['technologies', 'Technologies'], ['projects', 'Case studies'], ['careers', 'Careers'], ['testimonials', 'Testimonials'], ['faqs', 'FAQs'], ['industries', 'Industries'], ['process', 'Process'], ['values', 'Values'], ['timeline', 'Timeline'], ['settings', 'Site settings'], ['email', 'Email'], ['messages', 'Messages'], ['security', 'Security']];
 
 /* ---------- field rendering ---------- */
-const imgSrc = v => /^uploads\//.test(v || '') ? '../' + v : v;
-async function shrinkImage(file) {
-  const bmp = await createImageBitmap(file); const s = Math.min(bmp.width, bmp.height);
-  const c = document.createElement('canvas'); c.width = c.height = 800; const x = c.getContext('2d');
-  x.fillStyle = '#fff'; x.fillRect(0, 0, 800, 800); x.drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, 800, 800);
-  return c.toDataURL('image/jpeg', 0.88);
+const imgSrc = v => /^(https?:|data:|blob:)/.test(v || '') ? v : '../' + (v || '');
+const KINDS = {team: {w: 800, h: 800, crop: true, type: 'image/jpeg'}, avatar: {w: 600, h: 600, crop: true, type: 'image/jpeg'}, cover: {w: 1600, h: 1000, crop: true, type: 'image/jpeg'}, logo: {w: 512, h: 512, crop: false, type: 'image/png'}, inline: {w: 1600, h: 1600, crop: false, type: 'image/jpeg'}};
+async function shrinkImage(file, kind) {
+  const k = KINDS[kind] || KINDS.team, bmp = await createImageBitmap(file);
+  let sx = 0, sy = 0, sw = bmp.width, sh = bmp.height, dw, dh;
+  if (k.crop) { const r = k.w / k.h; if (sw / sh > r) { const nw = sh * r; sx = (sw - nw) / 2; sw = nw; } else { const nh = sw / r; sy = (sh - nh) / 2; sh = nh; } dw = Math.min(k.w, Math.round(sw)); dh = Math.round(dw / r); }
+  else { const sc = Math.min(1, k.w / Math.max(sw, sh)); dw = Math.max(1, Math.round(sw * sc)); dh = Math.max(1, Math.round(sh * sc)); }
+  const c = document.createElement('canvas'); c.width = dw; c.height = dh; const x = c.getContext('2d');
+  if (k.type === 'image/jpeg') { x.fillStyle = '#fff'; x.fillRect(0, 0, dw, dh); }
+  x.drawImage(bmp, sx, sy, sw, sh, 0, 0, dw, dh);
+  return c.toDataURL(k.type, 0.88);
+}
+async function uploadVideo(file, onProgress) {            // sent in small pieces so large files upload reliably
+  const st = await api('upload_video_start', {size: file.size, name: file.name}); const step = st.chunk || 524288; let off = 0;
+  while (off < file.size) {
+    const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(file.slice(off, off + step)); });
+    let tries = 0, resp;
+    for (;;) { try { resp = await api('upload_video_chunk', {id: st.id, offset: off, data: b64}); break; } catch (e) { if (e.status || ++tries > 2) throw e; } }
+    off = resp.received; onProgress(off / file.size);
+  }
+  return api('upload_video_finish', {id: st.id});
 }
 function bindImages(form) {
   $$('.imgfield', form).forEach(box => {
-    const inp = $('[data-file]', box), hid = $('input[type=hidden]', box), prev = $('[data-prev]', box), clr = $('[data-clear]', box), msg = $('[data-msg]', box);
-    inp.addEventListener('change', async () => {
-      const f = inp.files[0]; if (!f) return;
-      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { msg.textContent = 'Please choose a JPG, PNG or WebP image.'; inp.value = ''; return; }
-      if (f.size > 15e6) { msg.textContent = 'That file is too large (15 MB maximum).'; inp.value = ''; return; }
-      msg.textContent = 'Uploading…';
-      try { const r = await api('upload', {kind: 'team', data: await shrinkImage(f)}); hid.value = r.url; prev.innerHTML = `<img src="${esc(imgSrc(r.url))}" alt="">`; clr.hidden = false; msg.textContent = 'Photo ready. Click Save changes to publish it.'; }
-      catch (e) { msg.textContent = e.message; }
-      inp.value = '';
+    const hid = $('input[type=hidden]', box), prev = $('[data-prev]', box), clr = $('[data-clear]', box), msg = $('[data-msg]', box), bar = $('[data-bar]', box);
+    const kind = box.dataset.kind || 'team', isVid = box.classList.contains('vidfield'), fileIn = $('[data-file]', box) || $('[data-vfile]', box);
+    const setPrev = url => { prev.innerHTML = url ? (isVid ? `<video src="${esc(imgSrc(url))}" muted playsinline preload="metadata"></video>` : `<img src="${esc(imgSrc(url))}" alt="">`) : `<span>${isVid ? 'No video' : 'No photo'}</span>`; clr.hidden = !url; };
+    fileIn.addEventListener('change', async () => {
+      const f = fileIn.files[0]; if (!f) return;
+      if (isVid) {
+        if (!/^video\/(mp4|webm)$/.test(f.type)) { msg.textContent = 'Please choose an MP4 or WebM video.'; fileIn.value = ''; return; }
+        if (f.size > 52428800) { msg.textContent = 'That video is larger than 50 MB. Compress it first, for example to 720p.'; fileIn.value = ''; return; }
+        bar.hidden = false; $('i', bar).style.width = '0%'; msg.textContent = 'Uploading video… 0%';
+        try { const r = await uploadVideo(f, p => { $('i', bar).style.width = Math.round(p * 100) + '%'; msg.textContent = `Uploading video… ${Math.round(p * 100)}%`; }); hid.value = r.url; setPrev(r.url); msg.textContent = 'Video ready. Click Save changes to publish it.'; }
+        catch (e) { msg.textContent = e.message; }
+        bar.hidden = true;
+      } else {
+        if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { msg.textContent = 'Please choose a JPG, PNG or WebP image.'; fileIn.value = ''; return; }
+        if (f.size > 15e6) { msg.textContent = 'That file is too large (15 MB maximum).'; fileIn.value = ''; return; }
+        msg.textContent = 'Uploading…';
+        try { const r = await api('upload', {kind, data: await shrinkImage(f, kind)}); hid.value = r.url; setPrev(r.url); msg.textContent = 'Image ready. Click Save changes to publish it.'; }
+        catch (e) { msg.textContent = e.message; }
+      }
+      fileIn.value = '';
     });
-    clr.addEventListener('click', () => { hid.value = ''; prev.innerHTML = '<span>No photo</span>'; clr.hidden = true; msg.textContent = 'Photo removed. Click Save changes to publish.'; });
+    clr.addEventListener('click', () => { hid.value = ''; setPrev(''); msg.textContent = 'Removed. Click Save changes to publish.'; });
+  });
+}
+function bindInlineImage(form) {                          // the "Image" button in the article editor
+  const btn = $('[data-img]', form), inp = $('[data-imgfile]', form); if (!btn || !inp) return;
+  btn.addEventListener('click', () => inp.click());
+  inp.addEventListener('change', async () => {
+    const f = inp.files[0]; if (!f) return; const ta = form.elements.content;
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > 15e6) { toast('Choose a JPG, PNG or WebP image under 15 MB', 1); inp.value = ''; return; }
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    try { const r = await api('upload', {kind: 'inline', data: await shrinkImage(f, 'inline')}); const p = ta.selectionEnd; ta.setRangeText(`<p><img src="${r.url}" alt="Describe this image"></p>`, p, p, 'end'); toast('Image inserted. You can edit its description in the text.'); }
+    catch (e) { toast(e.message, 1); }
+    btn.disabled = false; btn.textContent = 'Image'; inp.value = ''; ta.focus();
   });
 }
 function fieldHTML(f, v) {
@@ -72,13 +110,14 @@ function fieldHTML(f, v) {
   const wrap = inner => `<label ${f.full ? 'style="grid-column:1/-1"' : ''}>${esc(f.label)}${inner}${hint}</label>`;
   switch (f.type) {
     case 'textarea': return wrap(`<textarea name="${f.k}">${esc(v)}</textarea>`);
-    case 'html': return `<label style="grid-column:1/-1">${esc(f.label)}<div class="tb">${[['h2', 'H2'], ['p', 'P'], ['strong', 'B'], ['em', 'I'], ['code', '{ }'], ['blockquote', 'Quote'], ['ul', 'List'], ['a', 'Link']].map(([t, l]) => `<button type="button" data-ins="${t}">${l}</button>`).join('')}</div><textarea name="${f.k}" style="min-height:340px;font-family:var(--mono);font-size:13.5px">${esc(v)}</textarea><span class="hint">Allowed: p, h2, strong, em, code, pre, blockquote, ul/li, a. Scripts are always stripped.</span></label>`;
+    case 'html': return `<label style="grid-column:1/-1">${esc(f.label)}<div class="tb">${[['h2', 'H2'], ['p', 'P'], ['strong', 'B'], ['em', 'I'], ['code', '{ }'], ['blockquote', 'Quote'], ['ul', 'List'], ['a', 'Link']].map(([t, l]) => `<button type="button" data-ins="${t}">${l}</button>`).join('')}<button type="button" data-img>Image</button><input type="file" accept="image/jpeg,image/png,image/webp" data-imgfile hidden></div><textarea name="${f.k}" style="min-height:340px;font-family:var(--mono);font-size:13.5px">${esc(v)}</textarea><span class="hint">Allowed: p, h2, strong, em, code, pre, blockquote, ul/li, a. Scripts are always stripped.</span></label>`;
     case 'number': return wrap(`<input type="number" name="${f.k}" value="${esc(v)}">`);
     case 'date': return wrap(`<input type="date" name="${f.k}" value="${esc(v)}">`);
     case 'bool': return `<label style="flex-direction:row;display:flex;gap:10px;align-items:center;color:#fff"><input type="checkbox" name="${f.k}" ${v ? 'checked' : ''} style="width:auto"> ${esc(f.label)}</label>`;
     case 'tags': return wrap(`<input name="${f.k}" value="${esc((v || []).join(', '))}" placeholder="comma, separated">`);
     case 'lines': return wrap(`<textarea name="${f.k}">${esc((v || []).join('\n'))}</textarea>`);
-    case 'image': return `<div style="grid-column:1/-1" class="imgfield"><span class="lbl">${esc(f.label)}</span><div class="imgrow"><div class="imgprev" data-prev>${v ? `<img src="${esc(imgSrc(v))}" alt="">` : '<span>No photo</span>'}</div><div class="imgbtns"><div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn ghost sm filebtn">Choose photo<input type="file" accept="image/jpeg,image/png,image/webp" data-file hidden></label><button type="button" class="btn ghost sm" data-clear ${v ? '' : 'hidden'}>Remove photo</button></div><span class="hint" data-msg>Square photos with the face in the middle look best. Large photos are resized automatically.</span></div><input type="hidden" name="${f.k}" value="${esc(v)}"></div></div>`;
+    case 'image': { const round = ['team', 'avatar'].includes(f.kind || 'team'); return `<div style="grid-column:1/-1" class="imgfield" data-kind="${esc(f.kind || 'team')}"><span class="lbl">${esc(f.label)}</span><div class="imgrow"><div class="imgprev ${round ? '' : 'wide'}" data-prev>${v ? `<img src="${esc(imgSrc(v))}" alt="">` : '<span>No photo</span>'}</div><div class="imgbtns"><div class="btnrow"><label class="btn ghost sm filebtn">Choose photo<input type="file" accept="image/jpeg,image/png,image/webp" data-file hidden></label><button type="button" class="btn ghost sm" data-clear ${v ? '' : 'hidden'}>Remove photo</button></div><span class="hint" data-msg>${esc(f.hint || 'JPG, PNG or WebP. Large pictures are resized automatically.')}</span></div><input type="hidden" name="${f.k}" value="${esc(v)}"></div></div>`; }
+    case 'video': return `<div style="grid-column:1/-1" class="imgfield vidfield" data-kind="video"><span class="lbl">${esc(f.label)}</span><div class="imgrow"><div class="imgprev wide" data-prev>${v ? `<video src="${esc(imgSrc(v))}" muted playsinline preload="metadata"></video>` : '<span>No video</span>'}</div><div class="imgbtns"><div class="btnrow"><label class="btn ghost sm filebtn">Upload video<input type="file" accept="video/mp4,video/webm" data-vfile hidden></label><button type="button" class="btn ghost sm" data-clear ${v ? '' : 'hidden'}>Remove video</button></div><div class="bar" data-bar hidden><i></i></div><span class="hint" data-msg>${esc(f.hint || 'MP4 (H.264) or WebM, up to 50 MB. Short looping clips of 5 to 15 seconds work best.')}</span></div><input type="hidden" name="${f.k}" value="${esc(v)}"></div></div>`;
     case 'select': return wrap(`<select name="${f.k}">${f.opts.map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select>`);
     default: return wrap(`<input name="${f.k}" value="${esc(v)}">`);
   }
@@ -96,6 +135,7 @@ function readForm(form, fields, base) {
   return out;
 }
 function bindToolbar(form) {
+  bindInlineImage(form);
   $$('[data-ins]', form).forEach(b => b.addEventListener('click', () => {
     const ta = form.elements.content, t = b.dataset.ins, s = ta.selectionStart, e = ta.selectionEnd, sel = ta.value.slice(s, e) || 'text';
     const map = {h2: `<h2>${sel}</h2>`, p: `<p>${sel}</p>`, strong: `<strong>${sel}</strong>`, em: `<em>${sel}</em>`, code: `<code>${sel}</code>`, blockquote: `<blockquote>${sel}</blockquote>`, ul: `<ul><li>${sel}</li></ul>`, a: `<a href="https://">${sel}</a>`};

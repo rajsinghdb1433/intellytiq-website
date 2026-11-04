@@ -66,6 +66,7 @@ const clean = html => {
 /* ---------- cover art (generated, no stock photos needed) ---------- */
 const seeded = s => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296; };
 const cover = (p, i = 0) => {
+  if (photoUrl(p.image)) return `<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">`;
   const r = seeded(p.slug || p.title || 'x'), h = Number(p.hue ?? Math.floor(r() * 360)), h2 = (h + 60) % 360, id = 'c' + Math.abs(i) + Math.floor(r() * 1e6);
   let nodes = '', lines = '';
   const pts = Array.from({length: 14}, () => [r() * 400, r() * 250]);
@@ -74,7 +75,13 @@ const cover = (p, i = 0) => {
   return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(p.title)}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 85% 22%)"/><stop offset="1" stop-color="hsl(${h2} 80% 38%)"/></linearGradient><radialGradient id="${id}r" cx=".75" cy=".2" r=".7"><stop offset="0" stop-color="hsl(${h2} 100% 70%)" stop-opacity=".55"/><stop offset="1" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/><rect width="400" height="250" fill="url(#${id}r)"/><g stroke="#fff" stroke-opacity=".22">${lines}</g><g fill="#fff" fill-opacity=".8">${nodes}</g><circle cx="${60 + r() * 280}" cy="${40 + r() * 170}" r="${50 + r() * 40}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/></svg>`;
 };
 const fmtDate = d => { try { return new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); } catch (e) { return d; } };
-const photoUrl = u => (/^uploads\/team\/[a-f0-9]{16,40}\.(jpg|png|webp)$/.test(u || '') || (window.__IQ_DEMO && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(u || ''))) ? u : '';
+const mediaPath = u => (/^uploads\/(team|media)\/[a-f0-9]{16,40}\.(jpg|png|webp|mp4|webm)$/.test(u || '') || (window.__IQ_DEMO && /^data:(image|video)\/[a-z0-9.+-]+;base64,[A-Za-z0-9+\/=]+$/i.test(u || ''))) ? u : '';
+const isVideoUrl = u => /\.(mp4|webm)$|^data:video\//i.test(u || '');
+const photoUrl = u => isVideoUrl(u) ? '' : mediaPath(u);
+const mimg = (u, alt = '', cls = '') => { const m = photoUrl(u); return m ? `<img ${cls ? `class="${cls}" ` : ''}src="${esc(m)}" alt="${esc(alt)}" loading="lazy">` : ''; };
+const mvid = (u, poster) => { const m = mediaPath(u); return m && isVideoUrl(m) ? `<video class="uvideo" controls playsinline preload="metadata" ${photoUrl(poster) ? `poster="${esc(poster)}"` : ''} src="${esc(m)}"></video>` : ''; };
+const cimg = u => photoUrl(u) ? `<div class="cimg"><img src="${esc(u)}" alt="" loading="lazy"></div>` : '';
+const svcTop = s => photoUrl(s.image) ? cimg(s.image) : `<div class="ico">${icon(s.icon)}</div>`;
 const initials = n => n.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
 /* ---------- layout ---------- */
@@ -132,10 +139,10 @@ const R = {
   'services-bento'(el, d) {
     const spans = ['span3', 'span3', 'span2', 'span2', 'span2', 'span4', 'span2', 'span3', 'span3'];
     const n = +el.dataset.limit || d.services.length;
-    el.innerHTML = d.services.slice(0, n).map((s, i) => `<a class="card ${spans[i % spans.length]} rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}"><div class="ico">${icon(s.icon)}</div><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><ul>${(s.tags || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul></a>`).join('');
+    el.innerHTML = d.services.slice(0, n).map((s, i) => `<a class="card ${spans[i % spans.length]} rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}">${svcTop(s)}<h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><ul>${(s.tags || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul></a>`).join('');
   },
   'services-grid'(el, d) {
-    el.innerHTML = d.services.map((s, i) => `<a class="card rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}"><div class="ico">${icon(s.icon)}</div><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><span class="link" style="margin-top:20px">Explore ${ARROW}</span></a>`).join('');
+    el.innerHTML = d.services.map((s, i) => `<a class="card rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}">${svcTop(s)}<h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><span class="link" style="margin-top:20px">Explore ${ARROW}</span></a>`).join('');
   },
   'service-detail'(el, d) {
     const s = d.services.find(x => x.slug === qs.get('s')) || d.services[0]; if (!s) return;
@@ -143,9 +150,10 @@ const R = {
     $('#svcTitle').textContent = s.title; $('#svcSummary').textContent = s.summary; $('#svcCrumb').textContent = s.title;
     el.innerHTML = `<div class="story"><div class="stick rv left"><div class="ico card" style="width:84px;height:84px;padding:0;display:grid;place-items:center;background:var(--grad)">${icon(s.icon).replace('<svg', '<svg style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.7"')}</div><h2 style="margin:26px 0 16px">What we deliver</h2><p class="lead">${esc(s.body)}</p><div class="cta" style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap"><a class="btn primary" href="contact.html?topic=${encodeURIComponent(s.title)}">Discuss this service ${ARROW}</a></div></div>
     <div>${(s.features || []).map((f, i) => `<div class="card rv" style="margin-bottom:16px;--d:${i * .05}s;display:flex;gap:18px;align-items:center;padding:24px 28px"><b class="grad" style="font-size:26px;font-family:var(--mono)">${String(i + 1).padStart(2, '0')}</b><h3 style="font-size:20px;margin:0">${esc(f)}</h3></div>`).join('')}</div></div>`;
+    const ic = $('.stick .ico', el); if (ic && photoUrl(s.image)) ic.outerHTML = `<div class="cimg" style="margin:0 0 6px;border-radius:24px;aspect-ratio:16/10"><img src="${esc(s.image)}" alt="${esc(s.title)}"></div>`;
     const sm = $('#svcMedia'); if (sm) { const vv = (d.videos || []).find(x => x.key === s.video) || (d.videos || [])[0]; sm.innerHTML = vv ? videoFrame(vv) : ''; }
     const others = d.services.filter(x => x.slug !== s.slug).slice(0, 3);
-    const rel = $('#related'); if (rel) rel.innerHTML = others.map(o => `<a class="card rv" href="service.html?s=${esc(o.slug)}"><div class="ico">${icon(o.icon)}</div><h3>${esc(o.title)}</h3><p>${esc(o.summary)}</p></a>`).join('');
+    const rel = $('#related'); if (rel) rel.innerHTML = others.map(o => `<a class="card rv" href="service.html?s=${esc(o.slug)}">${svcTop(o)}<h3>${esc(o.title)}</h3><p>${esc(o.summary)}</p></a>`).join('');
   },
   'video-bento'(el, d) { const vs = d.videos || []; if (vs.length < 3) { (el.closest('section') || el).hidden = true; return; } el.innerHTML = vs.map(videoTile).join(''); },
   'video-frame'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key) || (d.videos || [])[0]; el.innerHTML = v ? videoFrame(v) : ''; },
@@ -156,7 +164,7 @@ const R = {
   },
   'tech-tiles'(el, d) {
     const n = +el.dataset.limit || d.technologies.length;
-    el.innerHTML = d.technologies.slice(0, n).map((t, i) => `<button type="button" class="tile rv" data-tech="${i}" data-tilt style="--d:${(i % 4) * .06}s;--glow:${esc((t.color.match(/#[0-9a-f]{6}/i) || ['#6366f1'])[0])}88" aria-label="${esc(t.name)}: view details"><div class="mono" style="--bgc:${esc(t.color)}">${esc(t.mono)}</div><h4>${esc(t.name)}</h4><p>${esc(t.summary || t.desc)}</p><span class="more">Learn more ${ARROW}</span></button>`).join('');
+    el.innerHTML = d.technologies.slice(0, n).map((t, i) => `<button type="button" class="tile rv" data-tech="${i}" data-tilt style="--d:${(i % 4) * .06}s;--glow:${esc((t.color.match(/#[0-9a-f]{6}/i) || ['#6366f1'])[0])}88" aria-label="${esc(t.name)}: view details">${photoUrl(t.image) ? `<div class="mono has-img"><img src="${esc(t.image)}" alt="" loading="lazy"></div>` : `<div class="mono" style="--bgc:${esc(t.color)}">${esc(t.mono)}</div>`}<h4>${esc(t.name)}</h4><p>${esc(t.summary || t.desc)}</p><span class="more">Learn more ${ARROW}</span></button>`).join('');
   },
   stats(el, d) {
     el.innerHTML = (d.settings.stats || []).map(s => `<div class="stat rv"><b><span data-count="${+s.value}">0</span>${esc(s.suffix || '')}</b><span>${esc(s.label)}</span></div>`).join('');
@@ -165,16 +173,16 @@ const R = {
     el.innerHTML = d.process.map((p, i) => `<div class="step ${i === 0 ? 'on' : ''}" data-i="${i}"><span>${esc(p.n)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p></div>`).join('');
   },
   industries(el, d) {
-    el.innerHTML = d.industries.map((x, i) => `<div class="card rv" style="--d:${(i % 4) * .06}s"><h3 style="font-size:21px">${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join('');
+    el.innerHTML = d.industries.map((x, i) => `<div class="card rv" style="--d:${(i % 4) * .06}s">${cimg(x.image)}<h3 style="font-size:21px">${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join('');
   },
   values(el, d) { el.innerHTML = d.values.map((x, i) => `<div class="card rv" style="--d:${i * .07}s"><div class="ico">${icon(['bolt', 'chart', 'globe', 'layers'][i % 4])}</div><h3 style="font-size:22px">${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join(''); },
-  timeline(el, d) { el.innerHTML = d.timeline.map(x => `<div class="it rv"><span class="yr">${esc(x.year)}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></div>`).join(''); },
+  timeline(el, d) { el.innerHTML = d.timeline.map(x => `<div class="it rv"><span class="yr">${esc(x.year)}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p>${mimg(x.image, x.title)}</div>`).join(''); },
   testimonials(el, d) {
-    el.innerHTML = d.testimonials.map((t, i) => `<figure class="quote rv" style="--d:${i * .1}s"><div class="stars">★★★★★</div><p>“${esc(t.quote)}”</p><figcaption class="by"><i></i><div><b>${esc(t.name)}</b><small>${esc(t.role)}</small></div></figcaption></figure>`).join('');
+    el.innerHTML = d.testimonials.map((t, i) => `<figure class="quote rv" style="--d:${i * .1}s"><div class="stars">★★★★★</div><p>“${esc(t.quote)}”</p><figcaption class="by">${photoUrl(t.photo) ? `<img src="${esc(t.photo)}" alt="" loading="lazy">` : '<i></i>'}<div><b>${esc(t.name)}</b><small>${esc(t.role)}</small></div></figcaption></figure>`).join('');
   },
   faq(el, d) {
     const n = +el.dataset.limit || d.faqs.length;
-    el.innerHTML = d.faqs.slice(0, n).map(f => `<div class="qa rv"><button aria-expanded="false">${esc(f.q)}<i></i></button><div class="a"><div><p>${esc(f.a)}</p></div></div></div>`).join('');
+    el.innerHTML = d.faqs.slice(0, n).map(f => `<div class="qa rv"><button aria-expanded="false">${esc(f.q)}<i></i></button><div class="a"><div><p>${esc(f.a)}</p>${mimg(f.image, f.q)}${mvid(f.videoFile, f.image)}</div></div></div>`).join('');
     $$('.qa button', el).forEach(b => b.addEventListener('click', () => { const q = b.parentElement, o = q.classList.toggle('open'); b.setAttribute('aria-expanded', o); }));
   },
   team(el, d) {
@@ -186,7 +194,7 @@ const R = {
     const o = $('#openRoles'); if (o) o.innerHTML = open.map(card).join('');
   },
   projects(el, d) {
-    el.innerHTML = d.projects.map((p, i) => `<article class="card rv ${i % 2 ? '' : ''}" style="--d:${(i % 2) * .1}s"><span class="pill">${esc(p.industry)}</span><h3 style="margin-top:16px">${esc(p.title)}</h3><p><b style="color:#fff">Challenge.</b> ${esc(p.challenge)}</p><p style="margin-top:10px"><b style="color:#fff">Solution.</b> ${esc(p.solution)}</p><ul>${(p.results || []).map(r => `<li style="background:rgba(52,211,153,.14);color:#6ee7b7">✓ ${esc(r)}</li>`).join('')}</ul><ul>${(p.tech || []).map(r => `<li>${esc(r)}</li>`).join('')}</ul></article>`).join('');
+    el.innerHTML = d.projects.map((p, i) => `<article class="card rv ${i % 2 ? '' : ''}" style="--d:${(i % 2) * .1}s">${cimg(p.image)}<span class="pill">${esc(p.industry)}</span><h3 style="margin-top:16px">${esc(p.title)}</h3><p><b style="color:var(--text)">Challenge.</b> ${esc(p.challenge)}</p><p style="margin-top:10px"><b style="color:var(--text)">Solution.</b> ${esc(p.solution)}</p><ul>${(p.results || []).map(r => `<li style="background:rgba(52,211,153,.14);color:#6ee7b7">✓ ${esc(r)}</li>`).join('')}</ul><ul>${(p.tech || []).map(r => `<li>${esc(r)}</li>`).join('')}</ul></article>`).join('');
   },
   careers(el, d) {
     el.innerHTML = d.careers.map((j, i) => `<a class="job rv" style="--d:${i * .06}s" href="contact.html?topic=${encodeURIComponent('Career: ' + j.title)}"><div><h3>${esc(j.title)}</h3><p class="muted" style="margin-top:6px">${esc(j.summary)}</p><div class="m"><span class="pill">${esc(j.type)}</span><span class="pill" style="background:rgba(168,85,247,.14);color:#d8b4fe">${esc(j.level)}</span><span class="pill" style="background:rgba(255,255,255,.08);color:#cfd3e4">${esc(j.location)}</span></div></div><span class="btn ghost">Apply ${ARROW}</span></a>`).join('');
@@ -235,6 +243,7 @@ function postPage(d) {
   $('#pTitle').textContent = p.title; $('#pCat').textContent = p.category;
   $('#pMeta').innerHTML = `${esc(p.author)} · ${fmtDate(p.date)} · ${+p.read || 5} min read`;
   $('#pCover').innerHTML = cover(p, 7);
+  const pv = $('#pVideo'); if (pv) pv.innerHTML = mvid(p.videoFile, p.image);
   host.innerHTML = clean(p.content);
   const rel = d.posts.filter(x => x.slug !== p.slug && (x.category === p.category || (x.tags || []).some(t => (p.tags || []).includes(t)))).slice(0, 3);
   const more = rel.length ? rel : d.posts.filter(x => x.slug !== p.slug).slice(0, 3);
@@ -384,7 +393,7 @@ function techModal(d) {
   const li = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
   const open = i => {
     const t = T[i]; if (!t) return; last = document.activeElement;
-    body.innerHTML = `<div class="tm-head" style="--bgc:${esc(t.color)}"><div class="mono">${esc(t.mono)}</div><div><span class="tm-group">${esc(t.group || 'Technology')}</span><h3 id="tmTitle">${esc(t.name)}</h3><p>${esc(t.desc || '')}</p></div></div>
+    body.innerHTML = `<div class="tm-head" style="--bgc:${esc(t.color)}">${photoUrl(t.image) ? `<div class="mono has-img"><img src="${esc(t.image)}" alt=""></div>` : `<div class="mono">${esc(t.mono)}</div>`}<div><span class="tm-group">${esc(t.group || 'Technology')}</span><h3 id="tmTitle">${esc(t.name)}</h3><p>${esc(t.desc || '')}</p></div></div>
     <div class="tm-main"><p class="tm-long">${esc(t.long || t.summary || t.desc)}</p>
     <div class="tm-cols"><div><h4>What we deliver</h4><ul class="ticks">${li(t.does)}</ul></div><div><h4>Typical use cases</h4><ul class="ticks warm">${li(t.usecases)}</ul></div></div>
     <div class="tm-assure"><div class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></div><div><b>We have the right skill set to deliver your ${esc(t.name)} project.</b><p>Senior engineers, proven patterns and guaranteed delivery. Hire us per day or for a fixed project, at rates below typical market prices.</p></div></div>

@@ -28,6 +28,8 @@ const SESSION_IDLE = 1800;               // 30 minutes of inactivity
 const SESSION_MAX = 28800;               // 8 hours absolute
 const CAPTCHA_TTL = 600;                 // a code is valid for 10 minutes
 const CAPTCHA_MIN_SOLVE = 2;             // seconds; faster than this is a bot
+const MAX_VIDEO = 52428800;               // 50 MB per uploaded video
+const VIDEO_CHUNK = 700000;              // largest chunk accepted per request
 const GUARD = "<?php http_response_code(403); exit; ?>\n";
 
 $root = __DIR__;
@@ -216,7 +218,8 @@ function clean_value($v, string $key = '', int $depth = 0) {
     $s = mb_substr($s, 0, 8000);
     if (in_array($key, ['c1', 'c2'], true)) return preg_match('/^#[0-9a-f]{3,8}$/i', $s) ? $s : '#6366f1';
     if ($key === 'color') return preg_match('/^[#a-zA-Z0-9(),.%\s\-]{1,200}$/', $s) && !preg_match('/url\s*\(|expression|javascript|;|\{|\}/i', $s) ? $s : 'linear-gradient(135deg,#22d3ee,#6366f1)';
-    if ($key === 'photo') return preg_match('#^uploads/team/[a-f0-9]{16,40}\.(jpg|png|webp)$#', $s) ? $s : '';
+    if ($key === 'photo' || $key === 'image') return preg_match('#^uploads/(team|media)/[a-f0-9]{16,40}\.(jpg|png|webp)$#', $s) ? $s : '';
+    if ($key === 'videoFile') return preg_match('#^uploads/media/[a-f0-9]{16,40}\.(mp4|webm)$#', $s) ? $s : '';
     if ($key === 'file' || $key === 'poster') return preg_match('#^[A-Za-z0-9_\-./]{1,200}$#', $s) && strpos($s, '..') === false && preg_match('/\.(mp4|webm|jpg|jpeg|png|webp)$/i', $s) ? $s : '';
     if ($key === 'link') return preg_match('#^(https?://[^\s"\'<>]+|[a-z0-9_\-./?=&\#%]+)$#i', $s) ? $s : '';
     if ($key === 'video' || $key === 'key') return preg_replace('/[^a-z0-9\-]/', '', strtolower($s));
@@ -226,30 +229,53 @@ function clean_value($v, string $key = '', int $depth = 0) {
     return $s;
 }
 
-/* ---------- image uploads (team photos): re-encoded server side, stored where code can never run ---------- */
-function uploads_dir(): string {
-    $dir = __DIR__ . '/uploads/team';
-    if (!is_dir($dir)) {
-        @mkdir($dir, 0755, true);
-        @file_put_contents(__DIR__ . '/uploads/.htaccess',
+/* ---------- media uploads: images are re-encoded server side, videos are validated; stored where code can never run ---------- */
+function ensure_uploads(string $sub): string {
+    $base = __DIR__ . '/uploads';
+    if (!is_dir($base)) @mkdir($base, 0755, true);
+    if (!is_file($base . '/.htaccess')) {
+        @file_put_contents($base . '/.htaccess',
             "Options -ExecCGI -Indexes\n<IfModule mod_php.c>\nphp_flag engine off\n</IfModule>\n<IfModule mod_php7.c>\nphp_flag engine off\n</IfModule>\n<IfModule mod_php8.c>\nphp_flag engine off\n</IfModule>\nRemoveHandler .php .phtml .phar .php5 .php7 .php8\nRemoveType .php .phtml .phar\n<FilesMatch \"(?i)\\.(php[0-9]?|phtml|phar|pl|py|cgi|sh|html?|js|svg)$\">\n<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n</FilesMatch>\n");
-        @file_put_contents(__DIR__ . '/uploads/index.html', '');
     }
+    if (!is_file($base . '/index.html')) @file_put_contents($base . '/index.html', '');
+    $dir = "$base/$sub"; if (!is_dir($dir)) @mkdir($dir, 0755, true);
     return $dir;
 }
-function photos_in_use(): array {
+function media_in_use(): array {
     global $root;
-    $used = [];
-    foreach ([read_json('content.json', [])['team'] ?? [], read_json_file($root . '/data/defaults.json')['team'] ?? []] as $team) {
-        foreach ($team as $m) if (!empty($m['photo'])) $used[basename((string)$m['photo'])] = true;
-    }
-    return $used;
+    $blob = str_replace('\\/', '/', json_encode(read_json('content.json', [])) . (string)@file_get_contents($root . '/data/defaults.json'));
+    preg_match_all('#uploads/(?:team|media)/[a-f0-9]{16,40}\.(?:jpg|png|webp|mp4|webm)#', $blob, $m);
+    return array_flip(array_map('basename', $m[0]));
 }
-function cleanup_photos(): void {                 // remove replaced/removed photos once they are an hour old
-    $used = photos_in_use();
-    foreach (glob(uploads_dir() . '/*.{jpg,png,webp}', GLOB_BRACE) ?: [] as $f) {
-        if (!isset($used[basename($f)]) && filemtime($f) < time() - 3600) @unlink($f);
-    }
+function cleanup_media(): void {                  // delete media that is no longer used anywhere, once it is 3 hours old
+    global $store;
+    $used = media_in_use(); $cut = time() - 10800;
+    foreach (['team', 'media'] as $sub) foreach (glob(ensure_uploads($sub) . '/*.*') ?: [] as $f) { if (!isset($used[basename($f)]) && filemtime($f) < $cut) @unlink($f); }
+    foreach (array_merge(glob($store . '/vid-*.part') ?: [], glob($store . '/vid-*.json.php') ?: []) as $f) { if (filemtime($f) < time() - 7200) @unlink($f); }
+}
+/** Resizes/crops an uploaded image for its purpose. Returns [gd resource, extension, subfolder]. */
+function render_image($im, string $kind): array {
+    $w = imagesx($im); $h = imagesy($im);
+    $crop = function (float $ratio, int $maxW) use ($im, $w, $h) {
+        if ($w / $h > $ratio) { $sh = $h; $sw = (int)round($h * $ratio); $sx = intdiv($w - $sw, 2); $sy = 0; } else { $sw = $w; $sh = (int)round($w / $ratio); $sx = 0; $sy = intdiv($h - $sh, 2); }
+        $dw = min($maxW, $sw); $dh = (int)round($dw / $ratio);
+        $o = imagecreatetruecolor($dw, $dh); imagefilledrectangle($o, 0, 0, $dw, $dh, imagecolorallocate($o, 255, 255, 255));
+        imagecopyresampled($o, $im, 0, 0, $sx, $sy, $dw, $dh, $sw, $sh); return $o;
+    };
+    $fit = function (int $max, bool $alpha) use ($im, $w, $h) {
+        $sc = min(1, $max / max($w, $h)); $dw = max(1, (int)round($w * $sc)); $dh = max(1, (int)round($h * $sc));
+        $o = imagecreatetruecolor($dw, $dh);
+        if ($alpha) { imagealphablending($o, false); imagesavealpha($o, true); imagefilledrectangle($o, 0, 0, $dw, $dh, imagecolorallocatealpha($o, 255, 255, 255, 127)); }
+        else imagefilledrectangle($o, 0, 0, $dw, $dh, imagecolorallocate($o, 255, 255, 255));
+        imagecopyresampled($o, $im, 0, 0, 0, 0, $dw, $dh, $w, $h); return $o;
+    };
+    return match ($kind) {
+        'team' => [$crop(1.0, 640), 'jpg', 'team'],
+        'avatar' => [$crop(1.0, 480), 'jpg', 'media'],
+        'cover' => [$crop(1.6, 1200), 'jpg', 'media'],
+        'logo' => [$fit(512, true), 'png', 'media'],
+        default => [$fit(1600, false), 'jpg', 'media'],
+    };
 }
 
 /* ---------- outgoing email: authenticated SMTP (preferred) or PHP mail() fallback ---------- */
@@ -493,26 +519,77 @@ switch ($a) {
     case 'upload': {
         if ($method !== 'POST') out(['error' => 'POST only'], 405);
         need_auth();
-        throttle('upload', 40, 3600);
-        $d = body(MAX_BODY_ADMIN); $data = (string)($d['data'] ?? '');
-        if (($d['kind'] ?? 'team') !== 'team') out(['error' => 'Unknown upload type'], 422);
+        throttle('upload', 150, 3600);
+        $d = body(MAX_BODY_ADMIN); $data = (string)($d['data'] ?? ''); $kind = (string)($d['kind'] ?? 'team');
+        if (!in_array($kind, ['team', 'avatar', 'cover', 'logo', 'inline'], true)) out(['error' => 'Unknown upload type'], 422);
         if (!preg_match('#^data:image/(jpeg|png|webp);base64,#', $data, $m)) out(['error' => 'Please choose a JPG, PNG or WebP image.'], 422);
         $bin = base64_decode(substr($data, strlen($m[0])), true);
         if ($bin === false || $bin === '') out(['error' => 'That image could not be read.'], 422);
-        if (strlen($bin) > 1_100_000) out(['error' => 'The image is too large after resizing. Try a smaller photo.'], 413);
+        if (strlen($bin) > 1_100_000) out(['error' => 'The image is too large after resizing. Try a smaller picture.'], 413);
         $info = @getimagesizefromstring($bin);
-        if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true) || $info[0] > 6000 || $info[1] > 6000 || $info[0] < 40 || $info[1] < 40) out(['error' => 'That does not look like a valid photo.'], 422);
+        if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true) || $info[0] > 6000 || $info[1] > 6000 || $info[0] < 16 || $info[1] < 16 || ($kind !== 'logo' && ($info[0] < 40 || $info[1] < 40))) out(['error' => 'That does not look like a valid image.'], 422);
         if (!function_exists('imagecreatefromstring') || !function_exists('imagejpeg')) out(['error' => 'Image processing is not available on this server.'], 500);
         $im = @imagecreatefromstring($bin);
         if (!$im) out(['error' => 'That image could not be processed.'], 422);
-        $w = imagesx($im); $h = imagesy($im); $s = min($w, $h);                    // centre-crop to a square, then re-encode (drops metadata and any hidden payload)
-        $out = imagecreatetruecolor(640, 640); imagefilledrectangle($out, 0, 0, 640, 640, imagecolorallocate($out, 255, 255, 255));
-        imagecopyresampled($out, $im, 0, 0, intdiv($w - $s, 2), intdiv($h - $s, 2), 640, 640, $s, $s);
-        $name = bin2hex(random_bytes(12)) . '.jpg'; $path = uploads_dir() . '/' . $name;
-        if (!@imagejpeg($out, $path, 86)) out(['error' => 'Could not save the photo. Check folder permissions.'], 500);
-        @chmod($path, 0644); imagedestroy($im); imagedestroy($out);
-        cleanup_photos(); audit('team photo uploaded');
-        out(['ok' => true, 'url' => 'uploads/team/' . $name]);
+        [$res, $ext, $sub] = render_image($im, $kind);                               // re-encoding drops metadata and any hidden payload
+        $name = bin2hex(random_bytes(12)) . '.' . $ext; $path = ensure_uploads($sub) . '/' . $name;
+        $ok = $ext === 'png' ? @imagepng($res, $path, 6) : @imagejpeg($res, $path, 86);
+        if (!$ok) out(['error' => 'Could not save the image. Check folder permissions.'], 500);
+        @chmod($path, 0644); imagedestroy($im); imagedestroy($res);
+        cleanup_media(); audit("image uploaded ($kind)");
+        out(['ok' => true, 'url' => "uploads/$sub/$name"]);
+    }
+
+    case 'upload_video_start': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        throttle('vstart', 40, 3600);
+        $d = body(); $size = (int)($d['size'] ?? 0);
+        if ($size < 2000) out(['error' => 'That file is too small to be a video.'], 422);
+        if ($size > MAX_VIDEO) out(['error' => 'Videos can be up to 50 MB. Compress it first, for example to 720p.'], 413);
+        cleanup_media();
+        $id = bin2hex(random_bytes(8));
+        if (@file_put_contents($store . "/vid-$id.part", '') === false) out(['error' => 'Could not prepare the upload. Check folder permissions.'], 500);
+        write_json("vid-$id.json", ['size' => $size, 'ts' => time()]);
+        out(['ok' => true, 'id' => $id, 'chunk' => 524288]);
+    }
+
+    case 'upload_video_chunk': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        throttle('vchunk', 3000, 3600);
+        $d = body(MAX_BODY_ADMIN); $id = (string)($d['id'] ?? '');
+        if (!preg_match('/^[a-f0-9]{16}$/', $id)) out(['error' => 'Bad upload id'], 422);
+        $meta = read_json("vid-$id.json", null); $part = $store . "/vid-$id.part";
+        if (!$meta || !is_file($part)) out(['error' => 'Upload not found. Please start again.'], 404);
+        $off = (int)($d['offset'] ?? -1); clearstatcache(true, $part);
+        if ($off !== filesize($part)) out(['error' => 'Upload out of sequence. Please start again.', 'expected' => filesize($part)], 409);
+        $bin = base64_decode((string)($d['data'] ?? ''), true);
+        if ($bin === false || $bin === '' || strlen($bin) > VIDEO_CHUNK) out(['error' => 'Bad chunk'], 422);
+        if ($off + strlen($bin) > $meta['size']) out(['error' => 'More data than announced'], 422);
+        if (@file_put_contents($part, $bin, FILE_APPEND | LOCK_EX) === false) out(['error' => 'Could not write the upload.'], 500);
+        out(['ok' => true, 'received' => $off + strlen($bin)]);
+    }
+
+    case 'upload_video_finish': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        $d = body(); $id = (string)($d['id'] ?? '');
+        if (!preg_match('/^[a-f0-9]{16}$/', $id)) out(['error' => 'Bad upload id'], 422);
+        $meta = read_json("vid-$id.json", null); $part = $store . "/vid-$id.part";
+        if (!$meta || !is_file($part)) out(['error' => 'Upload not found. Please start again.'], 404);
+        clearstatcache(true, $part);
+        $drop = function () use ($part, $id) { @unlink($part); @unlink(spath("vid-$id.json")); };
+        if (filesize($part) !== (int)$meta['size']) { $drop(); out(['error' => 'The upload was incomplete. Please try again.'], 422); }
+        $head = (string)file_get_contents($part, false, null, 0, 16);
+        if (substr($head, 4, 4) === 'ftyp') $ext = 'mp4';
+        elseif (substr($head, 0, 4) === "\x1A\x45\xDF\xA3") $ext = 'webm';
+        else { $drop(); out(['error' => 'That is not an MP4 or WebM video.'], 422); }
+        $name = bin2hex(random_bytes(12)) . '.' . $ext; $dest = ensure_uploads('media') . '/' . $name;
+        if (!@rename($part, $dest) && !(@copy($part, $dest) && @unlink($part))) { $drop(); out(['error' => 'Could not save the video. Check folder permissions.'], 500); }
+        @chmod($dest, 0644); @unlink(spath("vid-$id.json"));
+        audit('video uploaded');
+        out(['ok' => true, 'url' => 'uploads/media/' . $name, 'size' => (int)$meta['size']]);
     }
 
     case 'mail_get': {

@@ -235,7 +235,7 @@ ${cta('Get new articles in your inbox.', 'Use the newsletter box in the footer, 
 /* ---------------- POST ---------------- */
 add({ file: 'post.html', page: 'post', title: 'Article | Intellytiq Solutions', desc: 'Article from the Intellytiq Solutions blog.',
 body: `<section class="phero" style="padding-bottom:40px"><div class="wrap" style="max-width:860px"><div class="crumbs"><a href="blog.html">Blog</a> / <span id="pCat"></span></div><h1 id="pTitle" style="font-size:clamp(34px,5vw,64px)"></h1><p class="muted" id="pMeta" style="margin-top:20px"></p></div></section>
-<section style="padding-bottom:20px"><div class="wrap" style="max-width:980px"><div id="pCover" class="rv in" style="border-radius:32px;overflow:hidden;aspect-ratio:21/9"></div></div></section>
+<section style="padding-bottom:20px"><div class="wrap" style="max-width:980px"><div id="pCover" class="rv in" style="border-radius:32px;overflow:hidden;aspect-ratio:21/9"></div><div id="pVideo" style="margin-top:24px"></div></div></section>
 <section class="sec" style="padding-top:60px"><div class="wrap"><article class="article" id="article"></article>
   <div class="center" style="margin-top:40px"><a id="share" class="btn ghost" target="_blank" rel="noopener">Share on LinkedIn ${ARROW}</a></div></div></section>
 <section class="sec alt"><div class="wrap"><div class="tools"><h2>Keep reading</h2><a class="link" href="blog.html">All articles ${ARROW}</a></div><div class="posts" id="relPosts"></div></div></section>${cta()}`});

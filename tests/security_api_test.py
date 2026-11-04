@@ -44,7 +44,7 @@ c, j = call(anon, 'captcha')
 check('image captcha is served', c == 200 and j.get('image', '').startswith('data:image/png;base64,') and len(j['image']) > 1500)
 png = base64.b64decode(j['image'].split(',')[1]); check('captcha is a real PNG', png[:8] == b'\x89PNG\r\n\x1a\n')
 pass
-check('token holds only time, nonce and signature (no answer)', bool(re.fullmatch(r'\\d+\\|[a-f0-9]{16}\\|[a-f0-9]{64}', base64.urlsafe_b64decode(j['token'] + '==').decode())))
+check('token holds only time, nonce and signature (no answer)', bool(re.fullmatch(r'[0-9]+[|][a-f0-9]{16}[|][a-f0-9]{64}', base64.urlsafe_b64decode(j['token'] + '==').decode())))
 
 form = {'name': 'Test Visitor', 'email': 'visitor@example.com', 'company': 'ACME', 'topic': 'Fabric', 'message': 'Hello, we need a Fabric architect for a project.'}
 c, j = call(anon, 'contact', form); check('contact without CAPTCHA is rejected', c == 422 and j.get('captcha'), f'{c} {j}')

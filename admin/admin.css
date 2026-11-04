@@ -76,3 +76,10 @@ footer .cap-slot{margin-top:10px;max-width:340px}
 .imgbtns{display:grid;gap:10px;min-width:0;flex:1}
 .filebtn{cursor:pointer}
 .lbl{font-size:13px;color:var(--muted);font-weight:600;display:block;margin-bottom:8px}
+
+.imgprev.wide{width:200px;height:125px;border-radius:14px}
+.imgprev video{width:100%;height:100%;object-fit:cover;display:block}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.bar{height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;width:min(300px,100%)}
+.bar[hidden]{display:none}
+.bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .2s}

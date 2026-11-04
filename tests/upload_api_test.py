@@ -83,7 +83,7 @@ check('external URL removed', t[2]['photo'] == '')
 check('javascript: URL removed', t[3]['photo'] == '')
 
 # ---- old unreferenced photos are tidied up, referenced ones kept ----
-orphan = os.path.join(ROOT, j2['url']); os.utime(orphan, (time.time() - 7200, time.time() - 7200))
+orphan = os.path.join(ROOT, j2["url"]); os.utime(orphan, (time.time() - 40000, time.time() - 40000))
 fresh = os.path.join(ROOT, j3['url']) if os.path.exists(os.path.join(ROOT, j3.get('url', 'x'))) else None
 c, j4 = call(adm, 'upload', {'kind': 'team', 'data': data_url(jpeg(300, 300), 'image/jpeg')}, headers=H)
 check('an old unused photo is removed', not os.path.exists(orphan))
