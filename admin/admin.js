@@ -159,14 +159,23 @@ async function viewMessages() {
   } catch (e) { $('#panel').innerHTML = `<div class="note err">${esc(e.message)}</div>`; }
 }
 
-function viewSecurity() {
-  setHead('Security', 'Change the admin password.');
-  $('#panel').innerHTML = `<form class="card formcard" id="pw" style="max-width:520px"><label>Current password<input type="password" name="current" autocomplete="current-password" required></label><label>New password <span class="hint">At least 8 characters</span><input type="password" name="new" autocomplete="new-password" minlength="8" required></label><label>Repeat new password<input type="password" name="again" autocomplete="new-password" required></label><div class="note" id="pn"></div><button class="btn primary" style="justify-self:start">Update password</button></form>`;
+async function viewSecurity() {
+  setHead('Security', 'Change the admin password and review recent sign-in activity.');
+  $('#panel').innerHTML = `${defaultPw ? '<div class="warn" style="max-width:640px">The default password is still active, so the rest of the admin panel is locked. Choose a new password below to continue.</div>' : ''}
+  <form class="card formcard" id="pw" style="max-width:640px"><h3>Change password</h3><label>Current password<input type="password" name="current" autocomplete="current-password" required></label><label>New password <span class="hint">At least 12 characters, with letters and numbers. A short phrase of random words works well.</span><input type="password" name="new" autocomplete="new-password" minlength="12" required></label><label>Repeat new password<input type="password" name="again" autocomplete="new-password" required></label><div class="note" id="pn"></div><button class="btn primary" style="justify-self:start">Update password</button></form>
+  <div class="card formcard" style="max-width:640px;margin-top:20px"><h3>Recent activity</h3><div id="audit" class="muted">Loading…</div></div>`;
   $('#pw').onsubmit = async e => {
     e.preventDefault(); const f = e.target.elements, n = $('#pn');
     if (f.new.value !== f.again.value) { n.className = 'note err'; n.textContent = 'New passwords do not match'; return; }
-    try { await api('passwd', {current: f.current.value, new: f.new.value}); n.className = 'note ok'; n.textContent = 'Password updated.'; defaultPw = false; $('#warn').hidden = true; e.target.reset(); } catch (er) { n.className = 'note err'; n.textContent = er.message; }
+    try { const r = await api('passwd', {current: f.current.value, new: f.new.value}); if (r.csrf) csrf = r.csrf; n.className = 'note ok'; n.textContent = 'Password updated. The rest of the admin panel is now available.'; defaultPw = false; $('#warn').hidden = true; e.target.reset(); setTimeout(() => go('dashboard'), 1200); }
+    catch (er) { n.className = 'note err'; n.textContent = er.message; }
   };
+  if (!defaultPw) {
+    try {
+      const {events} = await api('audit');
+      $('#audit').innerHTML = events.length ? `<div class="list">${events.slice(0, 25).map(x => `<div class="row" style="padding:10px 14px"><div style="min-width:0"><b style="font-size:14px">${esc(x.event)}</b><small>${esc(x.ip)} · ${esc(new Date(x.t).toLocaleString())}</small></div></div>`).join('')}</div>` : 'No activity yet.';
+    } catch (e) { $('#audit').textContent = 'Could not load activity.'; }
+  } else $('#audit').textContent = 'Available after you change the default password.';
 }
 
 async function viewDash() {
@@ -182,7 +191,9 @@ async function persist(key, value) { await api('save', {key, value}); DB[key] = 
 async function refresh() { DB = await (await fetch(`${API}?a=content`, {cache: 'no-store'})).json(); }
 function renderTabs() { $('#tabs').innerHTML = TABS.map(([k, l]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${l}${SCHEMA[k] ? `<i>${(DB[k] || []).length}</i>` : ''}</a>`).join(''); }
 function go(k) {
-  cur = TABS.some(t => t[0] === k) ? k : 'dashboard'; renderTabs();
+  cur = TABS.some(t => t[0] === k) ? k : 'dashboard';
+  if (defaultPw && cur !== 'security') { cur = 'security'; if (location.hash !== '#security') history.replaceState(null, '', '#security'); }
+  renderTabs();
   if (SCHEMA[cur]) viewList(cur); else ({dashboard: viewDash, settings: viewSettings, email: viewEmail, messages: viewMessages, security: viewSecurity})[cur]();
   scrollTo(0, 0);
 }
@@ -192,13 +203,15 @@ async function enter(info) {
   csrf = info.csrf; defaultPw = info.defaultPassword; await refresh();
   $('#login').hidden = true; $('#app').hidden = false; $('#warn').hidden = !defaultPw; go(location.hash.slice(1) || 'dashboard');
 }
+const loginCap = window.IQCaptcha.mount($('#loginCap'), '../api.php');
 $('#loginForm').onsubmit = async e => {
   e.preventDefault(); const f = e.target.elements, n = $('#loginNote');
-  try { const r = await api('login', {user: f.user.value.trim(), pass: f.pass.value}); n.className = 'note'; await enter(r); } catch (er) { n.className = 'note err'; n.textContent = er.message; }
+  try { const r = await api('login', {user: f.user.value.trim(), pass: f.pass.value, ...loginCap.values()}); n.className = 'note'; f.pass.value = ''; await enter(r); }
+  catch (er) { n.className = 'note err'; n.textContent = er.message; loginCap.reset(); }
 };
 $('#logout').onclick = async () => { try { await api('logout', {}); } catch (e) {} location.reload(); };
 (async () => {
   try { const me = await api('me'); if (me.auth) return enter(me); } catch (e) {}
-  $('#login').hidden = false;
+  $('#login').hidden = false; loginCap.load();
 })();
 })();

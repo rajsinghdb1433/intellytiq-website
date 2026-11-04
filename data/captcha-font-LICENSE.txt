@@ -1,0 +1,3 @@
+data/captcha.ttf is DejaVu Serif Bold (https://dejavu-fonts.github.io/), derived from Bitstream Vera.
+It is distributed under the free DejaVu / Bitstream Vera licence, which permits redistribution.
+It is used only to draw the CAPTCHA image on the server.

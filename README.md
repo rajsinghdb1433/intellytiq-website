@@ -37,3 +37,13 @@ Enquiries are always saved under **Admin → Messages**. To also receive them by
 3. Click **Send test email**. Each message in the inbox then shows whether its notification was delivered.
 
 The password is stored only in `storage/config.json` on the server (git-ignored, web-denied).
+
+## Security
+- **CAPTCHA** on every form that takes input: contact, newsletter and admin sign-in. Codes are single-use, signed, expire after 10 minutes, and answers faster than 2 seconds are rejected. A text-question alternative is offered for accessibility.
+- **Admin**: sign-in is rate limited, every attempt is logged (Admin → Security), sessions expire after 30 minutes idle, and the initial `admin`/`admin` password only allows changing the password. New passwords must be 12+ characters with letters and numbers.
+- **Requests**: POSTs must be same-origin JSON with a CSRF token on admin actions; request sizes are capped.
+- **Content**: everything an admin saves is validated, and article HTML goes through an allowlist sanitiser on the server and again in the browser.
+- **Server**: strict Content-Security-Policy, HSTS, clickjacking and MIME-sniffing protection (see `.htaccess`). Stored data is in `storage/*.php` files that exit immediately if requested over HTTP.
+- **Tests**: `python3 tests/security_api_test.py` (needs `php -S 127.0.0.1:8080`) and `node tests/security_ui_test.js` (needs Playwright).
+
+Still recommended: enable "Force HTTPS" in hPanel, keep PHP updated, and use a long unique admin password. Two-factor sign-in is a worthwhile next step.

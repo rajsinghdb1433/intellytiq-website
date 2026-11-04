@@ -20,7 +20,7 @@ const shell = ({ file, page, title, desc, body, extra = '' }) => `<!doctype html
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Intellytiq Solutions">
 <link rel="canonical" href="${SITE}/${file === 'index.html' ? '' : file}">
 <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg">
-<script>try{var t=localStorage.getItem("iq-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script src="assets/js/theme.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/extra.css">
 ${extra}
@@ -33,6 +33,7 @@ ${extra}
 ${body}
 </main>
 <div id="foot"></div>
+<script src="assets/js/captcha.js" defer></script>
 <script src="assets/js/app.js" defer></script>
 </body>
 </html>
@@ -243,6 +244,7 @@ body: `${phero('Let’s <span class="grad">talk</span>.', 'Tell us what you’re
     <div class="field"><select id="f4" name="topic"><option>General enquiry</option><option>Microsoft Fabric</option><option>Databricks Lakehouse</option><option>Snowflake Data Cloud</option><option>Data Engineering</option><option>Data Warehousing &amp; Modelling</option><option>MS SQL Server &amp; Azure SQL</option><option>Azure Cloud Services</option><option>Remote IT Talent &amp; Staff Augmentation</option></select><label for="f4">Topic</label></div></div>
     <div class="field"><textarea id="f5" name="message" placeholder=" " required></textarea><label for="f5">How can we help?</label></div>
     <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div data-captcha hidden></div>
     <div class="note" role="status"></div>
     <button class="btn primary" type="submit" style="justify-content:center">Send message ${ARROW}</button></form></div></section>`});
 

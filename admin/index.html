@@ -16,6 +16,7 @@
     <h2 style="font-size:26px;text-align:center">Sign in</h2>
     <label>User ID<input name="user" autocomplete="username" required autofocus></label>
     <label>Password<input name="pass" type="password" autocomplete="current-password" required></label>
+    <div data-captcha id="loginCap"></div>
     <div class="note" id="loginNote" role="alert"></div>
     <button class="btn primary" style="justify-content:center">Sign in</button>
     <a href="../index.html" class="muted" style="text-align:center;font-size:14px">← Back to website</a>
@@ -35,6 +36,7 @@
   </main>
 </div>
 <div id="toast" class="toast" role="status"></div>
+<script src="../assets/js/captcha.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

@@ -53,3 +53,19 @@ select option{color:#000}
   .grid2{grid-template-columns:1fr}
 }
 .tb{display:flex;gap:6px;flex-wrap:wrap}.tb button{padding:6px 12px;border-radius:8px;border:1px solid var(--line);font-size:13px;color:#fff}.tb button:hover{background:rgba(255,255,255,.1)}
+
+/* ---- CAPTCHA ---- */
+.captcha{display:grid;gap:10px;padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(var(--ov),.04);min-width:0}
+.captcha[hidden],[data-captcha][hidden]{display:none}
+.cap-row{display:flex;gap:10px;align-items:center}
+.cap-img{min-height:70px;min-width:min(200px,100%);flex:1;max-width:220px;border-radius:12px;overflow:hidden;display:grid;place-items:center;background:#f3f5ff;color:#39426b;font-weight:700;font-size:14px;padding:0 10px;text-align:center}
+.cap-img img{display:block;max-width:100%;height:auto}
+.cap-q{font-size:22px;color:#1f2a6b}
+.cap-r{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);font-size:20px;display:grid;place-items:center;flex:none;color:var(--text);transition:.3s}
+.cap-r:hover{background:rgba(var(--ov),.1);transform:rotate(180deg)}
+.captcha .cap-in{width:100%;padding:13px 16px;border-radius:12px;background:rgba(var(--ov),.06);border:1px solid var(--line);color:var(--text);font:inherit;letter-spacing:.22em;text-transform:uppercase;outline:0}
+.captcha .cap-in::placeholder{letter-spacing:0;text-transform:none}
+.captcha .cap-in:focus{border-color:var(--c2);box-shadow:0 0 0 4px rgba(99,102,241,.2)}
+.cap-t{background:none;color:var(--muted);font-size:13px;text-align:left;text-decoration:underline;padding:2px 0}
+.cap-t:hover{color:var(--text)}
+footer .cap-slot{margin-top:10px;max-width:340px}

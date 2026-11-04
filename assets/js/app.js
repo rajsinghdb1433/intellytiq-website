@@ -40,12 +40,27 @@ const load = async () => {
 
 /* ---------- sanitiser for admin-authored HTML ---------- */
 const clean = html => {
-  const doc = new DOMParser().parseFromString(`<div>${html || ''}</div>`, 'text/html');
-  doc.querySelectorAll('script,iframe,object,embed,style,link,meta,form').forEach(n => n.remove());
-  doc.querySelectorAll('*').forEach(n => [...n.attributes].forEach(a => {
-    if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) n.removeAttribute(a.name);
-  }));
-  return doc.body.firstChild.innerHTML;
+  // Allowlist sanitiser: unknown tags are unwrapped, dangerous ones removed, attributes and URLs restricted.
+  const ALLOW = new Set(['P', 'H2', 'H3', 'H4', 'STRONG', 'B', 'EM', 'I', 'CODE', 'PRE', 'BLOCKQUOTE', 'UL', 'OL', 'LI', 'A', 'BR', 'HR', 'IMG']);
+  const DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'FORM', 'INPUT', 'BUTTON', 'LINK', 'META', 'SVG', 'MATH', 'BASE', 'TEXTAREA', 'SELECT', 'NOSCRIPT', 'TEMPLATE', 'FRAME', 'FRAMESET']);
+  const okUrl = (u, img) => { u = String(u).replace(/[\u0000- \u007f]+/g, ''); if (!u) return null; const m = u.match(/^([a-z][a-z0-9+.\-]*):/i); if (m) { const sc = m[1].toLowerCase(); if (sc === 'http' || sc === 'https' || (!img && sc === 'mailto')) return u; if (img && sc === 'data' && /^data:image\/(png|jpe?g|gif|webp);base64,[a-z0-9+\/=]+$/i.test(u)) return u; return null; } return /^(\/|\.\/|\.\.\/|#|[a-z0-9_\-])/i.test(u) ? u : null; };
+  const doc = new DOMParser().parseFromString(`<div id="r">${html || ''}</div>`, 'text/html');
+  const walk = node => [...node.childNodes].forEach(c => {
+    if (c.nodeType === 8) return c.remove();
+    if (c.nodeType !== 1) return;
+    if (DROP.has(c.tagName)) return c.remove();
+    walk(c);
+    if (!ALLOW.has(c.tagName)) { c.replaceWith(...c.childNodes); return; }
+    [...c.attributes].forEach(a => {
+      const n = a.name.toLowerCase(), ok = (c.tagName === 'A' && (n === 'href' || n === 'title')) || (c.tagName === 'IMG' && ['src', 'alt', 'title', 'width', 'height'].includes(n));
+      if (!ok) return c.removeAttribute(a.name);
+      if (n === 'href' || n === 'src') { const u = okUrl(a.value, n === 'src'); if (u === null) c.removeAttribute(a.name); else c.setAttribute(n, u); }
+    });
+    if (c.tagName === 'A' && c.hasAttribute('href')) { c.setAttribute('rel', 'noopener noreferrer nofollow'); if (/^https?:/i.test(c.getAttribute('href'))) c.setAttribute('target', '_blank'); }
+    if (c.tagName === 'IMG') c.setAttribute('loading', 'lazy');
+  });
+  walk(doc.getElementById('r'));
+  return doc.getElementById('r').innerHTML;
 };
 
 /* ---------- cover art (generated, no stock photos needed) ---------- */
@@ -101,7 +116,7 @@ function buildFooter(s = {}) {
     <div><h5>Company</h5><ul><li><a href="about.html">About us</a></li><li><a href="team.html">Our team</a></li><li><a href="careers.html">Careers</a></li><li><a href="case-studies.html">Case studies</a></li><li><a href="contact.html">Contact</a></li></ul></div>
     <div><h5>Services</h5><ul id="footServices"></ul></div>
     <div><h5>Resources</h5><ul><li><a href="blog.html">Blog</a></li><li><a href="technologies.html">Technologies</a></li><li><a href="industries.html">Industries</a></li><li><a href="engagement.html">Engagement models</a></li><li><a href="faq.html">FAQ</a></li></ul>
-      <h5 style="margin-top:26px">Newsletter</h5><form class="subscribe" data-subscribe><input type="email" name="email" placeholder="you@company.com" aria-label="Email" required><button>Join</button></form><p class="muted" id="subMsg" style="font-size:13px;margin-top:8px"></p></div></div>
+      <h5 style="margin-top:26px">Newsletter</h5><form class="sub-form" data-subscribe novalidate><div class="subscribe"><input type="email" name="email" placeholder="you@company.com" aria-label="Email" autocomplete="email" required><button>Join</button></div><div class="cap-slot" data-captcha hidden></div></form><p class="muted" id="subMsg" role="status" style="font-size:13px;margin-top:8px"></p></div></div>
     <div class="fbot"><span>© ${new Date().getFullYear()} ${esc(s.company || 'Intellytiq Solutions')}. All rights reserved.</span><span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="sitemap.xml">Sitemap</a> · <a href="admin/">Admin</a></span></div>
   </div></footer>
   <button class="totop" aria-label="Back to top"><svg viewBox="0 0 24 24"><path d="m6 14 6-6 6 6"/></svg></button><div class="progress" id="prog"></div><div class="glow" id="glow"></div>`;
@@ -224,24 +239,41 @@ function postPage(d) {
 
 /* ---------- forms ---------- */
 function forms() {
+  const arm = form => {                       // mount a CAPTCHA and load it the first time the visitor interacts
+    const slot = $('[data-captcha]', form); if (!slot) return null;
+    const cap = window.IQCaptcha.mount(slot, 'api.php'); let started = false;
+    form.addEventListener('focusin', () => { if (started) return; started = true; slot.hidden = false; cap.load(); });
+    return {cap, slot, start() { if (!started) { started = true; slot.hidden = false; cap.load(); } }};
+  };
   const c = $('form[data-contact]');
   if (c) {
+    const g = arm(c);
     if (qs.get('topic')) { const t = c.elements.topic; if (t) { if (![...t.options].some(o => o.value === qs.get('topic'))) t.add(new Option(qs.get('topic'), qs.get('topic'))); t.value = qs.get('topic'); } }
     c.addEventListener('submit', async e => {
       e.preventDefault(); const note = $('.note', c), btn = $('button[type=submit]', c);
+      if (!c.checkValidity()) { c.reportValidity(); return; }
       const body = Object.fromEntries(new FormData(c)); btn.disabled = true; btn.firstChild.textContent = 'Sending… ';
       try {
-        const r = await fetch('api.php?a=contact', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-        const j = await r.json(); if (!r.ok) throw new Error(j.error || 'Something went wrong');
-        note.className = 'note ok'; note.textContent = 'Thank you! Your message has been received. We will reply within one business day.'; c.reset();
-      } catch (err) { note.className = 'note err'; note.textContent = err.message; }
+        const r = await fetch('api.php?a=contact', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+        const j = await r.json(); if (!r.ok) { const er = new Error(j.error || 'Something went wrong'); er.captcha = j.captcha; throw er; }
+        note.className = 'note ok'; note.textContent = 'Thank you! Your message has been received. We will reply within one business day.'; c.reset(); g && g.cap.reset();
+      } catch (err) { note.className = 'note err'; note.textContent = err.message; g && g.cap.reset(); }
       btn.disabled = false; btn.firstChild.textContent = 'Send message ';
     });
   }
-  $$('form[data-subscribe]').forEach(f => f.addEventListener('submit', async e => {
-    e.preventDefault(); const m = $('#subMsg');
-    try { const r = await fetch('api.php?a=subscribe', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email: f.email.value})}); const j = await r.json(); if (!r.ok) throw new Error(j.error); m.textContent = 'You’re in. Thank you!'; f.reset(); } catch (err) { m.textContent = err.message || 'Please try again.'; }
-  }));
+  $$('form[data-subscribe]').forEach(f => {
+    const g = arm(f);
+    f.addEventListener('submit', async e => {
+      e.preventDefault(); const m = $('#subMsg');
+      if (g) g.start();
+      if (!f.checkValidity()) { f.reportValidity(); return; }
+      try {
+        const r = await fetch('api.php?a=subscribe', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(f)))});
+        const j = await r.json(); if (!r.ok) throw new Error(j.error || 'Please try again.');
+        m.textContent = 'You’re in. Thank you!'; f.reset(); if (g) { g.slot.hidden = true; g.cap.reset(); }
+      } catch (err) { m.textContent = err.message || 'Please try again.'; if (g) g.cap.reset(); }
+    });
+  });
 }
 
 /* ---------- motion ---------- */
