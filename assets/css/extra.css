@@ -1,0 +1,24 @@
+/* Diagram nodes (delivery story) and small additions */
+.dn rect{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.16);stroke-width:1.5;transition:.6s}
+.dn text{fill:#9aa0b4;font:600 14px var(--font);transition:.6s}
+.dn.hot rect{fill:rgba(99,102,241,.2);stroke:#22d3ee;filter:drop-shadow(0 0 14px rgba(34,211,238,.45))}
+.dn.hot text{fill:#fff}
+.steps .step{border-color:rgba(0,0,0,.1)}
+.light .step p{color:var(--lightmuted)}
+.light .step span{color:#6366f1}
+.light .eyebrow{color:#6366f1}
+.light h2,.light h3{color:var(--lighttext)}
+.light .card h3{color:var(--lighttext)}
+.light .diagram{border-color:rgba(0,0,0,.08)}
+.light .tile h4{color:var(--lighttext)}
+.light .stat>span{color:var(--lightmuted)}
+.hero h1 .grad{white-space:normal}
+.card .link{margin-top:auto}
+a.card{display:flex;flex-direction:column}
+@media (max-width:560px){.hero h1{font-size:clamp(38px,11.5vw,56px)}}
+.cta-band .lead{margin-inline:auto}
+.story>*,.contact>*,.featured>*{min-width:0}
+.term{max-width:100%}
+.term pre{font-size:13px}
+main{overflow-x:clip}
+@media (max-width:860px){.rv.left,.rv.right{transform:translateY(46px)}.rv.left.in,.rv.right.in{transform:none}}

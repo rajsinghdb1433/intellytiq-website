@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api.php
+Sitemap: https://intellytiqsolutions.com/sitemap.xml
