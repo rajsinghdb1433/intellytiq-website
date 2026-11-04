@@ -27,7 +27,7 @@ const ICONS = {
 };
 const icon = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k] || ICONS.layers}</svg>`;
 const ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
-const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".55" stop-color="#6366f1"/><stop offset="1" stop-color="#d946ef"/></linearGradient></defs><path d="M24 3 42 13.500v21L24 45 6 34.500v-21L24 3Z" fill="none" stroke="url(#lg)" stroke-width="2.600"/><path d="M24 12v24M15 17.500l9 5 9-5M15 30.500l9-5 9 5" stroke="url(#lg)" stroke-width="2.600" stroke-linecap="round" fill="none"/><circle cx="24" cy="24" r="3.500" fill="url(#lg)"/></svg>`;
+const LOGO = `<img src="assets/img/logo-mark.svg" alt="" width="44" height="44">`;
 
 /* ---------- data ---------- */
 let DATA = null;
@@ -136,7 +136,7 @@ const R = {
   },
   'tech-tiles'(el, d) {
     const n = +el.dataset.limit || d.technologies.length;
-    el.innerHTML = d.technologies.slice(0, n).map((t, i) => `<div class="tile rv" data-tilt style="--d:${(i % 4) * .06}s;--glow:${esc((t.color.match(/#[0-9a-f]{6}/i) || ['#6366f1'])[0])}88"><div class="mono" style="--bgc:${esc(t.color)}">${esc(t.mono)}</div><h4>${esc(t.name)}</h4><p>${esc(t.desc)}</p></div>`).join('');
+    el.innerHTML = d.technologies.slice(0, n).map((t, i) => `<button type="button" class="tile rv" data-tech="${i}" data-tilt style="--d:${(i % 4) * .06}s;--glow:${esc((t.color.match(/#[0-9a-f]{6}/i) || ['#6366f1'])[0])}88" aria-label="${esc(t.name)}: view details"><div class="mono" style="--bgc:${esc(t.color)}">${esc(t.mono)}</div><h4>${esc(t.name)}</h4><p>${esc(t.summary || t.desc)}</p><span class="more">Learn more ${ARROW}</span></button>`).join('');
   },
   stats(el, d) {
     el.innerHTML = (d.settings.stats || []).map(s => `<div class="stat rv"><b><span data-count="${+s.value}">0</span>${esc(s.suffix || '')}</b><span>${esc(s.label)}</span></div>`).join('');
@@ -312,6 +312,34 @@ function network() {
   });
 }
 
+/* ---------- technology popup ---------- */
+function techModal(d) {
+  const T = d.technologies; if (!T.length) return;
+  const ov = document.createElement('div'); ov.className = 'tmodal'; ov.hidden = true;
+  ov.innerHTML = '<div class="tm-box" role="dialog" aria-modal="true" aria-labelledby="tmTitle" tabindex="-1"><button type="button" class="tm-x" aria-label="Close">&times;</button><div class="tm-body"></div></div>';
+  document.body.appendChild(ov);
+  const box = $('.tm-box', ov), body = $('.tm-body', ov); let last = null;
+  const li = a => (a || []).map(x => `<li>${esc(x)}</li>`).join('');
+  const open = i => {
+    const t = T[i]; if (!t) return; last = document.activeElement;
+    body.innerHTML = `<div class="tm-head" style="--bgc:${esc(t.color)}"><div class="mono">${esc(t.mono)}</div><div><span class="tm-group">${esc(t.group || 'Technology')}</span><h3 id="tmTitle">${esc(t.name)}</h3><p>${esc(t.desc || '')}</p></div></div>
+    <div class="tm-main"><p class="tm-long">${esc(t.long || t.summary || t.desc)}</p>
+    <div class="tm-cols"><div><h4>What we deliver</h4><ul class="ticks">${li(t.does)}</ul></div><div><h4>Typical use cases</h4><ul class="ticks warm">${li(t.usecases)}</ul></div></div>
+    <div class="tm-assure"><div class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></div><div><b>We have the right skill set to deliver your ${esc(t.name)} project.</b><p>Senior engineers, proven patterns and guaranteed delivery. Hire us per day or for a fixed project, at rates below typical market prices.</p></div></div>
+    <div class="tm-cta"><a class="btn primary" href="contact.html?topic=${encodeURIComponent(t.name)}">Discuss your ${esc(t.name)} project ${ARROW}</a><button type="button" class="btn ghost" data-close>Close</button></div></div>`;
+    ov.hidden = false; document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { ov.classList.add('open'); box.scrollTop = 0; $('.tm-x', ov).focus(); });
+  };
+  const close = () => { ov.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => { ov.hidden = true; }, 280); if (last && last.focus) last.focus(); };
+  document.addEventListener('click', e => { const b = e.target.closest('[data-tech]'); if (b) { e.preventDefault(); open(+b.dataset.tech); } });
+  ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('.tm-x') || e.target.closest('[data-close]')) close(); });
+  document.addEventListener('keydown', e => {
+    if (ov.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'Tab') { const f = $$('a[href],button', box).filter(x => x.offsetParent !== null); if (!f.length) return; const a = f[0], z = f[f.length - 1]; if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); } }
+  });
+}
+
 /* ---------- boot ---------- */
 buildNav();
 const done = () => $('.loader')?.classList.add('done');
@@ -321,6 +349,6 @@ load().then(d => {
   const ns = $('#navServices'); if (ns) ns.innerHTML = d.services.map(s => `<a href="service.html?s=${esc(s.slug)}"><b>${esc(s.title)}</b><span>${esc(s.tags?.slice(0, 2).join(' · ') || '')}</span></a>`).join('');
   const fs = $('#footServices'); if (fs) fs.innerHTML = d.services.slice(0, 6).map(s => `<li><a href="service.html?s=${esc(s.slug)}">${esc(s.title)}</a></li>`).join('');
   $$('[data-render]').forEach(el => R[el.dataset.render]?.(el, d));
-  blogPage(d); postPage(d); forms(); motion(); network(); typer(); done();
+  techModal(d); blogPage(d); postPage(d); forms(); motion(); network(); typer(); done();
 });
 })();

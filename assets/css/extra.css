@@ -54,3 +54,46 @@ main{overflow-x:clip}
 .cta-band h2{color:#fff}
 .menu a.m{color:var(--soft)}
 @media (max-width:860px){.theme-btn{margin:8px 0 0;width:100%;border-radius:14px}}
+
+/* ---- assurances ---- */
+.assure{list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px}
+.assure li{position:relative;padding-left:28px;font-weight:600;font-size:15px;color:var(--soft)}
+.assure li::before{content:"";position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--grad)}
+.assure li::after{content:"";position:absolute;left:6px;top:6px;width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.assure-bar{display:flex;gap:20px 30px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:26px 30px;border-radius:24px;background:linear-gradient(120deg,rgba(79,70,229,.1),rgba(14,165,198,.1));border:1px solid var(--line)}
+.assure-bar b{font-size:19px}
+.assure-bar p{color:var(--muted);margin-top:4px;max-width:62ch}
+
+/* ---- technology tiles as buttons + popup ---- */
+button.tile{text-align:left;color:inherit;font:inherit;width:100%;cursor:pointer;display:flex;flex-direction:column}
+button.tile .more{margin-top:auto;padding-top:14px;display:inline-flex;gap:6px;align-items:center;font-size:13.5px;font-weight:700;color:var(--c1)}
+button.tile .more svg{width:15px;height:15px;transition:transform .3s}
+button.tile:hover .more svg{transform:translateX(4px)}
+.tmodal{position:fixed;inset:0;z-index:500;display:grid;place-items:center;padding:20px;background:rgba(9,12,38,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;transition:opacity .28s}
+.tmodal[hidden]{display:none}
+.tmodal.open{opacity:1}
+.tm-box{position:relative;width:min(780px,100%);max-height:calc(100vh - 40px);overflow:auto;border-radius:30px;background:var(--solid);color:var(--text);box-shadow:0 60px 140px -40px rgba(30,20,120,.7);transform:translateY(26px) scale(.96);transition:transform .38s var(--ease);outline:0}
+.tmodal.open .tm-box{transform:none}
+.tm-x{position:absolute;right:16px;top:14px;z-index:2;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:28px;line-height:1;display:grid;place-items:center;backdrop-filter:blur(8px);transition:.25s}
+.tm-x:hover{background:rgba(255,255,255,.35);transform:rotate(90deg)}
+.tm-head{display:flex;gap:22px;align-items:center;padding:34px 70px 30px 34px;color:#fff;background:linear-gradient(135deg,rgba(0,0,0,.18),rgba(0,0,0,0)),var(--bgc);position:relative;overflow:hidden}
+.tm-head::after{content:"";position:absolute;right:-60px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.16);filter:blur(10px)}
+.tm-head .mono{flex:none;width:76px;height:76px;border-radius:22px;display:grid;place-items:center;font-weight:800;font-size:26px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);box-shadow:0 14px 30px -12px rgba(0,0,0,.4)}
+.tm-head h3{font-size:clamp(26px,4vw,36px);color:#fff;margin:4px 0}
+.tm-head p{opacity:.92}
+.tm-group{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.2)}
+.tm-main{padding:28px 34px 34px;display:grid;gap:24px}
+.tm-long{font-size:17px;line-height:1.65;color:var(--soft)}
+.tm-cols{display:grid;grid-template-columns:1.2fr 1fr;gap:26px}
+.tm-cols h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.tm-cols .ticks{margin-top:0;gap:10px}
+.tm-cols .ticks li{font-size:15px}
+.ticks.warm li::before{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.tm-assure{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;border-radius:20px;background:linear-gradient(120deg,rgba(79,70,229,.12),rgba(14,165,198,.12));border:1px solid var(--line)}
+.tm-assure b{display:block;font-size:17px;margin-bottom:4px}
+.tm-assure p{color:var(--muted);font-size:15px}
+.tm-ic{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--grad);color:#fff}
+.tm-ic svg{width:24px;height:24px}
+.tm-cta{display:flex;gap:12px;flex-wrap:wrap}
+@media (max-width:640px){.tm-head{padding:28px 60px 24px 22px;gap:16px}.tm-head .mono{width:60px;height:60px;font-size:21px}.tm-main{padding:22px 20px 26px}.tm-cols{grid-template-columns:1fr}.tm-box{border-radius:24px}}
+@media (prefers-reduced-motion:reduce){.tm-box,.tmodal{transition:none}}

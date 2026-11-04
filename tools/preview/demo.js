@@ -24,7 +24,7 @@
         if (body.hp) return json({ok: true});
         const name = clean(body.name, 120), email = clean(body.email, 160), msg = clean(body.message, 5000);
         if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || msg.length < 10) return json({error: 'Please provide your name, a valid email and a message (10+ characters).'}, 422);
-        (st.messages = st.messages || []).unshift({id: Math.random().toString(16).slice(2, 12), at: new Date().toISOString(), name, email, company: clean(body.company, 160), topic: clean(body.topic, 120), message: msg}); save(); return json({ok: true});
+        (st.messages = st.messages || []).unshift({mail: {ok: false, via: 'none', error: 'Demo mode: no email is sent', to: ''}, id: Math.random().toString(16).slice(2, 12), at: new Date().toISOString(), name, email, company: clean(body.company, 160), topic: clean(body.topic, 120), message: msg}); save(); return json({ok: true});
       }
       case 'subscribe': { const e = clean(body.email, 160); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return json({error: 'Enter a valid email address.'}, 422); st.subs = st.subs || []; if (!st.subs.some(s => s.email === e)) st.subs.push({email: e, at: new Date().toISOString()}); save(); return json({ok: true}); }
       case 'login': if (body.user === 'admin' && body.pass === (st.pw || 'admin')) { setAuth(true); return json({ok: true, csrf: 'demo', defaultPassword: !st.pw}); } return json({error: 'Invalid user id or password'}, 401);
@@ -34,6 +34,9 @@
       case 'reset': { const x = need(); if (x) return x; if (st.content) delete st.content[body.key]; save(); return json({ok: true}); }
       case 'messages': { const x = need(); if (x) return x; return json({messages: st.messages || [], subscribers: st.subs || []}); }
       case 'delete_message': { const x = need(); if (x) return x; st.messages = (st.messages || []).filter(mm => mm.id !== body.id); save(); return json({ok: true}); }
+      case 'mail_get': { const x = need(); if (x) return x; const c = st.mail || {}; return json({host: c.host || 'smtp.hostinger.com', port: c.port || 465, secure: c.secure || 'ssl', user: c.user || '', from: c.from || '', to: c.to || 'support@intellytiqsolutions.com', has_pass: !!c.pass, configured: !!(c.host && c.user && c.pass)}); }
+      case 'mail_save': { const x = need(); if (x) return x; const o = st.mail || {}; st.mail = {host: body.host, port: body.port, secure: body.secure, user: body.user, from: body.from, to: body.to, pass: body.pass || o.pass || ''}; save(); return json({ok: true}); }
+      case 'mail_test': { const x = need(); if (x) return x; return json({ok: false, via: 'none', error: 'Demo mode cannot send real email. Email works on the live PHP server (Admin > Email there).', to: (st.mail || {}).to || ''}); }
       case 'passwd': { const x = need(); if (x) return x; if (body.current !== (st.pw || 'admin')) return json({error: 'Current password is incorrect'}, 403); if (String(body.new || '').length < 8) return json({error: 'New password must be at least 8 characters'}, 422); st.pw = body.new; save(); return json({ok: true}); }
     }
     return json({error: 'Not found'}, 404);

@@ -29,3 +29,11 @@ After the first deploy make sure the site root is writable by PHP so `storage/` 
 ## Notes
 - Team "Open Role" cards, stats, testimonials and case studies are **sample content**: replace them in the admin panel.
 - Privacy and Terms pages are templates and should be reviewed by counsel.
+
+## Email notifications (contact form)
+Enquiries are always saved under **Admin → Messages**. To also receive them by email:
+1. Sign in at `/admin/` → **Email**.
+2. Enter the recipient, a real mailbox on your domain as the sender (for Hostinger: `smtp.hostinger.com`, port 465, SSL), and that mailbox's password.
+3. Click **Send test email**. Each message in the inbox then shows whether its notification was delivered.
+
+The password is stored only in `storage/config.json` on the server (git-ignored, web-denied).

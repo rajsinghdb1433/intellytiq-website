@@ -57,6 +57,67 @@ function throttle(string $bucket, int $max, int $window): void {
 }
 function clean(string $s, int $max = 4000): string { return mb_substr(trim(strip_tags($s)), 0, $max); }
 
+/* ---------- outgoing email: authenticated SMTP (preferred) or PHP mail() fallback ---------- */
+function mail_clean(string $s): string { return trim(preg_replace('/[\r\n]+/', ' ', $s)); }
+function smtp_send(array $c, string $to, string $subject, string $body, string $replyTo, ?string &$err): bool {
+    $host = (string)($c['host'] ?? ''); $port = (int)($c['port'] ?? 465); $sec = (string)($c['secure'] ?? 'ssl');
+    $user = (string)($c['user'] ?? ''); $pass = (string)($c['pass'] ?? '');
+    $from = filter_var($c['from'] ?? '', FILTER_VALIDATE_EMAIL) ? $c['from'] : $user;
+    $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true]]);
+    $fp = @stream_socket_client(($sec === 'ssl' ? 'ssl://' : 'tcp://') . "$host:$port", $en, $es, 12, STREAM_CLIENT_CONNECT, $ctx);
+    if (!$fp) { $err = "Could not connect to $host:$port ($es)"; return false; }
+    stream_set_timeout($fp, 12);
+    $read = function () use ($fp): string { $o = ''; while (($l = fgets($fp, 1024)) !== false) { $o .= $l; if (strlen($l) < 4 || $l[3] === ' ') break; } return $o; };
+    $step = function (string $cmd, array $ok) use ($fp, $read, &$err) {
+        if ($cmd !== '') fwrite($fp, $cmd . "\r\n");
+        $r = $read(); $code = (int)substr($r, 0, 3);
+        if (!in_array($code, $ok, true)) { $err = trim($r) !== '' ? trim($r) : 'No response from the mail server'; return false; }
+        return true;
+    };
+    $name = preg_replace('/[^a-z0-9.-]/i', '', $_SERVER['HTTP_HOST'] ?? 'localhost') ?: 'localhost';
+    try {
+        if (!$step('', [220]) || !$step("EHLO $name", [250])) return false;
+        if ($sec === 'tls') {
+            if (!$step('STARTTLS', [220])) return false;
+            if (!@stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) { $err = 'STARTTLS negotiation failed'; return false; }
+            if (!$step("EHLO $name", [250])) return false;
+        }
+        if ($user !== '') {
+            if (!$step('AUTH LOGIN', [334]) || !$step(base64_encode($user), [334]) || !$step(base64_encode($pass), [235])) { $err = 'Login rejected: ' . $err; return false; }
+        }
+        if (!$step("MAIL FROM:<$from>", [250]) || !$step("RCPT TO:<$to>", [250, 251]) || !$step('DATA', [354])) return false;
+        $domain = substr(strrchr($from, '@') ?: '@localhost', 1);
+        $hdr = "From: \"Intellytiq Website\" <$from>\r\nTo: <$to>\r\n" . ($replyTo !== '' ? "Reply-To: <" . mail_clean($replyTo) . ">\r\n" : '')
+             . 'Subject: =?UTF-8?B?' . base64_encode(mail_clean($subject)) . "?=\r\nDate: " . date('r') . "\r\nMessage-ID: <" . bin2hex(random_bytes(8)) . "@$domain>\r\n"
+             . "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n";
+        $msg = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $body)); $msg = str_replace("\n", "\r\n", $msg);
+        fwrite($fp, $hdr . "\r\n" . $msg . "\r\n.\r\n");
+        if (!$step('', [250])) return false;
+        @fwrite($fp, "QUIT\r\n");
+        return true;
+    } finally { @fclose($fp); }
+}
+function main_domain(): string {
+    $h = strtolower(preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost')); $p = explode('.', $h);
+    return count($p) > 2 ? implode('.', array_slice($p, -2)) : $h;
+}
+/** Returns ['ok'=>bool,'via'=>'smtp'|'mail','error'=>string|null,'to'=>string] */
+function send_notification(string $subject, string $body, string $replyTo): array {
+    global $store, $root;
+    $cfg = read_json($store . '/config.json', [])['smtp'] ?? [];
+    $settings = read_json($store . '/content.json', [])['settings'] ?? read_json($root . '/data/defaults.json', [])['settings'] ?? [];
+    $to = filter_var($cfg['to'] ?? '', FILTER_VALIDATE_EMAIL) ? $cfg['to'] : ($settings['email'] ?? '');
+    if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return ['ok' => false, 'via' => 'none', 'error' => 'No valid notification email address is set (Admin > Email)', 'to' => (string)$to];
+    if (!empty($cfg['host']) && !empty($cfg['user'])) {
+        $err = null; $ok = smtp_send($cfg, $to, $subject, $body, $replyTo, $err);
+        return ['ok' => $ok, 'via' => 'smtp', 'error' => $ok ? null : $err, 'to' => $to];
+    }
+    $from = filter_var($settings['email'] ?? '', FILTER_VALIDATE_EMAIL) ? $settings['email'] : ('no-reply@' . main_domain());
+    $headers = "From: Intellytiq Website <$from>\r\nReply-To: " . mail_clean($replyTo) . "\r\nContent-Type: text/plain; charset=UTF-8";
+    $ok = @mail($to, '=?UTF-8?B?' . base64_encode(mail_clean($subject)) . '?=', $body, $headers, '-f' . $from);
+    return ['ok' => $ok, 'via' => 'mail', 'error' => $ok ? 'Handed to the server mail queue. Delivery is not confirmed; set up SMTP under Admin > Email for reliable delivery.' : 'The server rejected the message', 'to' => $to];
+}
+
 $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => $https, 'httponly' => true, 'samesite' => 'Strict']);
 session_name('iqadmin');
@@ -92,14 +153,9 @@ switch ($a) {
         if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($msg) < 10) out(['error' => 'Please provide your name, a valid email and a message (10+ characters).'], 422);
         $row = ['id' => bin2hex(random_bytes(5)), 'at' => gmdate('c'), 'name' => $name, 'email' => $email,
                 'company' => clean((string)($d['company'] ?? ''), 160), 'topic' => clean((string)($d['topic'] ?? ''), 120), 'message' => $msg, 'ip' => ip()];
+        $mail = send_notification('[Website] New enquiry from ' . $name, "Name: $name\nEmail: $email\nCompany: {$row['company']}\nTopic: {$row['topic']}\n\n$msg\n\n-- Sent from the Intellytiq website contact form", $email);
+        $row['mail'] = ['ok' => $mail['ok'], 'via' => $mail['via'], 'error' => $mail['error'], 'to' => $mail['to']];
         $all = read_json($store . '/messages.json', []); array_unshift($all, $row); write_json($store . '/messages.json', array_slice($all, 0, 1000));
-        $settings = (read_json($store . '/content.json', [])['settings'] ?? read_json($root . '/data/defaults.json', [])['settings'] ?? []);
-        $to = $settings['email'] ?? '';
-        if (filter_var($to, FILTER_VALIDATE_EMAIL)) {
-            $subject = '[Website] New enquiry from ' . preg_replace('/[\r\n]+/', ' ', $name);
-            $headers = "From: no-reply@" . preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\nReply-To: " . preg_replace('/[\r\n]+/', '', $email) . "\r\nContent-Type: text/plain; charset=utf-8";
-            @mail($to, $subject, "Name: $name\nEmail: $email\nCompany: {$row['company']}\nTopic: {$row['topic']}\n\n$msg", $headers);
-        }
         out(['ok' => true]);
     }
 
@@ -183,6 +239,40 @@ switch ($a) {
         if (strlen($new) < 8) out(['error' => 'New password must be at least 8 characters'], 422);
         $cfg['hash'] = password_hash($new, PASSWORD_DEFAULT);
         write_json($store . '/config.json', $cfg); out(['ok' => true]);
+    }
+
+    case 'mail_get': {
+        need_auth();
+        $c = read_json($store . '/config.json', [])['smtp'] ?? [];
+        $settings = read_json($store . '/content.json', [])['settings'] ?? read_json($root . '/data/defaults.json', [])['settings'] ?? [];
+        out(['host' => $c['host'] ?? 'smtp.hostinger.com', 'port' => $c['port'] ?? 465, 'secure' => $c['secure'] ?? 'ssl', 'user' => $c['user'] ?? '', 'from' => $c['from'] ?? '',
+             'to' => $c['to'] ?? ($settings['email'] ?? ''), 'has_pass' => !empty($c['pass']), 'configured' => !empty($c['host']) && !empty($c['user']) && !empty($c['pass'])]);
+    }
+
+    case 'mail_save': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        $d = body(); $cfg = read_json($store . '/config.json', []); $old = $cfg['smtp'] ?? [];
+        $host = clean((string)($d['host'] ?? ''), 200); $port = (int)($d['port'] ?? 465); $sec = (string)($d['secure'] ?? 'ssl');
+        $user = clean((string)($d['user'] ?? ''), 200); $from = clean((string)($d['from'] ?? ''), 200); $to = clean((string)($d['to'] ?? ''), 200);
+        if (!in_array($sec, ['ssl', 'tls', 'none'], true)) out(['error' => 'Choose SSL, TLS or None'], 422);
+        if ($port < 1 || $port > 65535) out(['error' => 'Enter a valid port'], 422);
+        if ($host !== '' && !preg_match('/^[a-z0-9.-]+$/i', $host)) out(['error' => 'Enter a valid SMTP host'], 422);
+        foreach (['Username' => $user, 'From address' => $from, 'Notification address' => $to] as $label => $v) {
+            if ($v !== '' && !filter_var($v, FILTER_VALIDATE_EMAIL)) out(['error' => "$label must be an email address"], 422);
+        }
+        $pass = (string)($d['pass'] ?? '');
+        $cfg['smtp'] = ['host' => $host, 'port' => $port, 'secure' => $sec, 'user' => $user, 'from' => $from, 'to' => $to, 'pass' => $pass !== '' ? $pass : ($old['pass'] ?? '')];
+        if (!write_json($store . '/config.json', $cfg)) out(['error' => 'Could not write to storage. Check folder permissions.'], 500);
+        out(['ok' => true]);
+    }
+
+    case 'mail_test': {
+        if ($method !== 'POST') out(['error' => 'POST only'], 405);
+        need_auth();
+        throttle('mailtest', 8, 900);
+        $r = send_notification('Test email from the Intellytiq website', "This is a test message.\n\nIf you can read this, enquiries from the contact form will reach this mailbox.\nSent: " . gmdate('c'), '');
+        out($r);
     }
 
     default: out(['error' => 'Not found'], 404);

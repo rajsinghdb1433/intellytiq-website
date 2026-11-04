@@ -27,7 +27,7 @@ const SCHEMA = {
   team: {title: 'Team', sub: 'People shown on the Team page. Tick “Open role” to show a hiring card.', label: i => i.open ? `${i.role} (open role)` : i.name, meta: i => i.role, blank: () => ({name: '', role: '', bio: '', skills: [], lead: false, open: false, c1: '#22d3ee', c2: '#6366f1'}),
     fields: [T('name', 'Name'), T('role', 'Role'), {k: 'lead', label: 'Large leadership card', type: 'bool'}, {k: 'open', label: 'Open role (hiring card)', type: 'bool'}, T('c1', 'Avatar colour 1', {hint: 'e.g. #22d3ee'}), T('c2', 'Avatar colour 2'), {k: 'skills', label: 'Skills', type: 'tags'}, {k: 'bio', label: 'Bio', type: 'textarea', full: true}]},
   technologies: {title: 'Technologies', sub: 'Tiles on the Technologies page and the marquee.', label: i => i.name, meta: i => i.group, blank: () => ({name: '', mono: '', color: 'linear-gradient(135deg,#22d3ee,#6366f1)', desc: '', group: 'Platform'}),
-    fields: [T('name', 'Name'), T('mono', 'Short mark (2–3 letters)'), T('group', 'Group'), T('desc', 'One-line description'), T('color', 'CSS gradient', {full: true})]},
+    fields: [T('name', 'Name'), T('mono', 'Short mark (2–3 letters)'), T('group', 'Group'), T('desc', 'Short tagline'), T('color', 'CSS gradient', {full: true}), {k: 'summary', label: 'Card description (1–2 sentences)', type: 'textarea', full: true}, {k: 'long', label: 'Popup description', type: 'textarea', full: true}, {k: 'does', label: 'What we deliver (one per line)', type: 'lines', full: true}, {k: 'usecases', label: 'Typical use cases (one per line)', type: 'lines', full: true}]},
   projects: {title: 'Case studies', sub: 'Engagement stories. Use only approved client information.', label: i => i.title, meta: i => i.industry, blank: () => ({title: '', industry: '', challenge: '', solution: '', results: [], tech: []}),
     fields: [T('title', 'Title', {full: true}), T('industry', 'Industry'), {k: 'tech', label: 'Technologies', type: 'tags'}, {k: 'challenge', label: 'Challenge', type: 'textarea', full: true}, {k: 'solution', label: 'Solution', type: 'textarea', full: true}, {k: 'results', label: 'Results (one per line)', type: 'lines', full: true}]},
   careers: {title: 'Careers', sub: 'Open positions on the Careers page.', label: i => i.title, meta: i => i.type, blank: () => ({title: '', type: 'Contract · Remote', level: 'Senior', location: 'Worldwide', summary: ''}),
@@ -40,7 +40,7 @@ const SCHEMA = {
   values: {title: 'Company values', sub: '', label: i => i.title, meta: () => '', blank: () => ({title: '', text: ''}), fields: [T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}]},
   timeline: {title: 'Timeline', sub: 'Our story on the About page.', label: i => i.title, meta: i => i.year, blank: () => ({year: '', title: '', text: ''}), fields: [T('year', 'Label / year'), T('title', 'Title'), {k: 'text', label: 'Description', type: 'textarea', full: true}]}
 };
-const TABS = [['dashboard', 'Dashboard'], ['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team'], ['technologies', 'Technologies'], ['projects', 'Case studies'], ['careers', 'Careers'], ['testimonials', 'Testimonials'], ['faqs', 'FAQs'], ['industries', 'Industries'], ['process', 'Process'], ['values', 'Values'], ['timeline', 'Timeline'], ['settings', 'Site settings'], ['messages', 'Messages'], ['security', 'Security']];
+const TABS = [['dashboard', 'Dashboard'], ['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team'], ['technologies', 'Technologies'], ['projects', 'Case studies'], ['careers', 'Careers'], ['testimonials', 'Testimonials'], ['faqs', 'FAQs'], ['industries', 'Industries'], ['process', 'Process'], ['values', 'Values'], ['timeline', 'Timeline'], ['settings', 'Site settings'], ['email', 'Email'], ['messages', 'Messages'], ['security', 'Security']];
 
 /* ---------- field rendering ---------- */
 function fieldHTML(f, v) {
@@ -122,12 +122,38 @@ function viewSettings() {
   };
 }
 
+
+async function viewEmail() {
+  setHead('Email notifications', 'Choose where contact-form enquiries are emailed, and the mailbox the website sends them from.');
+  $('#panel').innerHTML = '<p class="muted">Loading…</p>';
+  let c; try { c = await api('mail_get'); } catch (e) { $('#panel').innerHTML = `<div class="note err">${esc(e.message)}</div>`; return; }
+  const f = (k, l, extra = '', hint = '') => `<label>${l}<input name="${k}" value="${esc(c[k])}" ${extra}>${hint ? `<span class="hint">${hint}</span>` : ''}</label>`;
+  $('#panel').innerHTML = `<div class="warn" style="max-width:880px;${c.configured ? 'background:rgba(52,211,153,.12);color:#6ee7b7' : ''}">${c.configured ? '✓ Authenticated email is configured. Use “Send test email” to confirm.' : '⚠ Not configured yet. Until it is, enquiries are saved under Messages, but emails may not be delivered.'}</div>
+  <form class="card formcard" id="mf"><div class="grid2">
+    ${f('to', 'Send enquiries to', 'type="email"', 'Any mailbox you read, e.g. support@yourdomain.com')}
+    ${f('user', 'Sending mailbox (username)', 'type="email" autocomplete="off"', 'A real mailbox on your domain, e.g. support@yourdomain.com')}
+    <label>Mailbox password<input name="pass" type="password" autocomplete="new-password" placeholder="${c.has_pass ? '•••••••• (saved. Leave blank to keep)' : 'Password of that mailbox'}"><span class="hint">Stored only on the server, never shown again.</span></label>
+    ${f('from', 'From address (optional)', 'type="email"', 'Leave blank to use the sending mailbox')}
+    ${f('host', 'SMTP server', '', 'Hostinger: smtp.hostinger.com')}
+    <label>Port and security<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input name="port" type="number" value="${esc(c.port)}"><select name="secure"><option value="ssl" ${c.secure === 'ssl' ? 'selected' : ''}>SSL (port 465)</option><option value="tls" ${c.secure === 'tls' ? 'selected' : ''}>STARTTLS (port 587)</option><option value="none" ${c.secure === 'none' ? 'selected' : ''}>None (testing only)</option></select></div></label>
+  </div><div class="note" id="mn"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary">Save</button><button type="button" class="btn ghost" id="mt">Send test email</button></div></form>`;
+  const note = (cls, t) => { const n = $('#mn'); n.className = 'note ' + cls; n.textContent = t; };
+  const val = () => Object.fromEntries(new FormData($('#mf')));
+  $('#mf').onsubmit = async e => { e.preventDefault(); try { await api('mail_save', val()); toast('Email settings saved'); viewEmail(); } catch (er) { note('err', er.message); } };
+  $('#mt').onclick = async () => {
+    try { await api('mail_save', val()); note('ok', 'Sending test email…'); const r = await api('mail_test', {});
+      r.ok && r.via === 'smtp' ? note('ok', `Test email sent to ${r.to}. Check that mailbox (and its spam folder).`) : note('err', `Not delivered: ${r.error || 'unknown error'}`); }
+    catch (er) { note('err', er.message); }
+  };
+}
+
 async function viewMessages() {
   setHead('Messages', 'Enquiries from the contact form and newsletter sign-ups.');
   $('#panel').innerHTML = '<p class="muted">Loading…</p>';
   try {
     const {messages, subscribers} = await api('messages');
-    $('#panel').innerHTML = `<h3 style="margin-bottom:14px">Enquiries (${messages.length})</h3><div class="list">${messages.map(m => `<div class="msg"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>${esc(m.name)} <span class="muted" style="font-weight:400">· ${esc(m.company || 'no company')}</span></b><small class="muted">${esc(new Date(m.at).toLocaleString())}</small></div><a class="link" href="mailto:${esc(m.email)}">${esc(m.email)}</a><span class="pill" style="justify-self:start">${esc(m.topic || 'General')}</span><p>${esc(m.message)}</p><div><button class="btn danger sm" data-md="${esc(m.id)}">Delete</button></div></div>`).join('') || '<p class="muted">No messages yet.</p>'}</div>
+    $('#panel').innerHTML = `<h3 style="margin-bottom:14px">Enquiries (${messages.length})</h3><div class="list">${messages.map(m => `<div class="msg"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>${esc(m.name)} <span class="muted" style="font-weight:400">· ${esc(m.company || 'no company')}</span></b><small class="muted">${esc(new Date(m.at).toLocaleString())}</small></div><a class="link" href="mailto:${esc(m.email)}">${esc(m.email)}</a><span class="pill" style="justify-self:start">${esc(m.topic || 'General')}</span><p>${esc(m.message)}</p>${m.mail ? (m.mail.ok && m.mail.via === 'smtp' ? `<small style="color:#6ee7b7">✓ Email notification sent to ${esc(m.mail.to)}</small>` : `<small style="color:#fcd34d">⚠ Email notification ${m.mail.ok ? 'handed to the server, delivery not confirmed' : 'NOT sent'}: ${esc(m.mail.error || '')} <a href="#email" style="text-decoration:underline">Fix email settings</a></small>`) : ''}<div><button class="btn danger sm" data-md="${esc(m.id)}">Delete</button></div></div>`).join('') || '<p class="muted">No messages yet.</p>'}</div>
     <h3 style="margin:36px 0 14px">Newsletter subscribers (${subscribers.length})</h3><div class="list">${subscribers.map(s => `<div class="row"><b>${esc(s.email)}</b><small>${esc(new Date(s.at).toLocaleDateString())}</small></div>`).join('') || '<p class="muted">No subscribers yet.</p>'}</div>`;
     $$('[data-md]').forEach(b => b.onclick = async () => { if (!confirm('Delete this message?')) return; await api('delete_message', {id: b.dataset.md}); viewMessages(); });
   } catch (e) { $('#panel').innerHTML = `<div class="note err">${esc(e.message)}</div>`; }
@@ -143,10 +169,11 @@ function viewSecurity() {
   };
 }
 
-function viewDash() {
+async function viewDash() {
   setHead('Dashboard', 'Everything you edit here appears on the public website immediately.');
+  let mailWarn = ''; try { const mc = await api('mail_get'); if (!mc.configured) mailWarn = '<div class="warn" style="margin-bottom:22px">⚠ Email notifications are not set up, so enquiries may not reach your inbox. <a href="#email">Set up email</a></div>'; } catch (e) {}
   const c = k => (DB[k] || []).length;
-  $('#panel').innerHTML = `<div class="dash">${[['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team entries'], ['projects', 'Case studies'], ['careers', 'Open roles'], ['technologies', 'Technologies']].map(([k, l]) => `<a class="card" href="#${k}"><b class="grad">${c(k)}</b><span class="muted">${l}</span></a>`).join('')}</div>
+  $('#panel').innerHTML = mailWarn + `<div class="dash">${[['posts', 'Blog posts'], ['services', 'Services'], ['team', 'Team entries'], ['projects', 'Case studies'], ['careers', 'Open roles'], ['technologies', 'Technologies']].map(([k, l]) => `<a class="card" href="#${k}"><b class="grad">${c(k)}</b><span class="muted">${l}</span></a>`).join('')}</div>
   <div class="card formcard"><h3>Quick tips</h3><p class="muted">• Add a blog post under <b>Blog posts → Add new</b>. Use the toolbar to insert headings and quotes.<br>• Edit contact email and social links under <b>Site settings</b>.<br>• Use <b>Restore defaults</b> on any section to undo your changes.<br>• Contact-form enquiries arrive under <b>Messages</b> and are emailed to your contact address.</p></div>`;
 }
 
@@ -156,7 +183,7 @@ async function refresh() { DB = await (await fetch(`${API}?a=content`, {cache: '
 function renderTabs() { $('#tabs').innerHTML = TABS.map(([k, l]) => `<a href="#${k}" class="${k === cur ? 'on' : ''}">${l}${SCHEMA[k] ? `<i>${(DB[k] || []).length}</i>` : ''}</a>`).join(''); }
 function go(k) {
   cur = TABS.some(t => t[0] === k) ? k : 'dashboard'; renderTabs();
-  if (SCHEMA[cur]) viewList(cur); else ({dashboard: viewDash, settings: viewSettings, messages: viewMessages, security: viewSecurity})[cur]();
+  if (SCHEMA[cur]) viewList(cur); else ({dashboard: viewDash, settings: viewSettings, email: viewEmail, messages: viewMessages, security: viewSecurity})[cur]();
   scrollTo(0, 0);
 }
 addEventListener('hashchange', () => $('#app').hidden || go(location.hash.slice(1)));

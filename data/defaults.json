@@ -1,124 +1,1099 @@
 {
-"settings":{
-  "company":"Intellytiq Solutions",
-  "tagline":"Data engineering & cloud talent, delivered remotely worldwide.",
-  "email":"info@intellytiqsolutions.com",
-  "phone":"",
-  "address":"Remote-first · Serving clients across the Americas, EMEA & APAC",
-  "hours":"Mon–Fri · 24×5 follow-the-sun coverage",
-  "linkedin":"","github":"https://github.com/rajsinghdb1433","twitter":"",
-  "stats":[
-    {"value":8,"suffix":"+","label":"Core technology platforms"},
-    {"value":24,"suffix":"×5","label":"Follow-the-sun delivery"},
-    {"value":99,"suffix":"%","label":"Target pipeline reliability"},
-    {"value":100,"suffix":"%","label":"Remote-first, worldwide"}
+ "settings": {
+  "company": "Intellytiq Solutions",
+  "tagline": "Data engineering & cloud talent, delivered remotely worldwide.",
+  "email": "support@intellytiqsolutions.com",
+  "phone": "",
+  "address": "Remote-first · Serving clients across the Americas, EMEA & APAC",
+  "hours": "Mon–Fri · 24×5 follow-the-sun coverage",
+  "linkedin": "",
+  "github": "https://github.com/rajsinghdb1433",
+  "twitter": "",
+  "stats": [
+   {
+    "value": 8,
+    "suffix": "+",
+    "label": "Core technology platforms"
+   },
+   {
+    "value": 24,
+    "suffix": "×5",
+    "label": "Follow-the-sun delivery"
+   },
+   {
+    "value": 99,
+    "suffix": "%",
+    "label": "Target pipeline reliability"
+   },
+   {
+    "value": 100,
+    "suffix": "%",
+    "label": "Remote-first, worldwide"
+   }
   ]
-},
-"services":[
- {"slug":"microsoft-fabric","icon":"layers","title":"Microsoft Fabric","summary":"End-to-end analytics on one unified SaaS platform: OneLake, Lakehouse, Warehouse, Data Factory, Real-Time Intelligence and Power BI.","body":"We design and implement Microsoft Fabric estates that unify data engineering, warehousing, real-time analytics and BI on OneLake. From capacity sizing and workspace governance to medallion Lakehouses, Direct Lake semantic models and CI/CD with deployment pipelines, we help you move from fragmented tools to a single, governed analytics fabric.","features":["OneLake & Lakehouse architecture","Fabric Data Factory pipelines & Dataflows Gen2","Direct Lake semantic models","Real-Time Intelligence & Eventstreams","Capacity planning & cost governance","Migration from Synapse / Power BI Premium"],"tags":["OneLake","Lakehouse","Direct Lake","Power BI"]},
- {"slug":"databricks","icon":"bolt","title":"Databricks Lakehouse","summary":"Scalable Spark, Delta Lake and Unity Catalog platforms for batch, streaming and machine learning workloads.","body":"Our engineers build production-grade Databricks platforms: Delta Lake medallion pipelines, Delta Live Tables, Auto Loader ingestion, Unity Catalog governance and MLflow-powered ML lifecycles. We tune cluster policies, optimise Spark jobs and implement cost controls so performance scales while spend stays predictable.","features":["Delta Lake & Delta Live Tables","Unity Catalog governance","Structured Streaming & Auto Loader","Spark performance tuning","MLflow & feature stores","Databricks Asset Bundles CI/CD"],"tags":["Spark","Delta Lake","Unity Catalog","MLflow"]},
- {"slug":"snowflake","icon":"snow","title":"Snowflake Data Cloud","summary":"Elastic cloud data warehousing with secure data sharing, Snowpark and consumption-based cost optimisation.","body":"We architect Snowflake accounts for performance, security and cost: role-based access, virtual warehouse strategy, Snowpipe and Streams/Tasks ingestion, dynamic tables, data sharing and Snowpark development. Our FinOps reviews routinely uncover double-digit savings in compute and storage.","features":["Account & RBAC design","Snowpipe, Streams & Tasks","Dynamic tables & Snowpark","Secure data sharing & marketplace","Query & warehouse optimisation","Cost monitoring (FinOps)"],"tags":["Snowpipe","Snowpark","Dynamic Tables","FinOps"]},
- {"slug":"data-engineering","icon":"flow","title":"Data Engineering","summary":"Reliable batch and streaming pipelines, ELT frameworks, orchestration and data quality, built to run unattended.","body":"We build resilient pipelines with Python, SQL, Spark and modern orchestration (Azure Data Factory, Airflow, dbt). Every pipeline ships with observability, automated data-quality tests, lineage and runbooks so your team trusts the data and sleeps through the night.","features":["Batch & streaming ingestion","dbt / ELT frameworks","Orchestration (ADF, Airflow)","Data quality & observability","CDC & event-driven design","Metadata-driven pipelines"],"tags":["Python","dbt","Airflow","Kafka"]},
- {"slug":"data-warehousing","icon":"db","title":"Data Warehousing & Modelling","summary":"Dimensional models, Data Vault and lakehouse warehouses that make analytics fast, consistent and auditable.","body":"From Kimball star schemas to Data Vault 2.0, we design warehouse models that match how the business thinks. We modernise legacy EDWs, tune MPP and columnar engines and establish semantic layers so every dashboard tells the same story.","features":["Kimball & Data Vault modelling","Legacy EDW modernisation","Semantic layer design","Slowly changing dimensions & history","Performance & partition strategy","Data catalogue & documentation"],"tags":["Kimball","Data Vault","SCD","Semantic layer"]},
- {"slug":"ms-sql-server","icon":"server","title":"MS SQL Server & Azure SQL","summary":"Performance tuning, high availability, migrations and DBA-as-a-service for SQL Server, Azure SQL and Managed Instance.","body":"Our SQL specialists handle query and index tuning, Always On availability groups, backup and DR strategy, security hardening and zero-downtime migrations to Azure SQL Database or Managed Instance. We also provide proactive 24×5 DBA support.","features":["Performance tuning & indexing","Always On & disaster recovery","Azure SQL / Managed Instance migration","T-SQL development & refactoring","Security & compliance hardening","Managed DBA support"],"tags":["T-SQL","Always On","Azure SQL","DBA"]},
- {"slug":"azure-cloud","icon":"cloud","title":"Azure Cloud Services","summary":"Landing zones, data platform infrastructure, networking, identity, DevOps and FinOps on Microsoft Azure.","body":"We deliver secure Azure foundations: landing zones, private networking, Entra ID, Key Vault, Infrastructure-as-Code with Bicep and Terraform, and DevOps pipelines. Our cloud engineers specialise in data-centric Azure services including ADLS Gen2, Synapse, Data Factory, Event Hubs and Purview.","features":["Landing zones & governance","IaC with Bicep / Terraform","ADLS Gen2, Event Hubs, Purview","Private networking & Entra ID","Azure DevOps & GitHub Actions","Cloud cost optimisation"],"tags":["Bicep","Terraform","ADLS Gen2","Purview"]},
- {"slug":"bi-analytics","icon":"chart","title":"BI, Analytics & AI","summary":"Power BI, semantic models, self-service analytics and applied AI that turns data into decisions.","body":"We turn curated data into insight with enterprise Power BI, DAX-optimised models, row-level security and embedded analytics. We also help teams adopt AI responsibly with RAG over enterprise data, Copilot readiness and ML-driven forecasting.","features":["Enterprise Power BI & DAX","Row-level security & governance","Embedded analytics","Forecasting & ML","RAG & Copilot readiness","Self-service enablement"],"tags":["Power BI","DAX","ML","Copilot"]},
- {"slug":"remote-it-staffing","icon":"globe","title":"Remote IT Talent & Staff Augmentation","summary":"Vetted data and cloud engineers, embedded in your team on flexible, remote engagements anywhere in the world.","body":"Need to scale fast? We provide senior engineers, architects and DBAs on contract, contract-to-hire or managed-team models. We are open to all kinds of remote IT work and match skills, time zones and culture so new capability is productive from week one.","features":["Contract & contract-to-hire","Dedicated remote squads","Time-zone aligned delivery","Rapid onboarding","Flexible scale-up / scale-down","Knowledge transfer built in"],"tags":["Staff augmentation","Dedicated teams","Remote","Global"]}
-],
-"technologies":[
- {"name":"Microsoft Fabric","mono":"Fb","color":"linear-gradient(135deg,#22d3ee,#2563eb)","desc":"Unified SaaS analytics","group":"Platform"},
- {"name":"Databricks","mono":"Db","color":"linear-gradient(135deg,#f97316,#ef4444)","desc":"Lakehouse & Spark","group":"Platform"},
- {"name":"Snowflake","mono":"Sf","color":"linear-gradient(135deg,#38bdf8,#0ea5e9)","desc":"Cloud data warehouse","group":"Platform"},
- {"name":"MS SQL Server","mono":"Sq","color":"linear-gradient(135deg,#f43f5e,#be123c)","desc":"Relational engine","group":"Database"},
- {"name":"Azure Data Factory","mono":"Af","color":"linear-gradient(135deg,#3b82f6,#1d4ed8)","desc":"Cloud orchestration","group":"Azure"},
- {"name":"Azure Synapse","mono":"Sy","color":"linear-gradient(135deg,#6366f1,#4338ca)","desc":"Analytics service","group":"Azure"},
- {"name":"Delta Lake","mono":"Dl","color":"linear-gradient(135deg,#06b6d4,#0e7490)","desc":"ACID lakehouse storage","group":"Platform"},
- {"name":"Apache Spark","mono":"Sp","color":"linear-gradient(135deg,#fb923c,#ea580c)","desc":"Distributed compute","group":"Engine"},
- {"name":"Power BI","mono":"Pb","color":"linear-gradient(135deg,#fbbf24,#d97706)","desc":"Business intelligence","group":"BI"},
- {"name":"dbt","mono":"dbt","color":"linear-gradient(135deg,#fb7185,#e11d48)","desc":"Analytics engineering","group":"Transform"},
- {"name":"Python","mono":"Py","color":"linear-gradient(135deg,#facc15,#2563eb)","desc":"Pipelines & ML","group":"Language"},
- {"name":"Apache Kafka","mono":"Kf","color":"linear-gradient(135deg,#94a3b8,#475569)","desc":"Event streaming","group":"Streaming"},
- {"name":"Terraform","mono":"Tf","color":"linear-gradient(135deg,#a78bfa,#7c3aed)","desc":"Infrastructure as code","group":"DevOps"},
- {"name":"Azure DevOps","mono":"Ad","color":"linear-gradient(135deg,#60a5fa,#2563eb)","desc":"CI/CD & boards","group":"DevOps"},
- {"name":"Microsoft Purview","mono":"Pv","color":"linear-gradient(135deg,#c084fc,#9333ea)","desc":"Governance & lineage","group":"Governance"},
- {"name":"Unity Catalog","mono":"Uc","color":"linear-gradient(135deg,#34d399,#059669)","desc":"Unified governance","group":"Governance"}
-],
-"process":[
- {"n":"01","title":"Discover","text":"We study your sources, workloads, constraints and goals, then map a clear current-state and target architecture."},
- {"n":"02","title":"Architect","text":"Reference architectures, cost models and security design, reviewed with your stakeholders before a line of code is written."},
- {"n":"03","title":"Build","text":"Iterative two-week sprints with working pipelines, tested transformations and demos, all shipped through CI/CD."},
- {"n":"04","title":"Operate","text":"Monitoring, runbooks, SLAs and FinOps keep the platform reliable and economical long after go-live."},
- {"n":"05","title":"Enable","text":"Documentation, pairing and training so your team owns and extends the platform with confidence."}
-],
-"industries":[
- {"title":"Financial Services","text":"Risk, regulatory reporting and real-time fraud analytics."},
- {"title":"Healthcare & Life Sciences","text":"Governed clinical, claims and operational data platforms."},
- {"title":"Retail & eCommerce","text":"Customer 360, demand forecasting and personalisation."},
- {"title":"Manufacturing & Supply Chain","text":"IoT telemetry, quality analytics and logistics visibility."},
- {"title":"Telecom & Media","text":"High-volume event streaming and subscriber analytics."},
- {"title":"Energy & Utilities","text":"Smart-meter data, forecasting and asset analytics."},
- {"title":"SaaS & Technology","text":"Product analytics, embedded BI and usage-based billing data."},
- {"title":"Public Sector","text":"Secure, compliant platforms for citizen-centric insights."}
-],
-"team":[
- {"name":"Raj Singh","role":"Director","bio":"Founder and Director of Intellytiq Solutions. Raj sets the technical vision, leads client engagements and ensures every delivery meets an engineering-first standard.","skills":["Data Strategy","Cloud Architecture","Delivery Leadership"],"lead":true,"c1":"#22d3ee","c2":"#6366f1"},
- {"name":"Pooja Singh","role":"Human Resources","bio":"Leads talent acquisition, onboarding and culture. Pooja builds the high-trust, remote-first team behind every project.","skills":["Talent Acquisition","Culture","Onboarding"],"lead":false,"c1":"#f472b6","c2":"#a855f7"},
- {"name":"CB Singh","role":"Senior Data Engineer","bio":"Designs and ships resilient pipelines and lakehouse platforms across Databricks, Fabric and Azure.","skills":["Databricks","Spark","Azure","SQL"],"c1":"#34d399","c2":"#0ea5e9"},
- {"name":"Open Role","role":"Principal Solutions Architect","bio":"Owns reference architectures across Fabric, Databricks and Snowflake for enterprise clients.","skills":["Architecture","Fabric","Snowflake"],"open":true},
- {"name":"Open Role","role":"Microsoft Fabric Consultant","bio":"Implements OneLake, Lakehouses, Direct Lake models and Fabric governance.","skills":["Fabric","Power BI","DAX"],"open":true},
- {"name":"Open Role","role":"SQL Server DBA","bio":"Keeps SQL Server and Azure SQL fast, available and secure.","skills":["T-SQL","Always On","Tuning"],"open":true},
- {"name":"Open Role","role":"Cloud & DevOps Engineer","bio":"Builds Azure landing zones, IaC and CI/CD for data platforms.","skills":["Azure","Terraform","DevOps"],"open":true},
- {"name":"Open Role","role":"Delivery Manager","bio":"Keeps global, follow-the-sun squads aligned, predictable and delighted clients.","skills":["Agile","Stakeholders","Delivery"],"open":true}
-],
-"posts":[
- {"slug":"medallion-architecture-fabric-vs-databricks","title":"Medallion Architecture: Fabric vs Databricks in Practice","category":"Architecture","excerpt":"Bronze, silver, gold: the pattern is the same, but the platform details change how you build it. Here is how we approach both.","author":"Raj Singh","date":"2026-10-12","read":8,"featured":true,"hue":210,"tags":["Fabric","Databricks","Lakehouse"],"content":"<p>The medallion architecture organises a lakehouse into progressively refined layers: <strong>bronze</strong> for raw ingested data, <strong>silver</strong> for cleansed and conformed entities, and <strong>gold</strong> for business-ready aggregates. Both Microsoft Fabric and Databricks support it natively on Delta Lake, but the way you operate it differs.</p><h2>Where Fabric shines</h2><p>Fabric places every layer in OneLake, so shortcuts let gold models read silver data without copying it. Direct Lake semantic models then query Delta tables straight from Power BI with import-like speed. For Microsoft-centric organisations, governance and security inherit from the Entra ID tenant.</p><h2>Where Databricks shines</h2><p>Databricks offers Delta Live Tables for declarative pipelines with built-in expectations, Auto Loader for incremental ingestion, and Unity Catalog for fine-grained governance across clouds. Teams with heavy Spark or ML workloads often prefer its flexibility.</p><blockquote>Pick the platform your team can operate well, then be ruthless about naming, testing and cost controls.</blockquote><p>Whatever you choose, enforce schemas at the silver boundary, test every transformation, and document ownership for every gold table. Architecture only pays off when it is boringly consistent.</p>"},
- {"slug":"snowflake-cost-optimisation-playbook","title":"A Practical Snowflake Cost Optimisation Playbook","category":"Snowflake","excerpt":"Seven changes that routinely reduce Snowflake credit consumption without hurting performance.","author":"CB Singh","date":"2026-09-28","read":6,"hue":190,"tags":["Snowflake","FinOps"],"content":"<p>Snowflake bills for compute by the second, so small configuration choices compound quickly. After reviewing many accounts, the same quick wins keep appearing.</p><h2>1. Right-size and auto-suspend</h2><p>Set <code>AUTO_SUSPEND</code> to 60 seconds for most warehouses and start one size smaller than you think you need. Scale up only when queries spill to remote storage.</p><h2>2. Separate workloads</h2><p>Give ingestion, transformation and BI their own warehouses so you can tune and attribute cost independently. Use resource monitors to alert before budgets are breached.</p><h2>3. Prune and cluster wisely</h2><p>Check partition pruning in the query profile. Add clustering keys only for large, frequently filtered tables, because automatic clustering has its own cost.</p><p>Finally, review the top 20 most expensive queries monthly. Fixing a handful of them usually delivers the biggest saving.</p>"},
- {"slug":"direct-lake-power-bi-explained","title":"Direct Lake in Power BI: What It Is and When to Use It","category":"Microsoft Fabric","excerpt":"Direct Lake reads Delta tables from OneLake directly. Learn where it fits between Import and DirectQuery.","author":"Raj Singh","date":"2026-09-10","read":7,"hue":265,"tags":["Fabric","Power BI"],"content":"<p>Power BI historically forced a trade-off: <em>Import</em> is fast but needs refreshes, while <em>DirectQuery</em> is fresh but slower. <strong>Direct Lake</strong> aims to remove the compromise by loading Delta Parquet column data from OneLake into memory on demand.</p><h2>When it works best</h2><p>Direct Lake suits large fact tables maintained by Fabric Lakehouse or Warehouse pipelines, where data freshness matters and refresh windows are painful. Keep tables well-compacted with V-Order and avoid tiny files.</p><h2>Watch-outs</h2><p>Some DAX and modelling features fall back to DirectQuery, which you should monitor. Design gold tables as star schemas and test fallback behaviour before go-live.</p>"},
- {"slug":"sql-server-to-azure-sql-migration-checklist","title":"SQL Server to Azure SQL: A Migration Checklist","category":"MS SQL","excerpt":"Assess, choose the right target, migrate with minimal downtime, and validate. A battle-tested checklist.","author":"CB Singh","date":"2026-08-22","read":9,"hue":350,"tags":["SQL Server","Azure"],"content":"<p>Migrating from on-premises SQL Server to Azure is rarely a lift-and-shift. A structured approach avoids surprises.</p><h2>Assess</h2><p>Run Azure Data Studio's migration assessment to detect compatibility issues, deprecated features and SKU recommendations. Capture a performance baseline before touching anything.</p><h2>Choose the target</h2><p>Azure SQL Database suits modern apps; Managed Instance keeps near-100% engine compatibility for cross-database queries and SQL Agent; SQL on VMs offers full control.</p><h2>Migrate and validate</h2><p>Use the Database Migration Service in online mode for minimal downtime. After cutover, compare row counts, checksums and query plans, and monitor Query Store for regressions.</p>"},
- {"slug":"building-reliable-data-pipelines","title":"Ten Principles for Building Reliable Data Pipelines","category":"Data Engineering","excerpt":"Idempotency, observability, contracts and more: the habits that separate fragile pipelines from dependable ones.","author":"CB Singh","date":"2026-08-03","read":7,"hue":160,"tags":["Pipelines","Quality"],"content":"<p>Reliable pipelines are rarely clever. They are predictable, observable and easy to rerun.</p><h2>Design for rerun</h2><p>Make every job idempotent so retries never duplicate data. Partition by date, use merge/upsert semantics and avoid side effects.</p><h2>Observe everything</h2><p>Emit row counts, freshness and failure metrics. Alert on data quality, not just job failure, because a successful job can still deliver wrong data.</p><h2>Contracts and tests</h2><p>Agree schemas with producers, validate at the boundary and run automated tests in CI. Document ownership and on-call expectations for every dataset.</p>"},
- {"slug":"unity-catalog-governance-guide","title":"Unity Catalog: Governance Without the Friction","category":"Databricks","excerpt":"How to structure catalogs, schemas and grants so governance accelerates teams instead of blocking them.","author":"Raj Singh","date":"2026-07-18","read":6,"hue":24,"tags":["Databricks","Governance"],"content":"<p>Governance fails when it is bolted on late. Unity Catalog lets you define access once and apply it across workspaces.</p><h2>Structure</h2><p>Use one catalog per environment (dev, test, prod) or per domain, with schemas aligned to medallion layers. Keep naming predictable.</p><h2>Access</h2><p>Grant privileges to groups, never individuals. Use row filters and column masks for sensitive fields and enable system tables for audit and lineage.</p>"},
- {"slug":"azure-landing-zone-for-data-platforms","title":"Azure Landing Zones for Data Platforms","category":"Azure","excerpt":"Network isolation, identity and policy: the foundations to put in place before your first pipeline runs.","author":"Raj Singh","date":"2026-06-30","read":8,"hue":225,"tags":["Azure","Security"],"content":"<p>A data platform is only as secure as the cloud foundation beneath it. An Azure landing zone provides subscriptions, policy and networking guardrails from day one.</p><h2>Core building blocks</h2><p>Hub-and-spoke networking with private endpoints, Entra ID with conditional access and managed identities, Key Vault for secrets, and Azure Policy for guardrails. Deploy it all with Bicep or Terraform so environments stay identical.</p>"},
- {"slug":"remote-first-engineering-teams","title":"Making Remote-First Engineering Teams Actually Work","category":"Culture","excerpt":"Practices we use to deliver across time zones with high trust, clear ownership and little overhead.","author":"Pooja Singh","date":"2026-06-05","read":5,"hue":300,"tags":["Remote","Culture"],"content":"<p>Remote works when expectations are explicit. We write things down, favour asynchronous updates and keep a small daily overlap window for collaboration.</p><h2>What we do</h2><p>Every project has a written definition of done, a shared board and weekly demos. Onboarding follows a checklist so new engineers contribute in their first week.</p>"},
- {"slug":"real-time-analytics-eventstreams-kafka","title":"Real-Time Analytics: Eventstreams, Kafka and Streaming Lakehouses","category":"Streaming","excerpt":"Choosing between Fabric Eventstreams, Kafka and Structured Streaming for low-latency analytics.","author":"CB Singh","date":"2026-05-14","read":7,"hue":320,"tags":["Streaming","Kafka","Fabric"],"content":"<p>Not every dashboard needs sub-second latency, so start with the business requirement. If minutes are acceptable, micro-batch is simpler and cheaper.</p><h2>Options</h2><p>Fabric Eventstreams and Real-Time Intelligence suit Microsoft-centric streaming; Kafka remains the backbone for high-throughput event platforms; Spark Structured Streaming bridges streams into Delta tables for unified batch and streaming.</p>"}
-],
-"projects":[
- {"title":"Lakehouse Modernisation for a Global Retailer","industry":"Retail","challenge":"Fragmented reporting across regional warehouses and slow overnight batches.","solution":"Unified Databricks medallion lakehouse with Delta Live Tables and Unity Catalog governance.","results":["Faster reporting windows","Single governed source of truth","Lower platform spend"],"tech":["Databricks","Delta Lake","Power BI"]},
- {"title":"Fabric Migration for a Financial Services Group","industry":"Financial Services","challenge":"Legacy EDW and sprawling Power BI workspaces with inconsistent metrics.","solution":"Microsoft Fabric lakehouse with Direct Lake semantic models and workspace governance.","results":["Consistent KPIs","Reduced refresh failures","Simpler licensing"],"tech":["Fabric","OneLake","Direct Lake"]},
- {"title":"Snowflake Cost & Performance Programme","industry":"SaaS","challenge":"Rapidly growing credit consumption with unpredictable query performance.","solution":"Warehouse redesign, resource monitors, clustering review and query optimisation.","results":["Meaningful credit savings","Predictable performance","Cost dashboards"],"tech":["Snowflake","dbt","FinOps"]},
- {"title":"SQL Server to Azure SQL Managed Instance","industry":"Healthcare","challenge":"Ageing on-premises SQL estate with limited disaster recovery.","solution":"Assessed and migrated databases with online migration, geo-replication and monitoring.","results":["Minimal downtime cutover","Improved resilience","Reduced admin effort"],"tech":["Azure SQL MI","DMS","Always On"]}
-],
-"careers":[
- {"title":"Senior Data Engineer (Databricks / Fabric)","type":"Contract · Remote","level":"Senior","location":"Worldwide","summary":"Design and build lakehouse pipelines, mentor engineers and own delivery quality."},
- {"title":"Microsoft Fabric Consultant","type":"Contract · Remote","level":"Mid–Senior","location":"Worldwide","summary":"Implement OneLake, Direct Lake models and Fabric governance for enterprise clients."},
- {"title":"SQL Server DBA / Azure SQL Specialist","type":"Full-time · Remote","level":"Senior","location":"Worldwide","summary":"Tune, secure and migrate SQL estates; provide proactive DBA support."},
- {"title":"Snowflake Data Engineer","type":"Contract · Remote","level":"Mid–Senior","location":"Worldwide","summary":"Build Snowflake ELT with Snowpipe, Streams, Tasks and dbt."},
- {"title":"Cloud / DevOps Engineer (Azure)","type":"Full-time · Remote","level":"Mid–Senior","location":"Worldwide","summary":"Automate landing zones and data platform deployment with IaC and CI/CD."}
-],
-"testimonials":[
- {"quote":"They treated our data platform like their own product: clear architecture, clean code and zero drama at go-live.","name":"Head of Data Platform","role":"Global Retail Group (sample testimonial)"},
- {"quote":"The remote team slotted into our sprints in days. Communication was crisp and delivery was predictable.","name":"VP Engineering","role":"SaaS Company (sample testimonial)"},
- {"quote":"Our Snowflake and SQL estate is faster, cheaper and finally documented. Highly recommended.","name":"IT Director","role":"Healthcare Provider (sample testimonial)"}
-],
-"faqs":[
- {"q":"Which platforms and technologies do you support?","a":"Microsoft Fabric, Databricks, Snowflake, MS SQL Server and Azure SQL, Azure data and cloud services, Power BI, dbt, Spark, Python, Kafka and Terraform, plus broader remote IT engineering work."},
- {"q":"Do you work with clients outside a specific country?","a":"Yes. We are remote-first and serve clients worldwide, aligning working hours with your time zone."},
- {"q":"What engagement models are available?","a":"Fixed-scope projects, time-and-materials, dedicated remote squads, staff augmentation and ongoing managed support."},
- {"q":"How quickly can you start?","a":"After a short discovery call and scoping, most engagements can begin within one to three weeks."},
- {"q":"How do you handle security and confidentiality?","a":"We sign NDAs, work under least-privilege access, use your tenant and tooling, and follow your compliance requirements."},
- {"q":"Can you take over an existing platform?","a":"Absolutely. We start with an assessment of architecture, cost and reliability, then stabilise and improve incrementally."},
- {"q":"Do you offer training for our team?","a":"Yes. Knowledge transfer, documentation and hands-on workshops are part of every engagement."},
- {"q":"Do you handle IT work outside data and cloud?","a":"We are open to all kinds of remote IT work. Share your requirement and we will tell you honestly whether we are the right fit."}
-],
-"values":[
- {"title":"Engineering first","text":"Clean code, tests and documentation on every deliverable."},
- {"title":"Radical clarity","text":"Honest estimates, visible progress, no surprises."},
- {"title":"Own the outcome","text":"We measure success by your business results."},
- {"title":"Always learning","text":"Certifications, communities and continuous practice."}
-],
-"timeline":[
- {"year":"Foundation","title":"Intellytiq Solutions is founded","text":"Started with a mission: bring enterprise-grade data engineering to companies of every size."},
- {"year":"Growth","title":"Expanded into cloud data platforms","text":"Added Microsoft Fabric, Databricks and Snowflake practices alongside SQL Server expertise."},
- {"year":"Today","title":"Remote-first, worldwide","text":"Serving clients across time zones with specialist engineers and flexible engagement models."},
- {"year":"Next","title":"AI-ready data foundations","text":"Helping clients prepare governed, high-quality data for analytics and AI."}
-]
+ },
+ "services": [
+  {
+   "slug": "microsoft-fabric",
+   "icon": "layers",
+   "title": "Microsoft Fabric",
+   "summary": "End-to-end analytics on one unified SaaS platform: OneLake, Lakehouse, Warehouse, Data Factory, Real-Time Intelligence and Power BI.",
+   "body": "We design and implement Microsoft Fabric estates that unify data engineering, warehousing, real-time analytics and BI on OneLake. From capacity sizing and workspace governance to medallion Lakehouses, Direct Lake semantic models and CI/CD with deployment pipelines, we help you move from fragmented tools to a single, governed analytics fabric.",
+   "features": [
+    "OneLake & Lakehouse architecture",
+    "Fabric Data Factory pipelines & Dataflows Gen2",
+    "Direct Lake semantic models",
+    "Real-Time Intelligence & Eventstreams",
+    "Capacity planning & cost governance",
+    "Migration from Synapse / Power BI Premium"
+   ],
+   "tags": [
+    "OneLake",
+    "Lakehouse",
+    "Direct Lake",
+    "Power BI"
+   ]
+  },
+  {
+   "slug": "databricks",
+   "icon": "bolt",
+   "title": "Databricks Lakehouse",
+   "summary": "Scalable Spark, Delta Lake and Unity Catalog platforms for batch, streaming and machine learning workloads.",
+   "body": "Our engineers build production-grade Databricks platforms: Delta Lake medallion pipelines, Delta Live Tables, Auto Loader ingestion, Unity Catalog governance and MLflow-powered ML lifecycles. We tune cluster policies, optimise Spark jobs and implement cost controls so performance scales while spend stays predictable.",
+   "features": [
+    "Delta Lake & Delta Live Tables",
+    "Unity Catalog governance",
+    "Structured Streaming & Auto Loader",
+    "Spark performance tuning",
+    "MLflow & feature stores",
+    "Databricks Asset Bundles CI/CD"
+   ],
+   "tags": [
+    "Spark",
+    "Delta Lake",
+    "Unity Catalog",
+    "MLflow"
+   ]
+  },
+  {
+   "slug": "snowflake",
+   "icon": "snow",
+   "title": "Snowflake Data Cloud",
+   "summary": "Elastic cloud data warehousing with secure data sharing, Snowpark and consumption-based cost optimisation.",
+   "body": "We architect Snowflake accounts for performance, security and cost: role-based access, virtual warehouse strategy, Snowpipe and Streams/Tasks ingestion, dynamic tables, data sharing and Snowpark development. Our FinOps reviews routinely uncover double-digit savings in compute and storage.",
+   "features": [
+    "Account & RBAC design",
+    "Snowpipe, Streams & Tasks",
+    "Dynamic tables & Snowpark",
+    "Secure data sharing & marketplace",
+    "Query & warehouse optimisation",
+    "Cost monitoring (FinOps)"
+   ],
+   "tags": [
+    "Snowpipe",
+    "Snowpark",
+    "Dynamic Tables",
+    "FinOps"
+   ]
+  },
+  {
+   "slug": "data-engineering",
+   "icon": "flow",
+   "title": "Data Engineering",
+   "summary": "Reliable batch and streaming pipelines, ELT frameworks, orchestration and data quality, built to run unattended.",
+   "body": "We build resilient pipelines with Python, SQL, Spark and modern orchestration (Azure Data Factory, Airflow, dbt). Every pipeline ships with observability, automated data-quality tests, lineage and runbooks so your team trusts the data and sleeps through the night.",
+   "features": [
+    "Batch & streaming ingestion",
+    "dbt / ELT frameworks",
+    "Orchestration (ADF, Airflow)",
+    "Data quality & observability",
+    "CDC & event-driven design",
+    "Metadata-driven pipelines"
+   ],
+   "tags": [
+    "Python",
+    "dbt",
+    "Airflow",
+    "Kafka"
+   ]
+  },
+  {
+   "slug": "data-warehousing",
+   "icon": "db",
+   "title": "Data Warehousing & Modelling",
+   "summary": "Dimensional models, Data Vault and lakehouse warehouses that make analytics fast, consistent and auditable.",
+   "body": "From Kimball star schemas to Data Vault 2.0, we design warehouse models that match how the business thinks. We modernise legacy EDWs, tune MPP and columnar engines and establish semantic layers so every dashboard tells the same story.",
+   "features": [
+    "Kimball & Data Vault modelling",
+    "Legacy EDW modernisation",
+    "Semantic layer design",
+    "Slowly changing dimensions & history",
+    "Performance & partition strategy",
+    "Data catalogue & documentation"
+   ],
+   "tags": [
+    "Kimball",
+    "Data Vault",
+    "SCD",
+    "Semantic layer"
+   ]
+  },
+  {
+   "slug": "ms-sql-server",
+   "icon": "server",
+   "title": "MS SQL Server & Azure SQL",
+   "summary": "Performance tuning, high availability, migrations and DBA-as-a-service for SQL Server, Azure SQL and Managed Instance.",
+   "body": "Our SQL specialists handle query and index tuning, Always On availability groups, backup and DR strategy, security hardening and zero-downtime migrations to Azure SQL Database or Managed Instance. We also provide proactive 24×5 DBA support.",
+   "features": [
+    "Performance tuning & indexing",
+    "Always On & disaster recovery",
+    "Azure SQL / Managed Instance migration",
+    "T-SQL development & refactoring",
+    "Security & compliance hardening",
+    "Managed DBA support"
+   ],
+   "tags": [
+    "T-SQL",
+    "Always On",
+    "Azure SQL",
+    "DBA"
+   ]
+  },
+  {
+   "slug": "azure-cloud",
+   "icon": "cloud",
+   "title": "Azure Cloud Services",
+   "summary": "Landing zones, data platform infrastructure, networking, identity, DevOps and FinOps on Microsoft Azure.",
+   "body": "We deliver secure Azure foundations: landing zones, private networking, Entra ID, Key Vault, Infrastructure-as-Code with Bicep and Terraform, and DevOps pipelines. Our cloud engineers specialise in data-centric Azure services including ADLS Gen2, Synapse, Data Factory, Event Hubs and Purview.",
+   "features": [
+    "Landing zones & governance",
+    "IaC with Bicep / Terraform",
+    "ADLS Gen2, Event Hubs, Purview",
+    "Private networking & Entra ID",
+    "Azure DevOps & GitHub Actions",
+    "Cloud cost optimisation"
+   ],
+   "tags": [
+    "Bicep",
+    "Terraform",
+    "ADLS Gen2",
+    "Purview"
+   ]
+  },
+  {
+   "slug": "bi-analytics",
+   "icon": "chart",
+   "title": "BI, Analytics & AI",
+   "summary": "Power BI, semantic models, self-service analytics and applied AI that turns data into decisions.",
+   "body": "We turn curated data into insight with enterprise Power BI, DAX-optimised models, row-level security and embedded analytics. We also help teams adopt AI responsibly with RAG over enterprise data, Copilot readiness and ML-driven forecasting.",
+   "features": [
+    "Enterprise Power BI & DAX",
+    "Row-level security & governance",
+    "Embedded analytics",
+    "Forecasting & ML",
+    "RAG & Copilot readiness",
+    "Self-service enablement"
+   ],
+   "tags": [
+    "Power BI",
+    "DAX",
+    "ML",
+    "Copilot"
+   ]
+  },
+  {
+   "slug": "remote-it-staffing",
+   "icon": "globe",
+   "title": "Remote IT Talent & Staff Augmentation",
+   "summary": "Vetted data and cloud engineers, embedded in your team on per-day, project-based or long-term engagements anywhere in the world.",
+   "body": "Need to scale fast? Book senior engineers, architects and DBAs by the day, hand us a whole project at a fixed scope, or build a dedicated remote squad. Our rates are lower than typical market prices, and we commit to guaranteed delivery. We are open to all kinds of remote IT work and match skills, time zones and culture so new capability is productive from week one.",
+   "features": [
+    "Per-day and short-notice engagements",
+    "Fixed-scope, project-based delivery",
+    "Dedicated remote squads",
+    "Time-zone aligned delivery",
+    "Rates below typical market prices",
+    "Guaranteed delivery with visible milestones"
+   ],
+   "tags": [
+    "Staff augmentation",
+    "Dedicated teams",
+    "Remote",
+    "Global"
+   ]
+  }
+ ],
+ "technologies": [
+  {
+   "name": "Microsoft Fabric",
+   "mono": "Fb",
+   "color": "linear-gradient(135deg,#22d3ee,#2563eb)",
+   "desc": "Unified SaaS analytics",
+   "group": "Platform",
+   "summary": "One SaaS platform for data engineering, warehousing, real-time analytics and Power BI, all on a single copy of your data in OneLake.",
+   "long": "Microsoft Fabric brings Data Factory, engineering and warehousing, Real-Time Intelligence and Power BI together on OneLake, a single logical data lake for the whole organisation. We design the capacity, workspaces and governance model first, then build Lakehouses, pipelines and Direct Lake semantic models on top, so analysts get fast, governed self-service without copying data between tools.",
+   "does": [
+    "Lakehouse and Warehouse design on OneLake",
+    "Data Factory pipelines and Dataflows Gen2",
+    "Direct Lake semantic models and Power BI",
+    "Real-Time Intelligence and Eventstreams",
+    "Capacity sizing, security and cost governance",
+    "Migration from Synapse, Power BI Premium or a legacy warehouse"
+   ],
+   "usecases": [
+    "Replace fragmented analytics tools with one platform",
+    "Real-time operational dashboards",
+    "Unified customer 360 reporting",
+    "Fast Power BI on very large data"
+   ]
+  },
+  {
+   "name": "Databricks",
+   "mono": "Db",
+   "color": "linear-gradient(135deg,#f97316,#ef4444)",
+   "desc": "Lakehouse & Spark",
+   "group": "Platform",
+   "summary": "Lakehouse platform for large-scale data engineering, streaming and machine learning, built on Apache Spark and Delta Lake.",
+   "long": "Databricks combines the flexibility of a data lake with the reliability of a warehouse. We build production-grade medallion pipelines with Delta Live Tables and Auto Loader, govern them with Unity Catalog, and tune clusters and jobs so performance scales while spend stays predictable. Teams get one place for ETL, streaming, BI and machine learning.",
+   "does": [
+    "Medallion architecture on Delta Lake",
+    "Delta Live Tables and Auto Loader ingestion",
+    "Unity Catalog governance and lineage",
+    "Spark performance and cost tuning",
+    "MLflow, feature stores and model serving",
+    "CI/CD with Databricks Asset Bundles"
+   ],
+   "usecases": [
+    "Petabyte-scale ETL",
+    "Streaming analytics and change data capture",
+    "Machine learning platforms",
+    "Consolidating several warehouses into one lakehouse"
+   ]
+  },
+  {
+   "name": "Snowflake",
+   "mono": "Sf",
+   "color": "linear-gradient(135deg,#38bdf8,#0ea5e9)",
+   "desc": "Cloud data warehouse",
+   "group": "Platform",
+   "summary": "Elastic cloud data warehouse with secure data sharing, Snowpark and pay-for-what-you-use compute.",
+   "long": "Snowflake separates storage from compute so teams can scale workloads independently. We design accounts, roles and warehouse strategy, build ingestion with Snowpipe, Streams and Tasks, model data with dynamic tables and dbt, and run FinOps reviews that cut credit spend without hurting performance.",
+   "does": [
+    "Account, role and warehouse design",
+    "Snowpipe, Streams, Tasks and dynamic tables",
+    "Snowpark and ELT development",
+    "Secure data sharing and marketplace",
+    "Query tuning and clustering",
+    "Cost monitoring and optimisation"
+   ],
+   "usecases": [
+    "Cloud data warehouse modernisation",
+    "Cross-company data sharing",
+    "Cost reduction programmes",
+    "Self-service analytics at scale"
+   ]
+  },
+  {
+   "name": "MS SQL Server",
+   "mono": "Sq",
+   "color": "linear-gradient(135deg,#f43f5e,#be123c)",
+   "desc": "Relational engine",
+   "group": "Database",
+   "summary": "The relational engine behind many core business systems, on premises, on virtual machines or as Azure SQL.",
+   "long": "SQL Server remains the backbone of countless applications. Our DBAs and developers tune queries and indexes, design high availability and disaster recovery with Always On, harden security, and migrate estates to Azure SQL Database or Managed Instance with minimal downtime. We also offer proactive managed DBA support.",
+   "does": [
+    "Query, index and Query Store tuning",
+    "Always On availability groups and disaster recovery",
+    "Migration to Azure SQL and Managed Instance",
+    "T-SQL development and refactoring",
+    "Security and compliance hardening",
+    "Managed DBA support"
+   ],
+   "usecases": [
+    "Slow application databases",
+    "Upgrades and cloud migrations",
+    "High-availability and backup strategy",
+    "Licensing and cost review"
+   ]
+  },
+  {
+   "name": "Azure Data Factory",
+   "mono": "Af",
+   "color": "linear-gradient(135deg,#3b82f6,#1d4ed8)",
+   "desc": "Cloud orchestration",
+   "group": "Azure",
+   "summary": "Cloud-scale data integration and orchestration, from simple copy jobs to complex hybrid pipelines.",
+   "long": "Azure Data Factory moves and transforms data across more than a hundred sources. We build metadata-driven pipelines that are parameterised, monitored and deployed through CI/CD, so adding a new source is configuration, not a rebuild.",
+   "does": [
+    "Metadata-driven ingestion frameworks",
+    "Hybrid and on-premises connectivity",
+    "Mapping data flows and Spark integration",
+    "Triggers, alerts and monitoring",
+    "Git integration and CI/CD",
+    "Migration to Fabric Data Factory"
+   ],
+   "usecases": [
+    "Nightly warehouse loads",
+    "SaaS and ERP data ingestion",
+    "Legacy SSIS migration",
+    "Event-driven file processing"
+   ]
+  },
+  {
+   "name": "Azure Synapse",
+   "mono": "Sy",
+   "color": "linear-gradient(135deg,#6366f1,#4338ca)",
+   "desc": "Analytics service",
+   "group": "Azure",
+   "summary": "Integrated analytics service combining SQL pools, Spark and pipelines for enterprise warehousing.",
+   "long": "Azure Synapse Analytics blends dedicated and serverless SQL, Spark and pipelines in one workspace. We design distribution, partitioning and workload management for dedicated pools, build lake queries with serverless SQL, and plan paths to Microsoft Fabric where it makes sense.",
+   "does": [
+    "Dedicated SQL pool design and tuning",
+    "Serverless SQL over the data lake",
+    "Spark pools and notebooks",
+    "Workload management and cost control",
+    "Security and private networking",
+    "Roadmap and migration to Fabric"
+   ],
+   "usecases": [
+    "Enterprise data warehouse",
+    "Ad hoc lake exploration",
+    "Large-scale reporting",
+    "Synapse to Fabric migration"
+   ]
+  },
+  {
+   "name": "Delta Lake",
+   "mono": "Dl",
+   "color": "linear-gradient(135deg,#06b6d4,#0e7490)",
+   "desc": "ACID lakehouse storage",
+   "group": "Platform",
+   "summary": "Open table format that brings ACID transactions, time travel and schema enforcement to the data lake.",
+   "long": "Delta Lake adds reliability to Parquet files: ACID transactions, schema evolution, time travel and efficient merges. We use it as the foundation of lakehouse designs on Fabric, Databricks and Synapse, with sensible partitioning, compaction and retention so tables stay fast and affordable.",
+   "does": [
+    "Table design, partitioning and Z-ordering",
+    "MERGE, change data capture and slowly changing dimensions",
+    "Optimize, vacuum and retention policies",
+    "Schema evolution and constraints",
+    "Time travel and recovery",
+    "Open-format interoperability"
+   ],
+   "usecases": [
+    "Reliable lakehouse tables",
+    "Auditable history and rollback",
+    "Streaming and batch on one table",
+    "Avoiding vendor lock-in"
+   ]
+  },
+  {
+   "name": "Apache Spark",
+   "mono": "Sp",
+   "color": "linear-gradient(135deg,#fb923c,#ea580c)",
+   "desc": "Distributed compute",
+   "group": "Engine",
+   "summary": "Distributed compute engine for large-scale data processing, streaming and machine learning.",
+   "long": "Spark powers transformations that no single machine can handle. We write maintainable PySpark and Spark SQL, tune shuffles, joins, skew and memory, and size clusters to keep jobs fast and cheap, whether they run on Databricks, Fabric or Synapse.",
+   "does": [
+    "PySpark and Spark SQL development",
+    "Join, shuffle and skew optimisation",
+    "Structured Streaming",
+    "Cluster sizing and autoscaling",
+    "Testing and packaging of Spark code",
+    "Troubleshooting slow or failing jobs"
+   ],
+   "usecases": [
+    "Heavy ETL and aggregation",
+    "Near-real-time pipelines",
+    "Feature engineering for machine learning",
+    "Cutting job runtime and cost"
+   ]
+  },
+  {
+   "name": "Power BI",
+   "mono": "Pb",
+   "color": "linear-gradient(135deg,#fbbf24,#d97706)",
+   "desc": "Business intelligence",
+   "group": "BI",
+   "summary": "Business intelligence with governed semantic models, interactive dashboards and embedded analytics.",
+   "long": "Power BI turns curated data into decisions. We build star-schema semantic models with performant DAX, row-level security and deployment pipelines, optimise slow reports, and set up governance so self-service stays trustworthy as adoption grows.",
+   "does": [
+    "Semantic modelling and DAX optimisation",
+    "Direct Lake, Import and composite models",
+    "Row-level and object-level security",
+    "Report design and user experience",
+    "Deployment pipelines and governance",
+    "Embedded analytics"
+   ],
+   "usecases": [
+    "Executive dashboards",
+    "Rescuing slow reports",
+    "Self-service BI roll-out",
+    "Customer-facing embedded reports"
+   ]
+  },
+  {
+   "name": "dbt",
+   "mono": "dbt",
+   "color": "linear-gradient(135deg,#fb7185,#e11d48)",
+   "desc": "Analytics engineering",
+   "group": "Transform",
+   "summary": "Analytics engineering framework for version-controlled, tested and documented SQL transformations.",
+   "long": "dbt brings software engineering discipline to the transformation layer. We structure projects into staging, intermediate and mart models, add tests and documentation, run it in CI, and orchestrate on Snowflake, Databricks or Fabric so every metric is traceable and trusted.",
+   "does": [
+    "Project structure and naming standards",
+    "Incremental models and snapshots",
+    "Tests, contracts and documentation",
+    "CI/CD and slim builds",
+    "Orchestration with Airflow or Data Factory",
+    "Semantic layer and metrics"
+   ],
+   "usecases": [
+    "Reliable ELT on a modern warehouse",
+    "Replacing stored-procedure sprawl",
+    "Data quality you can prove",
+    "Faster, safer analytics changes"
+   ]
+  },
+  {
+   "name": "Python",
+   "mono": "Py",
+   "color": "linear-gradient(135deg,#facc15,#2563eb)",
+   "desc": "Pipelines & ML",
+   "group": "Language",
+   "summary": "The general-purpose language of data: pipelines, automation, APIs and machine learning.",
+   "long": "Python glues the modern data stack together. We write clean, tested, typed Python for ingestion, transformation, automation and machine learning, package it properly and deploy it through CI/CD, so scripts become dependable software.",
+   "does": [
+    "Ingestion and API integration",
+    "Pandas, Polars and PySpark",
+    "Automation and orchestration tasks",
+    "Testing, typing and packaging",
+    "Machine learning with scikit-learn",
+    "Serverless and containerised deployment"
+   ],
+   "usecases": [
+    "Custom connectors",
+    "Data quality and validation tools",
+    "Forecasting and ML models",
+    "Automating manual reporting"
+   ]
+  },
+  {
+   "name": "Apache Kafka",
+   "mono": "Kf",
+   "color": "linear-gradient(135deg,#94a3b8,#475569)",
+   "desc": "Event streaming",
+   "group": "Streaming",
+   "summary": "Distributed event-streaming platform for high-throughput, real-time data pipelines.",
+   "long": "Kafka moves events reliably between systems at scale. We design topics, partitions and schemas, build producers, consumers and stream processors, and connect Kafka to the lakehouse so real-time events and historical data live together.",
+   "does": [
+    "Topic, partition and schema design",
+    "Kafka Connect and change data capture with Debezium",
+    "Stream processing with Spark and Flink",
+    "Event Hubs and Fabric Eventstream integration",
+    "Monitoring, retention and security",
+    "Exactly-once delivery and replay strategies"
+   ],
+   "usecases": [
+    "Real-time fraud detection and alerting",
+    "IoT and telemetry ingestion",
+    "Change data capture",
+    "Event-driven microservices"
+   ]
+  },
+  {
+   "name": "Terraform",
+   "mono": "Tf",
+   "color": "linear-gradient(135deg,#a78bfa,#7c3aed)",
+   "desc": "Infrastructure as code",
+   "group": "DevOps",
+   "summary": "Infrastructure as code to build secure, repeatable cloud environments.",
+   "long": "Terraform lets us define Azure and data-platform infrastructure in code. We create reusable modules, remote state and pipelines so environments are identical, reviewable and quick to rebuild, with policy checks to keep them compliant.",
+   "does": [
+    "Reusable Azure and Databricks modules",
+    "Remote state and workspaces",
+    "Policy-as-code and compliance checks",
+    "Pipeline-driven plan and apply",
+    "Environment promotion",
+    "Bicep as an alternative"
+   ],
+   "usecases": [
+    "Azure landing zones",
+    "Repeatable dev, test and production",
+    "Disaster-recovery rebuilds",
+    "Audit-friendly change control"
+   ]
+  },
+  {
+   "name": "Azure DevOps",
+   "mono": "Ad",
+   "color": "linear-gradient(135deg,#60a5fa,#2563eb)",
+   "desc": "CI/CD & boards",
+   "group": "DevOps",
+   "summary": "Boards, repositories and pipelines to plan, build and release data platforms with confidence.",
+   "long": "Azure DevOps and GitHub Actions give data teams the same delivery discipline as software teams. We set up branching strategies, automated tests, and build and release pipelines for Fabric, Databricks, Snowflake and SQL, with approvals and rollbacks.",
+   "does": [
+    "Git branching and code review standards",
+    "CI/CD for data pipelines and databases",
+    "Automated tests and quality gates",
+    "Environment approvals and rollbacks",
+    "Boards and sprint tracking",
+    "GitHub Actions equivalents"
+   ],
+   "usecases": [
+    "Safer releases",
+    "Database DevOps",
+    "Multi-team delivery",
+    "An audit trail for every change"
+   ]
+  },
+  {
+   "name": "Microsoft Purview",
+   "mono": "Pv",
+   "color": "linear-gradient(135deg,#c084fc,#9333ea)",
+   "desc": "Governance & lineage",
+   "group": "Governance",
+   "summary": "Data governance, catalogue and lineage across your cloud and on-premises estate.",
+   "long": "Purview helps people find, understand and trust data. We configure scans, classifications and glossaries, capture end-to-end lineage, and align sensitivity labels and access policies with your compliance requirements.",
+   "does": [
+    "Data map and automated scanning",
+    "Business glossary and classification",
+    "End-to-end lineage",
+    "Sensitivity labels and policies",
+    "Access governance",
+    "Fabric and Azure integration"
+   ],
+   "usecases": [
+    "Regulatory compliance",
+    "Data discovery",
+    "Impact analysis",
+    "Sensitive data protection"
+   ]
+  },
+  {
+   "name": "Unity Catalog",
+   "mono": "Uc",
+   "color": "linear-gradient(135deg,#34d399,#059669)",
+   "desc": "Unified governance",
+   "group": "Governance",
+   "summary": "Unified governance for data and AI assets across Databricks workspaces.",
+   "long": "Unity Catalog centralises access control, auditing and lineage for tables, files, models and notebooks. We design catalog and schema structure, grant privileges to groups, apply row filters and column masks, and enable system tables for audit and cost visibility.",
+   "does": [
+    "Catalog and schema design",
+    "Group-based privileges",
+    "Row filters and column masks",
+    "Lineage and audit via system tables",
+    "External locations and credentials",
+    "Delta Sharing"
+   ],
+   "usecases": [
+    "Governed self-service",
+    "Multi-workspace access control",
+    "Regulated data protection",
+    "Secure data sharing"
+   ]
+  }
+ ],
+ "process": [
+  {
+   "n": "01",
+   "title": "Discover",
+   "text": "We study your sources, workloads, constraints and goals, then map a clear current-state and target architecture."
+  },
+  {
+   "n": "02",
+   "title": "Architect",
+   "text": "Reference architectures, cost models and security design, reviewed with your stakeholders before a line of code is written."
+  },
+  {
+   "n": "03",
+   "title": "Build",
+   "text": "Iterative two-week sprints with working pipelines, tested transformations and demos, all shipped through CI/CD."
+  },
+  {
+   "n": "04",
+   "title": "Operate",
+   "text": "Monitoring, runbooks, SLAs and FinOps keep the platform reliable and economical long after go-live."
+  },
+  {
+   "n": "05",
+   "title": "Enable",
+   "text": "Documentation, pairing and training so your team owns and extends the platform with confidence."
+  }
+ ],
+ "industries": [
+  {
+   "title": "Financial Services",
+   "text": "Risk, regulatory reporting and real-time fraud analytics."
+  },
+  {
+   "title": "Healthcare & Life Sciences",
+   "text": "Governed clinical, claims and operational data platforms."
+  },
+  {
+   "title": "Retail & eCommerce",
+   "text": "Customer 360, demand forecasting and personalisation."
+  },
+  {
+   "title": "Manufacturing & Supply Chain",
+   "text": "IoT telemetry, quality analytics and logistics visibility."
+  },
+  {
+   "title": "Telecom & Media",
+   "text": "High-volume event streaming and subscriber analytics."
+  },
+  {
+   "title": "Energy & Utilities",
+   "text": "Smart-meter data, forecasting and asset analytics."
+  },
+  {
+   "title": "SaaS & Technology",
+   "text": "Product analytics, embedded BI and usage-based billing data."
+  },
+  {
+   "title": "Public Sector",
+   "text": "Secure, compliant platforms for citizen-centric insights."
+  }
+ ],
+ "team": [
+  {
+   "name": "Raj Singh",
+   "role": "Director",
+   "bio": "Founder and Director of Intellytiq Solutions. Raj sets the technical vision, leads client engagements and ensures every delivery meets an engineering-first standard.",
+   "skills": [
+    "Data Strategy",
+    "Cloud Architecture",
+    "Delivery Leadership"
+   ],
+   "lead": true,
+   "c1": "#22d3ee",
+   "c2": "#6366f1"
+  },
+  {
+   "name": "Pooja Singh",
+   "role": "Human Resources",
+   "bio": "Leads talent acquisition, onboarding and culture. Pooja builds the high-trust, remote-first team behind every project.",
+   "skills": [
+    "Talent Acquisition",
+    "Culture",
+    "Onboarding"
+   ],
+   "lead": false,
+   "c1": "#f472b6",
+   "c2": "#a855f7"
+  },
+  {
+   "name": "CB Singh",
+   "role": "Senior Data Engineer",
+   "bio": "Designs and ships resilient pipelines and lakehouse platforms across Databricks, Fabric and Azure.",
+   "skills": [
+    "Databricks",
+    "Spark",
+    "Azure",
+    "SQL"
+   ],
+   "c1": "#34d399",
+   "c2": "#0ea5e9"
+  },
+  {
+   "name": "Open Role",
+   "role": "Principal Solutions Architect",
+   "bio": "Owns reference architectures across Fabric, Databricks and Snowflake for enterprise clients.",
+   "skills": [
+    "Architecture",
+    "Fabric",
+    "Snowflake"
+   ],
+   "open": true
+  },
+  {
+   "name": "Open Role",
+   "role": "Microsoft Fabric Consultant",
+   "bio": "Implements OneLake, Lakehouses, Direct Lake models and Fabric governance.",
+   "skills": [
+    "Fabric",
+    "Power BI",
+    "DAX"
+   ],
+   "open": true
+  },
+  {
+   "name": "Open Role",
+   "role": "SQL Server DBA",
+   "bio": "Keeps SQL Server and Azure SQL fast, available and secure.",
+   "skills": [
+    "T-SQL",
+    "Always On",
+    "Tuning"
+   ],
+   "open": true
+  },
+  {
+   "name": "Open Role",
+   "role": "Cloud & DevOps Engineer",
+   "bio": "Builds Azure landing zones, IaC and CI/CD for data platforms.",
+   "skills": [
+    "Azure",
+    "Terraform",
+    "DevOps"
+   ],
+   "open": true
+  },
+  {
+   "name": "Open Role",
+   "role": "Delivery Manager",
+   "bio": "Keeps global, follow-the-sun squads aligned, predictable and delighted clients.",
+   "skills": [
+    "Agile",
+    "Stakeholders",
+    "Delivery"
+   ],
+   "open": true
+  }
+ ],
+ "posts": [
+  {
+   "slug": "medallion-architecture-fabric-vs-databricks",
+   "title": "Medallion Architecture: Fabric vs Databricks in Practice",
+   "category": "Architecture",
+   "excerpt": "Bronze, silver, gold: the pattern is the same, but the platform details change how you build it. Here is how we approach both.",
+   "author": "Raj Singh",
+   "date": "2026-10-12",
+   "read": 8,
+   "featured": true,
+   "hue": 210,
+   "tags": [
+    "Fabric",
+    "Databricks",
+    "Lakehouse"
+   ],
+   "content": "<p>The medallion architecture organises a lakehouse into progressively refined layers: <strong>bronze</strong> for raw ingested data, <strong>silver</strong> for cleansed and conformed entities, and <strong>gold</strong> for business-ready aggregates. Both Microsoft Fabric and Databricks support it natively on Delta Lake, but the way you operate it differs.</p><h2>Where Fabric shines</h2><p>Fabric places every layer in OneLake, so shortcuts let gold models read silver data without copying it. Direct Lake semantic models then query Delta tables straight from Power BI with import-like speed. For Microsoft-centric organisations, governance and security inherit from the Entra ID tenant.</p><h2>Where Databricks shines</h2><p>Databricks offers Delta Live Tables for declarative pipelines with built-in expectations, Auto Loader for incremental ingestion, and Unity Catalog for fine-grained governance across clouds. Teams with heavy Spark or ML workloads often prefer its flexibility.</p><blockquote>Pick the platform your team can operate well, then be ruthless about naming, testing and cost controls.</blockquote><p>Whatever you choose, enforce schemas at the silver boundary, test every transformation, and document ownership for every gold table. Architecture only pays off when it is boringly consistent.</p>"
+  },
+  {
+   "slug": "snowflake-cost-optimisation-playbook",
+   "title": "A Practical Snowflake Cost Optimisation Playbook",
+   "category": "Snowflake",
+   "excerpt": "Seven changes that routinely reduce Snowflake credit consumption without hurting performance.",
+   "author": "CB Singh",
+   "date": "2026-09-28",
+   "read": 6,
+   "hue": 190,
+   "tags": [
+    "Snowflake",
+    "FinOps"
+   ],
+   "content": "<p>Snowflake bills for compute by the second, so small configuration choices compound quickly. After reviewing many accounts, the same quick wins keep appearing.</p><h2>1. Right-size and auto-suspend</h2><p>Set <code>AUTO_SUSPEND</code> to 60 seconds for most warehouses and start one size smaller than you think you need. Scale up only when queries spill to remote storage.</p><h2>2. Separate workloads</h2><p>Give ingestion, transformation and BI their own warehouses so you can tune and attribute cost independently. Use resource monitors to alert before budgets are breached.</p><h2>3. Prune and cluster wisely</h2><p>Check partition pruning in the query profile. Add clustering keys only for large, frequently filtered tables, because automatic clustering has its own cost.</p><p>Finally, review the top 20 most expensive queries monthly. Fixing a handful of them usually delivers the biggest saving.</p>"
+  },
+  {
+   "slug": "direct-lake-power-bi-explained",
+   "title": "Direct Lake in Power BI: What It Is and When to Use It",
+   "category": "Microsoft Fabric",
+   "excerpt": "Direct Lake reads Delta tables from OneLake directly. Learn where it fits between Import and DirectQuery.",
+   "author": "Raj Singh",
+   "date": "2026-09-10",
+   "read": 7,
+   "hue": 265,
+   "tags": [
+    "Fabric",
+    "Power BI"
+   ],
+   "content": "<p>Power BI historically forced a trade-off: <em>Import</em> is fast but needs refreshes, while <em>DirectQuery</em> is fresh but slower. <strong>Direct Lake</strong> aims to remove the compromise by loading Delta Parquet column data from OneLake into memory on demand.</p><h2>When it works best</h2><p>Direct Lake suits large fact tables maintained by Fabric Lakehouse or Warehouse pipelines, where data freshness matters and refresh windows are painful. Keep tables well-compacted with V-Order and avoid tiny files.</p><h2>Watch-outs</h2><p>Some DAX and modelling features fall back to DirectQuery, which you should monitor. Design gold tables as star schemas and test fallback behaviour before go-live.</p>"
+  },
+  {
+   "slug": "sql-server-to-azure-sql-migration-checklist",
+   "title": "SQL Server to Azure SQL: A Migration Checklist",
+   "category": "MS SQL",
+   "excerpt": "Assess, choose the right target, migrate with minimal downtime, and validate. A battle-tested checklist.",
+   "author": "CB Singh",
+   "date": "2026-08-22",
+   "read": 9,
+   "hue": 350,
+   "tags": [
+    "SQL Server",
+    "Azure"
+   ],
+   "content": "<p>Migrating from on-premises SQL Server to Azure is rarely a lift-and-shift. A structured approach avoids surprises.</p><h2>Assess</h2><p>Run Azure Data Studio's migration assessment to detect compatibility issues, deprecated features and SKU recommendations. Capture a performance baseline before touching anything.</p><h2>Choose the target</h2><p>Azure SQL Database suits modern apps; Managed Instance keeps near-100% engine compatibility for cross-database queries and SQL Agent; SQL on VMs offers full control.</p><h2>Migrate and validate</h2><p>Use the Database Migration Service in online mode for minimal downtime. After cutover, compare row counts, checksums and query plans, and monitor Query Store for regressions.</p>"
+  },
+  {
+   "slug": "building-reliable-data-pipelines",
+   "title": "Ten Principles for Building Reliable Data Pipelines",
+   "category": "Data Engineering",
+   "excerpt": "Idempotency, observability, contracts and more: the habits that separate fragile pipelines from dependable ones.",
+   "author": "CB Singh",
+   "date": "2026-08-03",
+   "read": 7,
+   "hue": 160,
+   "tags": [
+    "Pipelines",
+    "Quality"
+   ],
+   "content": "<p>Reliable pipelines are rarely clever. They are predictable, observable and easy to rerun.</p><h2>Design for rerun</h2><p>Make every job idempotent so retries never duplicate data. Partition by date, use merge/upsert semantics and avoid side effects.</p><h2>Observe everything</h2><p>Emit row counts, freshness and failure metrics. Alert on data quality, not just job failure, because a successful job can still deliver wrong data.</p><h2>Contracts and tests</h2><p>Agree schemas with producers, validate at the boundary and run automated tests in CI. Document ownership and on-call expectations for every dataset.</p>"
+  },
+  {
+   "slug": "unity-catalog-governance-guide",
+   "title": "Unity Catalog: Governance Without the Friction",
+   "category": "Databricks",
+   "excerpt": "How to structure catalogs, schemas and grants so governance accelerates teams instead of blocking them.",
+   "author": "Raj Singh",
+   "date": "2026-07-18",
+   "read": 6,
+   "hue": 24,
+   "tags": [
+    "Databricks",
+    "Governance"
+   ],
+   "content": "<p>Governance fails when it is bolted on late. Unity Catalog lets you define access once and apply it across workspaces.</p><h2>Structure</h2><p>Use one catalog per environment (dev, test, prod) or per domain, with schemas aligned to medallion layers. Keep naming predictable.</p><h2>Access</h2><p>Grant privileges to groups, never individuals. Use row filters and column masks for sensitive fields and enable system tables for audit and lineage.</p>"
+  },
+  {
+   "slug": "azure-landing-zone-for-data-platforms",
+   "title": "Azure Landing Zones for Data Platforms",
+   "category": "Azure",
+   "excerpt": "Network isolation, identity and policy: the foundations to put in place before your first pipeline runs.",
+   "author": "Raj Singh",
+   "date": "2026-06-30",
+   "read": 8,
+   "hue": 225,
+   "tags": [
+    "Azure",
+    "Security"
+   ],
+   "content": "<p>A data platform is only as secure as the cloud foundation beneath it. An Azure landing zone provides subscriptions, policy and networking guardrails from day one.</p><h2>Core building blocks</h2><p>Hub-and-spoke networking with private endpoints, Entra ID with conditional access and managed identities, Key Vault for secrets, and Azure Policy for guardrails. Deploy it all with Bicep or Terraform so environments stay identical.</p>"
+  },
+  {
+   "slug": "remote-first-engineering-teams",
+   "title": "Making Remote-First Engineering Teams Actually Work",
+   "category": "Culture",
+   "excerpt": "Practices we use to deliver across time zones with high trust, clear ownership and little overhead.",
+   "author": "Pooja Singh",
+   "date": "2026-06-05",
+   "read": 5,
+   "hue": 300,
+   "tags": [
+    "Remote",
+    "Culture"
+   ],
+   "content": "<p>Remote works when expectations are explicit. We write things down, favour asynchronous updates and keep a small daily overlap window for collaboration.</p><h2>What we do</h2><p>Every project has a written definition of done, a shared board and weekly demos. Onboarding follows a checklist so new engineers contribute in their first week.</p>"
+  },
+  {
+   "slug": "real-time-analytics-eventstreams-kafka",
+   "title": "Real-Time Analytics: Eventstreams, Kafka and Streaming Lakehouses",
+   "category": "Streaming",
+   "excerpt": "Choosing between Fabric Eventstreams, Kafka and Structured Streaming for low-latency analytics.",
+   "author": "CB Singh",
+   "date": "2026-05-14",
+   "read": 7,
+   "hue": 320,
+   "tags": [
+    "Streaming",
+    "Kafka",
+    "Fabric"
+   ],
+   "content": "<p>Not every dashboard needs sub-second latency, so start with the business requirement. If minutes are acceptable, micro-batch is simpler and cheaper.</p><h2>Options</h2><p>Fabric Eventstreams and Real-Time Intelligence suit Microsoft-centric streaming; Kafka remains the backbone for high-throughput event platforms; Spark Structured Streaming bridges streams into Delta tables for unified batch and streaming.</p>"
+  }
+ ],
+ "projects": [
+  {
+   "title": "Lakehouse Modernisation for a Global Retailer",
+   "industry": "Retail",
+   "challenge": "Fragmented reporting across regional warehouses and slow overnight batches.",
+   "solution": "Unified Databricks medallion lakehouse with Delta Live Tables and Unity Catalog governance.",
+   "results": [
+    "Faster reporting windows",
+    "Single governed source of truth",
+    "Lower platform spend"
+   ],
+   "tech": [
+    "Databricks",
+    "Delta Lake",
+    "Power BI"
+   ]
+  },
+  {
+   "title": "Fabric Migration for a Financial Services Group",
+   "industry": "Financial Services",
+   "challenge": "Legacy EDW and sprawling Power BI workspaces with inconsistent metrics.",
+   "solution": "Microsoft Fabric lakehouse with Direct Lake semantic models and workspace governance.",
+   "results": [
+    "Consistent KPIs",
+    "Reduced refresh failures",
+    "Simpler licensing"
+   ],
+   "tech": [
+    "Fabric",
+    "OneLake",
+    "Direct Lake"
+   ]
+  },
+  {
+   "title": "Snowflake Cost & Performance Programme",
+   "industry": "SaaS",
+   "challenge": "Rapidly growing credit consumption with unpredictable query performance.",
+   "solution": "Warehouse redesign, resource monitors, clustering review and query optimisation.",
+   "results": [
+    "Meaningful credit savings",
+    "Predictable performance",
+    "Cost dashboards"
+   ],
+   "tech": [
+    "Snowflake",
+    "dbt",
+    "FinOps"
+   ]
+  },
+  {
+   "title": "SQL Server to Azure SQL Managed Instance",
+   "industry": "Healthcare",
+   "challenge": "Ageing on-premises SQL estate with limited disaster recovery.",
+   "solution": "Assessed and migrated databases with online migration, geo-replication and monitoring.",
+   "results": [
+    "Minimal downtime cutover",
+    "Improved resilience",
+    "Reduced admin effort"
+   ],
+   "tech": [
+    "Azure SQL MI",
+    "DMS",
+    "Always On"
+   ]
+  }
+ ],
+ "careers": [
+  {
+   "title": "Senior Data Engineer (Databricks / Fabric)",
+   "type": "Contract · Remote",
+   "level": "Senior",
+   "location": "Worldwide",
+   "summary": "Design and build lakehouse pipelines, mentor engineers and own delivery quality."
+  },
+  {
+   "title": "Microsoft Fabric Consultant",
+   "type": "Contract · Remote",
+   "level": "Mid–Senior",
+   "location": "Worldwide",
+   "summary": "Implement OneLake, Direct Lake models and Fabric governance for enterprise clients."
+  },
+  {
+   "title": "SQL Server DBA / Azure SQL Specialist",
+   "type": "Full-time · Remote",
+   "level": "Senior",
+   "location": "Worldwide",
+   "summary": "Tune, secure and migrate SQL estates; provide proactive DBA support."
+  },
+  {
+   "title": "Snowflake Data Engineer",
+   "type": "Contract · Remote",
+   "level": "Mid–Senior",
+   "location": "Worldwide",
+   "summary": "Build Snowflake ELT with Snowpipe, Streams, Tasks and dbt."
+  },
+  {
+   "title": "Cloud / DevOps Engineer (Azure)",
+   "type": "Full-time · Remote",
+   "level": "Mid–Senior",
+   "location": "Worldwide",
+   "summary": "Automate landing zones and data platform deployment with IaC and CI/CD."
+  }
+ ],
+ "testimonials": [
+  {
+   "quote": "They treated our data platform like their own product: clear architecture, clean code and zero drama at go-live.",
+   "name": "Head of Data Platform",
+   "role": "Global Retail Group (sample testimonial)"
+  },
+  {
+   "quote": "The remote team slotted into our sprints in days. Communication was crisp and delivery was predictable.",
+   "name": "VP Engineering",
+   "role": "SaaS Company (sample testimonial)"
+  },
+  {
+   "quote": "Our Snowflake and SQL estate is faster, cheaper and finally documented. Highly recommended.",
+   "name": "IT Director",
+   "role": "Healthcare Provider (sample testimonial)"
+  }
+ ],
+ "faqs": [
+  {
+   "q": "Which platforms and technologies do you support?",
+   "a": "Microsoft Fabric, Databricks, Snowflake, MS SQL Server and Azure SQL, Azure data and cloud services, Power BI, dbt, Spark, Python, Kafka and Terraform, plus broader remote IT engineering work."
+  },
+  {
+   "q": "Do you work with clients outside a specific country?",
+   "a": "Yes. We are remote-first and serve clients worldwide, aligning working hours with your time zone."
+  },
+  {
+   "q": "What engagement models are available?",
+   "a": "Hire us per day for as short or long as you need, hand us a whole project on a fixed scope and price, build a dedicated remote squad, or add managed support on a retainer."
+  },
+  {
+   "q": "Can I hire you for just a few days?",
+   "a": "Yes. Many clients book a senior engineer on a per-day basis for a health check, a hard problem or a short sprint. There are no long-term commitments, and you can extend whenever you like."
+  },
+  {
+   "q": "How does your pricing compare?",
+   "a": "Our rates are lower than typical market prices for comparable senior skills, whether you work with us per day or on a fixed-price project. We share a clear estimate before we start so there are no surprises."
+  },
+  {
+   "q": "Do you guarantee delivery?",
+   "a": "Yes. Every project starts with an agreed scope, milestones and acceptance criteria, and we commit to delivering against them with progress you can see every week. The specific guarantee terms are written into your agreement."
+  },
+  {
+   "q": "How quickly can you start?",
+   "a": "After a short discovery call and scoping, most engagements can begin within one to three weeks."
+  },
+  {
+   "q": "How do you handle security and confidentiality?",
+   "a": "We sign NDAs, work under least-privilege access, use your tenant and tooling, and follow your compliance requirements."
+  },
+  {
+   "q": "Can you take over an existing platform?",
+   "a": "Absolutely. We start with an assessment of architecture, cost and reliability, then stabilise and improve incrementally."
+  },
+  {
+   "q": "Do you offer training for our team?",
+   "a": "Yes. Knowledge transfer, documentation and hands-on workshops are part of every engagement."
+  },
+  {
+   "q": "Do you handle IT work outside data and cloud?",
+   "a": "We are open to all kinds of remote IT work. Share your requirement and we will tell you honestly whether we are the right fit."
+  }
+ ],
+ "values": [
+  {
+   "title": "Engineering first",
+   "text": "Clean code, tests and documentation on every deliverable."
+  },
+  {
+   "title": "Radical clarity",
+   "text": "Honest estimates, visible progress, no surprises."
+  },
+  {
+   "title": "Own the outcome",
+   "text": "We measure success by your business results."
+  },
+  {
+   "title": "Always learning",
+   "text": "Certifications, communities and continuous practice."
+  }
+ ],
+ "timeline": [
+  {
+   "year": "Foundation",
+   "title": "Intellytiq Solutions is founded",
+   "text": "Started with a mission: bring enterprise-grade data engineering to companies of every size."
+  },
+  {
+   "year": "Growth",
+   "title": "Expanded into cloud data platforms",
+   "text": "Added Microsoft Fabric, Databricks and Snowflake practices alongside SQL Server expertise."
+  },
+  {
+   "year": "Today",
+   "title": "Remote-first, worldwide",
+   "text": "Serving clients across time zones with specialist engineers and flexible engagement models."
+  },
+  {
+   "year": "Next",
+   "title": "AI-ready data foundations",
+   "text": "Helping clients prepare governed, high-quality data for analytics and AI."
+  }
+ ]
 }
