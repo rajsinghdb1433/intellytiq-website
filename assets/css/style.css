@@ -1,5 +1,6 @@
 /* Intellytiq Solutions: design system (bright default, dark optional) */
 :root{
+  --nav-h:80px;
   --bg:#f6f8fe; --bg2:#eaf0fc; --panel:rgba(255,255,255,.8); --line:rgba(var(--ov),.12);
   --ov:28,36,92; --text:#0f1430; --muted:#566086; --soft:#39426b;
   --surface:#ffffff; --solid:#ffffff; --cardbg:rgba(255,255,255,.82); --navbg:rgba(255,255,255,.78); --menubg:rgba(255,255,255,.97); --footbg:#eef2fc;
@@ -69,14 +70,14 @@ h3{font-size:clamp(22px,2.2vw,28px)}
 /* nav */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
 .nav.scrolled{background:var(--navbg);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-color:var(--line)}
-.nav .in{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:20px;letter-spacing:-.02em}
-.logo img{width:44px;height:44px;flex:none}
-.logo small{display:block;font-size:9.5px;letter-spacing:.32em;color:var(--muted);font-weight:600;margin-top:-3px}
+.nav .in{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h)}
+.logo{display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:-.02em}
+.logo img{width:58px;height:58px;flex:none}
+.logo small{display:block;font-size:11.5px;letter-spacing:.32em;color:var(--muted);font-weight:600;margin-top:-2px}
 .menu{display:flex;gap:6px;align-items:center}
-.menu a.m{padding:9px 14px;border-radius:999px;font-size:14.5px;color:var(--soft);transition:.25s}
+.menu a.m{padding:11px 17px;border-radius:999px;font-size:16.5px;font-weight:500;color:var(--soft);transition:.25s}
 .menu a.m:hover,.menu a.m.active{background:rgba(var(--ov),.09);color:var(--text)}
-.menu .btn{padding:10px 20px;font-size:14.5px;margin-left:8px}
+.menu .btn{padding:13px 26px;font-size:16.5px;margin-left:10px}
 .burger{display:none;width:44px;height:44px;border-radius:12px;position:relative}
 .burger i,.burger i::before{content:"";position:absolute;left:12px;width:20px;height:2px;background:var(--text);transition:.3s}
 .burger i{top:21px}.burger i::before{top:-7px;left:0}
@@ -368,13 +369,15 @@ footer .about{color:var(--muted);margin:18px 0 22px;max-width:340px;font-size:15
   .story{grid-template-columns:1fr}.story .stick{position:relative;top:0}
   .contact{grid-template-columns:1fr}.featured{grid-template-columns:1fr}
 }
-@media (max-width:860px){
+@media (max-width:940px){
   .burger{display:block}
-  .menu{position:fixed;inset:68px 0 auto 0;flex-direction:column;align-items:stretch;gap:2px;padding:16px 20px 28px;background:var(--menubg);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);transform:translateY(-12px);opacity:0;visibility:hidden;transition:.35s var(--ease);max-height:calc(100vh - 68px);overflow:auto}
+  .menu{position:fixed;inset:var(--nav-h) 0 auto 0;flex-direction:column;align-items:stretch;gap:2px;padding:16px 20px 28px;background:var(--menubg);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);transform:translateY(-12px);opacity:0;visibility:hidden;transition:.35s var(--ease);max-height:calc(100vh - var(--nav-h));overflow:auto}
   .menu.open{opacity:1;visibility:visible;transform:none}
   .menu a.m{font-size:18px;padding:14px}.menu .btn{margin:10px 0 0;justify-content:center}
   .drop .panel{position:static;transform:none;width:auto;opacity:1;visibility:visible;grid-template-columns:1fr;background:none;border:0;padding:0 0 0 12px;display:none}
   .drop.open .panel{display:grid}
+}
+@media (max-width:860px){
   .bento{grid-template-columns:1fr}.bento>*{grid-column:auto!important}
   .stats{grid-template-columns:repeat(2,1fr);gap:34px 14px}
   .g2,.g3,.g4,.quotes{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}

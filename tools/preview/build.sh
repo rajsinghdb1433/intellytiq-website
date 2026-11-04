@@ -8,7 +8,7 @@ cp "$ROOT/tools/preview/demo.js" "$OUT/assets/js/demo.js"
 rm -rf "$OUT/Intellytiq-Videos/source"; rm -f "$OUT/data/captcha.ttf" "$OUT/data/captcha-font-LICENSE.txt" "$OUT/admin/.htaccess"
 cd "$OUT"
 mv index.html home.html; mv admin/index.html admin/home.html
-for f in *.html; do sed -i 's#<script src="assets/js/app.js" defer>#<script src="assets/js/demo.js"></script>\n<script src="assets/js/app.js" defer>#' "$f"; done
-sed -i 's#<script src="admin.js">#<script src="../assets/js/demo.js"></script>\n<script src="admin.js">#' admin/home.html
+for f in *.html; do sed -i 's#<script src="assets/js/app.js[^"]*" defer>#<script src="assets/js/demo.js"></script>\n&#' "$f"; done
+sed -i 's#<script src="admin.js[^"]*">#<script src="../assets/js/demo.js"></script>\n&#' admin/home.html
 grep -rl "index.html" --include=*.html --include=*.js . | xargs sed -i 's#admin/"#admin/home.html"#g; s#index\.html#home.html#g'
 cp "$ROOT/tools/preview/launcher.html" index.html

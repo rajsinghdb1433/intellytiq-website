@@ -109,7 +109,7 @@ function buildNav() {
   const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
   onScroll(); addEventListener('scroll', onScroll, {passive: true});
   burger.addEventListener('click', () => { const o = menu.classList.toggle('open'); burger.classList.toggle('open', o); burger.setAttribute('aria-expanded', o); });
-  $('.drop > a')?.addEventListener('click', e => { if (matchMedia('(max-width:860px)').matches) { e.preventDefault(); $('.drop').classList.toggle('open'); } });
+  $('.drop > a')?.addEventListener('click', e => { if (matchMedia('(max-width:940px)').matches) { e.preventDefault(); $('.drop').classList.toggle('open'); } });
 }
 
 function buildFooter(s = {}) {
@@ -368,6 +368,7 @@ function lazyVideos() {
     (v.closest('.vtile,.vframe,.bgvid-slot') || v).remove();
     $$('[data-video-section]').forEach(h => { if (!h.querySelector('video')) (h.closest('section') || h).hidden = true; });
   };
+  const fail = v => { if (v.getAttribute('poster')) { v.removeAttribute('src'); return; } kill(v); };
   const io = new IntersectionObserver(es => es.forEach(e => {
     const v = e.target;
     if (e.isIntersecting) {
@@ -377,8 +378,8 @@ function lazyVideos() {
     } else if (!v.paused) v.pause();
   }), {rootMargin: '300px 0px'});
   vids.forEach(v => {
-    v.addEventListener('error', () => kill(v));
-    v.addEventListener('loadedmetadata', () => { if (!v.videoWidth || !isFinite(v.duration) || v.duration < 1.5) kill(v); });
+    v.addEventListener('error', () => fail(v));
+    v.addEventListener('loadedmetadata', () => { if (!v.videoWidth || !isFinite(v.duration) || v.duration < 1.5) fail(v); });
     io.observe(v);
   });
 }

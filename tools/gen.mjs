@@ -1,10 +1,13 @@
 // Static page generator: `node tools/gen.mjs` writes every *.html page, sitemap.xml and robots.txt.
 // Pages are plain HTML (no build step is needed on the server); dynamic content is rendered by assets/js/app.js.
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+// Each CSS/JS address carries a short fingerprint of the file, so browsers and the CDN always fetch the latest version after a change.
+const ver = f => createHash('sha1').update(readFileSync(join(root, f))).digest('hex').slice(0, 8);
 const SITE = process.env.SITE_URL || 'https://intellytiqsolutions.com';
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const FAV = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23d946ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M24 3 42 13.500v21L24 45 6 34.500v-21L24 3Z' fill='%2305060a' stroke='url(%23g)' stroke-width='3.500'/%3E%3Ccircle cx='24' cy='24' r='5' fill='url(%23g)'/%3E%3C/svg%3E";
@@ -20,9 +23,9 @@ const shell = ({ file, page, title, desc, body, extra = '' }) => `<!doctype html
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Intellytiq Solutions">
 <link rel="canonical" href="${SITE}/${file === 'index.html' ? '' : file}">
 <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg">
-<script src="assets/js/theme.js"></script>
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/extra.css">
+<script src="assets/js/theme.js?v=${ver('assets/js/theme.js')}"></script>
+<link rel="stylesheet" href="assets/css/style.css?v=${ver('assets/css/style.css')}">
+<link rel="stylesheet" href="assets/css/extra.css?v=${ver('assets/css/extra.css')}">
 ${extra}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Intellytiq Solutions","url":"${SITE}","logo":"${SITE}/assets/img/logo-mark.svg","description":"Data engineering, Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure cloud consulting delivered remotely worldwide."}</script>
 </head>
@@ -33,8 +36,8 @@ ${extra}
 ${body}
 </main>
 <div id="foot"></div>
-<script src="assets/js/captcha.js" defer></script>
-<script src="assets/js/app.js" defer></script>
+<script src="assets/js/captcha.js?v=${ver('assets/js/captcha.js')}" defer></script>
+<script src="assets/js/app.js?v=${ver('assets/js/app.js')}" defer></script>
 </body>
 </html>
 `;
@@ -287,4 +290,8 @@ for (const p of pages) writeFileSync(join(root, p.file), shell(p));
 const urls = pages.filter(p => !['404.html'].includes(p.file)).map(p => `  <url><loc>${SITE}/${p.file === 'index.html' ? '' : p.file}</loc></url>`).join('\n');
 writeFileSync(join(root, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 writeFileSync(join(root, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api.php\nSitemap: ${SITE}/sitemap.xml\n`);
+
+// The admin page is hand-written, so stamp its asset addresses the same way.
+const adminPath = join(root, 'admin/index.html');
+writeFileSync(adminPath, readFileSync(adminPath, 'utf8').replace(/(href|src)="((?:\.\.\/)?[^"?]+\.(?:css|js))(?:\?v=[a-f0-9]+)?"/g, (m, attr, p) => `${attr}="${p}?v=${ver(join('admin', p))}"`));
 console.log(`Generated ${pages.length} pages.`);

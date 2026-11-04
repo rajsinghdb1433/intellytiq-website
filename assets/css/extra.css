@@ -44,7 +44,7 @@ main{overflow-x:clip}
 .chip-f.c1{left:34%;top:-2%}.chip-f.c2{right:-2%;top:46%;animation-delay:-1.6s}.chip-f.c3{left:6%;bottom:12%;animation-delay:-3.2s}
 @media (max-width:1180px){.hero-art{display:none}.hero::after{background:linear-gradient(180deg,rgba(246,248,254,.8),rgba(246,248,254,.55))}}
 @media (prefers-reduced-motion:reduce){.hero-video{display:none}.hero-art,.chip-f{animation:none}}
-.theme-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);margin-left:6px;transition:.3s;background:rgba(var(--ov),.05)}
+.theme-btn{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);margin-left:6px;transition:.3s;background:rgba(var(--ov),.05)}
 .theme-btn:hover{background:rgba(var(--ov),.12);transform:rotate(18deg)}
 .theme-btn svg{width:19px;height:19px;fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .theme-btn .moon{display:none}
@@ -53,7 +53,7 @@ main{overflow-x:clip}
 :root[data-theme="dark"] .phero::before{background:radial-gradient(circle,rgba(99,102,241,.32),transparent 62%)}
 .cta-band h2{color:#fff}
 .menu a.m{color:var(--soft)}
-@media (max-width:860px){.theme-btn{margin:8px 0 0;width:100%;border-radius:14px}}
+@media (max-width:940px){.theme-btn{margin:8px 0 0;width:100%;border-radius:14px}}
 
 /* ---- assurances ---- */
 .assure{list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px}
@@ -162,3 +162,9 @@ footer .cap-slot{margin-top:10px;max-width:340px}
 .article img{max-width:100%;height:auto;border-radius:16px;margin:8px 0 28px;display:block}
 .qa .a img{max-height:420px;object-fit:cover;width:100%}
 .qa .a video{max-height:420px;background:#0a0f26}
+
+/* ---- navigation sizing at in-between and small widths ---- */
+@media (max-width:1240px){.menu a.m{padding:10px 12px;font-size:15.5px}.menu .btn{padding:12px 20px;font-size:15.5px;margin-left:6px}.logo{font-size:24px}.logo img{width:52px;height:52px}}
+@media (max-width:1040px){:root{--nav-h:76px}.menu a.m{padding:9px 9px;font-size:15px}.menu .btn{padding:11px 16px;font-size:15px}.logo{font-size:22px}.logo img{width:48px;height:48px}.theme-btn{width:42px;height:42px}}
+@media (max-width:940px){:root{--nav-h:72px}.logo{font-size:23px}.logo img{width:50px;height:50px}.menu a.m{font-size:19px;padding:15px}.menu .btn{font-size:17px;padding:15px 26px}}
+@media (max-width:940px){.theme-btn{width:100%;height:48px;border-radius:14px;margin:8px 0 0}.menu .btn{margin:10px 0 0}}
