@@ -52,7 +52,8 @@
     "Lakehouse",
     "Direct Lake",
     "Power BI"
-   ]
+   ],
+   "video": "lakehouse-telemetry"
   },
   {
    "slug": "databricks",
@@ -73,7 +74,8 @@
     "Delta Lake",
     "Unity Catalog",
     "MLflow"
-   ]
+   ],
+   "video": "lakehouse-telemetry"
   },
   {
    "slug": "snowflake",
@@ -94,7 +96,8 @@
     "Snowpark",
     "Dynamic Tables",
     "FinOps"
-   ]
+   ],
+   "video": "cloud-mesh"
   },
   {
    "slug": "data-engineering",
@@ -115,7 +118,8 @@
     "dbt",
     "Airflow",
     "Kafka"
-   ]
+   ],
+   "video": "devops-pipeline"
   },
   {
    "slug": "data-warehousing",
@@ -136,7 +140,8 @@
     "Data Vault",
     "SCD",
     "Semantic layer"
-   ]
+   ],
+   "video": "lakehouse-telemetry"
   },
   {
    "slug": "ms-sql-server",
@@ -157,7 +162,8 @@
     "Always On",
     "Azure SQL",
     "DBA"
-   ]
+   ],
+   "video": "zero-trust"
   },
   {
    "slug": "azure-cloud",
@@ -178,7 +184,8 @@
     "Terraform",
     "ADLS Gen2",
     "Purview"
-   ]
+   ],
+   "video": "cloud-mesh"
   },
   {
    "slug": "bi-analytics",
@@ -199,7 +206,8 @@
     "DAX",
     "ML",
     "Copilot"
-   ]
+   ],
+   "video": "ai-core"
   },
   {
    "slug": "remote-it-staffing",
@@ -220,7 +228,8 @@
     "Dedicated teams",
     "Remote",
     "Global"
-   ]
+   ],
+   "video": "devops-pipeline"
   }
  ],
  "technologies": [
@@ -1094,6 +1103,53 @@
    "year": "Next",
    "title": "AI-ready data foundations",
    "text": "Helping clients prepare governed, high-quality data for analytics and AI."
+  }
+ ],
+ "videos": [
+  {
+   "key": "lakehouse-telemetry",
+   "tag": "Data platforms",
+   "title": "Lakehouse telemetry at scale",
+   "text": "Stream, store and query enterprise telemetry on Fabric, Databricks and Snowflake.",
+   "link": "service.html?s=databricks",
+   "file": "Intellytiq-Videos/intellytiq-enterprise-big-data-lakehouse-telemetry-1080p-12s.mp4",
+   "poster": ""
+  },
+  {
+   "key": "cloud-mesh",
+   "tag": "Cloud",
+   "title": "Hybrid cloud, connected",
+   "text": "Secure Azure foundations that link on-premises and cloud workloads.",
+   "link": "service.html?s=azure-cloud",
+   "file": "Intellytiq-Videos/intellytiq-enterprise-cloud-hybrid-mesh-1080p-12s.mp4",
+   "poster": ""
+  },
+  {
+   "key": "devops-pipeline",
+   "tag": "Automation",
+   "title": "CI/CD for data",
+   "text": "Automated builds, tests and releases for pipelines and databases.",
+   "link": "service.html?s=data-engineering",
+   "file": "Intellytiq-Videos/intellytiq-automated-devops-ci-cd-pipeline-1080p-12s.mp4",
+   "poster": ""
+  },
+  {
+   "key": "zero-trust",
+   "tag": "Security",
+   "title": "Zero-trust by design",
+   "text": "Least-privilege access, private networking and governance from day one.",
+   "link": "service.html?s=azure-cloud",
+   "file": "Intellytiq-Videos/intellytiq-zero-trust-cybersecurity-threat-shield-1080p-12s.mp4",
+   "poster": ""
+  },
+  {
+   "key": "ai-core",
+   "tag": "AI and analytics",
+   "title": "Intelligence from your data",
+   "text": "BI, forecasting and AI-ready data foundations.",
+   "link": "service.html?s=bi-analytics",
+   "file": "Intellytiq-Videos/intellytiq-ai-neural-core-machine-intelligence-1080p-12s.mp4",
+   "poster": ""
   }
  ]
 }

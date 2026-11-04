@@ -43,7 +43,7 @@ const phero = (h1, lead, crumb) => `<section class="phero"><canvas class="net"><
   <div class="crumbs rv"><a href="index.html">Home</a> / ${crumb}</div>
   <h1 class="rv" style="--d:.08s">${h1}</h1><p class="lead rv" style="--d:.16s">${lead}</p></div></section>`;
 
-const cta = (h = 'Let’s build your data advantage.', p = 'Hire us per day or for a fixed project, at rates below typical market prices, with guaranteed delivery. We reply within one business day.') => `<section class="sec"><div class="wrap"><div class="cta-band rv"><h2>${h}</h2><p class="lead">${p}</p><div class="cta"><a class="btn primary" href="contact.html">Start a conversation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div></div></div></section>`;
+const cta = (h = 'Let’s build your data advantage.', p = 'Hire us per day or for a fixed project, at rates below typical market prices, with guaranteed delivery. We reply within one business day.', vid = '') => `<section class="sec"><div class="wrap"><div class="cta-band rv">${vid ? `<span class="bgvid-slot" data-render="bg-video" data-key="${vid}"></span>` : ''}<h2>${h}</h2><p class="lead">${p}</p><div class="cta"><a class="btn primary" href="contact.html">Start a conversation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div></div></div></section>`;
 
 const head = (eyebrow, h2, lead = '', center = true) => `<div class="head ${center ? 'center' : ''}"><div class="eyebrow rv">${eyebrow}</div><h2 class="rv" style="--d:.07s">${h2}</h2>${lead ? `<p class="lead rv" style="--d:.14s">${lead}</p>` : ''}</div>`;
 
@@ -66,7 +66,8 @@ body: `
 <section class="sec"><div class="wrap center">
   <div class="eyebrow rv">Who we are</div>
   <h2 class="rv" style="--d:.07s;max-width:1000px;margin:0 auto">A specialist team that turns <span class="grad">complex data</span> into dependable, decision-ready platforms.</h2>
-  <p class="lead rv" style="--d:.14s;margin:28px auto 0">From a single pipeline to a full enterprise lakehouse, we embed senior engineers who ship, document and hand over, wherever you are in the world.</p></div></section>
+  <p class="lead rv" style="--d:.14s;margin:28px auto 0">From a single pipeline to a full enterprise lakehouse, we embed senior engineers who ship, document and hand over, wherever you are in the world.</p>
+  <div class="vslot" data-render="video-frame" data-key="cloud-mesh" style="margin-top:56px"></div></div></section>
 
 <section class="sec" style="padding-top:0"><div class="wrap">
   ${head('Hire us your way', 'Flexible, affordable and <span class="grad">guaranteed.</span>', 'Pick the engagement that fits. Every option comes with rates below typical market prices and delivery you can count on.')}
@@ -80,6 +81,10 @@ body: `
 <section class="sec" style="padding-top:0"><div class="wide">
   ${head('What we do', 'One partner. Every layer of the data stack.')}
   <div class="bento" data-render="services-bento"></div></div></section>
+
+<section class="sec alt"><div class="wrap">
+  ${head('Capabilities in motion', 'See what we build, <span class="grad">in action.</span>', 'Platforms, pipelines, security and AI, delivered end to end.')}
+  <div class="vbento" data-render="video-bento" data-video-section></div></div></section>
 
 <section class="sec light"><div class="wrap">
   ${head('How we work', 'From first call to production, <span style="color:#6366f1">in five clear steps.</span>', 'A transparent delivery model that keeps architecture, cost and quality visible at every stage.')}
@@ -140,7 +145,7 @@ clean.writeStream.<span class="f">foreachBatch</span>(upsert).<span class="f">st
 
 <section class="sec"><div class="wrap">${head('FAQ', 'Questions, answered.')}<div class="faq" data-render="faq" data-limit="5"></div>
   <div class="center" style="margin-top:36px"><a class="link" href="faq.html">More questions ${ARROW}</a></div></div></section>
-${cta()}`});
+${cta(undefined, undefined, 'ai-core')}`});
 
 /* ---------------- ABOUT ---------------- */
 add({ file: 'about.html', page: 'about', title: 'About Us | Intellytiq Solutions', desc: 'Learn about Intellytiq Solutions: a remote-first data engineering and cloud consultancy specialising in Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure.',
@@ -150,6 +155,7 @@ body: `${phero('We are <span class="grad">Intellytiq</span>.', 'A remote-first t
   <div><div class="eyebrow rv">Our mission</div><h2 class="rv" style="--d:.07s">Make enterprise-grade data engineering accessible to every company.</h2></div>
   <div><p class="lead rv" style="--d:.1s;margin-bottom:22px">Intellytiq Solutions provides the technical capabilities and skillsets companies need: Microsoft Fabric, Databricks, Snowflake, MS SQL, data engineering, warehousing and Azure cloud services.</p>
   <p class="lead rv" style="--d:.16s">We are open to all kinds of remote IT work, from short specialist engagements to long-term dedicated squads, and we hold ourselves to one standard: ship work that your team is proud to own.</p></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="vslot" data-render="video-frame" data-key="zero-trust"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Principles', 'What we stand for.')}<div class="grid g4" data-render="values"></div></div></section>
 <section class="sec"><div class="wrap"><div class="stats" data-render="stats"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Journey', 'Our story so far.')}<div class="tl" data-render="timeline"></div></div></section>
@@ -160,6 +166,7 @@ ${cta('Meet the people behind the platforms.', 'Say hello to our team, or tell u
 add({ file: 'services.html', page: 'services', title: 'Services | Intellytiq Solutions', desc: 'Microsoft Fabric, Databricks, Snowflake, data engineering, data warehousing, MS SQL Server, Azure cloud, BI and remote IT staffing services.',
 body: `${phero('Services built for the <span class="grad">modern data estate</span>.', 'Strategy, engineering and operations across the platforms that matter, delivered by senior specialists, remotely and worldwide.', 'Services')}
 <section class="sec" style="padding-top:20px"><div class="wrap story" style="align-items:center"><div class="illus rv left"><img src="assets/img/lakehouse.svg" alt="Bronze, silver and gold lakehouse layers" loading="lazy"></div><div><div class="eyebrow rv">Our approach</div><h2 class="rv" style="--d:.07s">Every layer, engineered with care.</h2><p class="lead rv" style="--d:.14s;margin-top:18px">From raw ingestion to curated, governed insight, we build the medallion layers your analytics depend on.</p></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="vslot" data-render="video-frame" data-key="lakehouse-telemetry"></div></div></section>
 <section class="sec" style="padding-top:20px"><div class="wrap"><div class="grid g3" data-render="services-grid"></div></div></section>
 <section class="sec" style="padding-top:0"><div class="wrap"><div class="assure-bar rv"><div><b>Per day or per project, for less.</b><p>Book an engineer by the day or hand us the full project. Rates are below typical market prices and delivery is guaranteed.</p></div><a class="btn primary" href="contact.html">Get a quote ${ARROW}</a></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Technologies', 'Technologies we deliver on.', 'Select any logo to see what we deliver with it and how we can help with your project.')}<div class="tiles" data-render="tech-tiles"></div></div></section>
@@ -173,7 +180,7 @@ ${cta()}`});
 /* ---------------- SERVICE DETAIL ---------------- */
 add({ file: 'service.html', page: 'service', title: 'Service | Intellytiq Solutions', desc: 'Intellytiq Solutions service details: capabilities, deliverables and technologies.',
 body: `<section class="phero"><canvas class="net"></canvas><div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / <a href="services.html">Services</a> / <span id="svcCrumb">Service</span></div><h1 id="svcTitle">Service</h1><p class="lead" id="svcSummary"></p></div></section>
-<section class="sec" style="padding-top:20px"><div class="wrap" data-render="service-detail"></div></section>
+<section class="sec" style="padding-top:20px"><div class="wrap"><div id="svcMedia" style="margin-bottom:44px"></div><div data-render="service-detail"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Keep exploring', 'Related services.')}<div class="grid g3" id="related"></div></div></section>
 ${cta()}`});
 
@@ -183,6 +190,7 @@ body: `${phero('The stack we <span class="grad">master</span>.', 'Deep, hands-on
 <div class="marq" data-render="tech-marquee"></div>
 <section class="sec" style="padding-top:20px"><div class="wrap story" style="align-items:center"><div class="illus rv left"><img src="assets/img/cloud.svg" alt="Cloud platform connected to data services" loading="lazy"></div><div><div class="eyebrow rv">One connected stack</div><h2 class="rv" style="--d:.07s">Cloud-native from the ground up.</h2><p class="lead rv" style="--d:.14s;margin-top:18px">Fabric, Databricks, Snowflake and Azure services working together, secured and governed as one platform.</p></div></div></section>
 <section class="sec" style="padding-top:20px"><div class="wrap"><div class="tiles" data-render="tech-tiles"></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="vslot" data-render="video-frame" data-key="devops-pipeline"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Architecture', 'Open formats. No lock-in.', 'We favour Delta, Parquet and Iceberg-compatible patterns so your data stays yours.')}
   <div class="grid g3"><div class="card rv"><h3>Lakehouse</h3><p>Medallion layers on Delta Lake across Fabric OneLake and Databricks with Unity Catalog governance.</p></div><div class="card rv" style="--d:.1s"><h3>Warehouse</h3><p>Dimensional and Data Vault models on Snowflake, Fabric Warehouse and SQL Server.</p></div><div class="card rv" style="--d:.2s"><h3>Real-time</h3><p>Event-driven designs with Kafka, Event Hubs, Fabric Eventstreams and Structured Streaming.</p></div></div></div></section>
 ${cta()}`});

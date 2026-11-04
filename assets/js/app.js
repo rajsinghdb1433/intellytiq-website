@@ -142,9 +142,13 @@ const R = {
     $('#svcTitle').textContent = s.title; $('#svcSummary').textContent = s.summary; $('#svcCrumb').textContent = s.title;
     el.innerHTML = `<div class="story"><div class="stick rv left"><div class="ico card" style="width:84px;height:84px;padding:0;display:grid;place-items:center;background:var(--grad)">${icon(s.icon).replace('<svg', '<svg style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.7"')}</div><h2 style="margin:26px 0 16px">What we deliver</h2><p class="lead">${esc(s.body)}</p><div class="cta" style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap"><a class="btn primary" href="contact.html?topic=${encodeURIComponent(s.title)}">Discuss this service ${ARROW}</a></div></div>
     <div>${(s.features || []).map((f, i) => `<div class="card rv" style="margin-bottom:16px;--d:${i * .05}s;display:flex;gap:18px;align-items:center;padding:24px 28px"><b class="grad" style="font-size:26px;font-family:var(--mono)">${String(i + 1).padStart(2, '0')}</b><h3 style="font-size:20px;margin:0">${esc(f)}</h3></div>`).join('')}</div></div>`;
+    const sm = $('#svcMedia'); if (sm) { const vv = (d.videos || []).find(x => x.key === s.video); sm.innerHTML = vv ? videoFrame(vv) : ''; }
     const others = d.services.filter(x => x.slug !== s.slug).slice(0, 3);
     const rel = $('#related'); if (rel) rel.innerHTML = others.map(o => `<a class="card rv" href="service.html?s=${esc(o.slug)}"><div class="ico">${icon(o.icon)}</div><h3>${esc(o.title)}</h3><p>${esc(o.summary)}</p></a>`).join('');
   },
+  'video-bento'(el, d) { el.innerHTML = (d.videos || []).map(videoTile).join(''); },
+  'video-frame'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key); el.innerHTML = v ? videoFrame(v) : ''; },
+  'bg-video'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key); el.innerHTML = v ? `<video class="bgvid" muted loop playsinline preload="none" data-src="${esc(v.file)}" aria-hidden="true"></video>` : ''; },
   'tech-marquee'(el, d) {
     const items = d.technologies.map(t => `<span>${esc(t.name)}</span>`).join('');
     el.innerHTML = `<div class="tr">${items}${items}</div>`;
@@ -344,6 +348,31 @@ function network() {
   });
 }
 
+/* ---------- videos: lazy, muted loops that remove themselves if the file cannot play ---------- */
+const videoFrame = (v, cls = '') => `<div class="vframe vwide ${cls}" data-vkey="${esc(v.key)}"><video muted loop playsinline preload="none" data-src="${esc(v.file)}" ${v.poster ? `poster="${esc(v.poster)}"` : ''} aria-label="${esc(v.title)}"></video>${v.title ? `<div class="vcap"><span class="vtag">${esc(v.tag || '')}</span><b>${esc(v.title)}</b></div>` : ''}</div>`;
+const videoTile = (v, i) => `<a class="vtile rv" style="--d:${(i % 3) * .08}s" href="${esc(v.link || 'services.html')}" data-vkey="${esc(v.key)}"><video muted loop playsinline preload="none" data-src="${esc(v.file)}" ${v.poster ? `poster="${esc(v.poster)}"` : ''} aria-hidden="true"></video><div class="vover"><span class="vtag">${esc(v.tag || '')}</span><h3>${esc(v.title)}</h3><p>${esc(v.text || '')}</p><span class="more">Explore ${ARROW}</span></div></a>`;
+function lazyVideos() {
+  const vids = $$('video[data-src]'); if (!vids.length) return;
+  const saver = !!(navigator.connection && navigator.connection.saveData);
+  const kill = v => {
+    (v.closest('.vtile,.vframe,.bgvid-slot') || v).remove();
+    $$('[data-video-section]').forEach(h => { if (!h.querySelector('video')) (h.closest('section') || h).hidden = true; });
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) {
+      if (saver) return;
+      if (!v.getAttribute('src')) { v.preload = 'metadata'; v.src = v.dataset.src; v.load(); }
+      if (!reduce) v.play().catch(() => {});
+    } else if (!v.paused) v.pause();
+  }), {rootMargin: '300px 0px'});
+  vids.forEach(v => {
+    v.addEventListener('error', () => kill(v));
+    v.addEventListener('loadedmetadata', () => { if (!v.videoWidth || !isFinite(v.duration) || v.duration < 1.5) kill(v); });
+    io.observe(v);
+  });
+}
+
 /* ---------- technology popup ---------- */
 function techModal(d) {
   const T = d.technologies; if (!T.length) return;
@@ -381,6 +410,6 @@ load().then(d => {
   const ns = $('#navServices'); if (ns) ns.innerHTML = d.services.map(s => `<a href="service.html?s=${esc(s.slug)}"><b>${esc(s.title)}</b><span>${esc(s.tags?.slice(0, 2).join(' · ') || '')}</span></a>`).join('');
   const fs = $('#footServices'); if (fs) fs.innerHTML = d.services.slice(0, 6).map(s => `<li><a href="service.html?s=${esc(s.slug)}">${esc(s.title)}</a></li>`).join('');
   $$('[data-render]').forEach(el => R[el.dataset.render]?.(el, d));
-  techModal(d); blogPage(d); postPage(d); forms(); motion(); network(); typer(); done();
+  techModal(d); lazyVideos(); blogPage(d); postPage(d); forms(); motion(); network(); typer(); done();
 });
 })();

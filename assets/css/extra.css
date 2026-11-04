@@ -114,3 +114,29 @@ button.tile:hover .more svg{transform:translateX(4px)}
 .cap-t:hover{color:var(--text)}
 footer .cap-slot{margin-top:10px;max-width:340px}
 .sub-form .subscribe{margin-top:6px}
+
+/* ---- videos ---- */
+.vslot:empty{display:none}
+.vwide{aspect-ratio:21/9;position:relative}
+.vframe video{position:absolute;inset:0}
+.vframe .vcap{position:absolute;left:0;right:0;bottom:0;display:flex;gap:12px;align-items:center;padding:34px 24px 18px;color:#fff;background:linear-gradient(transparent,rgba(5,8,30,.72));font-size:15px}
+.vtag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);color:#fff}
+.vbento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(240px,auto);gap:18px}
+.vtile{position:relative;overflow:hidden;border-radius:var(--radius);background:linear-gradient(135deg,#1e1b4b,#312e81 55%,#0e7490);display:flex;align-items:flex-end;color:#fff;isolation:isolate;box-shadow:var(--shadow);min-height:240px;transition:transform .5s var(--ease)}
+.vtile:nth-child(1){grid-column:span 4;grid-row:span 2}
+.vtile:nth-child(2),.vtile:nth-child(3){grid-column:span 2}
+.vtile:nth-child(4),.vtile:nth-child(5){grid-column:span 3}
+.vtile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease)}
+.vtile::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,8,30,0) 30%,rgba(5,8,30,.82))}
+.vtile:hover{transform:translateY(-6px)}
+.vtile:hover video{transform:scale(1.06)}
+.vover{padding:26px 28px;display:grid;gap:8px;max-width:520px;justify-items:start}
+.vover h3{font-size:clamp(20px,2.2vw,28px);color:#fff}
+.vover p{font-size:15px;color:rgba(255,255,255,.86)}
+.vover .more{display:inline-flex;gap:6px;align-items:center;font-weight:700;font-size:14px;color:#a5f3fc;transition:gap .3s}
+.vover .more svg{width:16px;height:16px}
+.vtile:hover .more{gap:12px}
+.bgvid-slot{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;border-radius:inherit}
+.bgvid{width:100%;height:100%;object-fit:cover;opacity:.32;mix-blend-mode:screen}
+@media (max-width:860px){.vbento{grid-template-columns:1fr}.vbento>.vtile{grid-column:auto!important;grid-row:auto!important;min-height:260px}.vwide{aspect-ratio:16/9}}
+@media (prefers-reduced-motion:reduce){.vtile,.vtile video{transition:none}}

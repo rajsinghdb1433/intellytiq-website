@@ -7,7 +7,7 @@
   const load = () => { if (mem) return mem; try { mem = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { mem = {}; } return mem; };
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) {} };
   const json = (o, s = 200) => new Response(JSON.stringify(o), {status: s, headers: {'Content-Type': 'application/json'}});
-  const COLS = ['settings','services','technologies','process','industries','team','posts','projects','careers','testimonials','faqs','values','timeline'];
+  const COLS = ['settings','services','technologies','process','industries','team','posts','projects','careers','testimonials','faqs','values','timeline','videos'];
   const clean = (s, n = 4000) => String(s || '').replace(/<[^>]*>/g, '').trim().slice(0, n);
   const isAuth = () => { try { return authed || sessionStorage.getItem('iq_demo_ok') === '1'; } catch (e) { return authed; } };
   const setAuth = v => { authed = v; try { v ? sessionStorage.setItem('iq_demo_ok', '1') : sessionStorage.removeItem('iq_demo_ok'); } catch (e) {} };
