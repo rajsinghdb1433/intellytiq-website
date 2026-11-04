@@ -142,12 +142,12 @@ const R = {
     $('#svcTitle').textContent = s.title; $('#svcSummary').textContent = s.summary; $('#svcCrumb').textContent = s.title;
     el.innerHTML = `<div class="story"><div class="stick rv left"><div class="ico card" style="width:84px;height:84px;padding:0;display:grid;place-items:center;background:var(--grad)">${icon(s.icon).replace('<svg', '<svg style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.7"')}</div><h2 style="margin:26px 0 16px">What we deliver</h2><p class="lead">${esc(s.body)}</p><div class="cta" style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap"><a class="btn primary" href="contact.html?topic=${encodeURIComponent(s.title)}">Discuss this service ${ARROW}</a></div></div>
     <div>${(s.features || []).map((f, i) => `<div class="card rv" style="margin-bottom:16px;--d:${i * .05}s;display:flex;gap:18px;align-items:center;padding:24px 28px"><b class="grad" style="font-size:26px;font-family:var(--mono)">${String(i + 1).padStart(2, '0')}</b><h3 style="font-size:20px;margin:0">${esc(f)}</h3></div>`).join('')}</div></div>`;
-    const sm = $('#svcMedia'); if (sm) { const vv = (d.videos || []).find(x => x.key === s.video); sm.innerHTML = vv ? videoFrame(vv) : ''; }
+    const sm = $('#svcMedia'); if (sm) { const vv = (d.videos || []).find(x => x.key === s.video) || (d.videos || [])[0]; sm.innerHTML = vv ? videoFrame(vv) : ''; }
     const others = d.services.filter(x => x.slug !== s.slug).slice(0, 3);
     const rel = $('#related'); if (rel) rel.innerHTML = others.map(o => `<a class="card rv" href="service.html?s=${esc(o.slug)}"><div class="ico">${icon(o.icon)}</div><h3>${esc(o.title)}</h3><p>${esc(o.summary)}</p></a>`).join('');
   },
-  'video-bento'(el, d) { el.innerHTML = (d.videos || []).map(videoTile).join(''); },
-  'video-frame'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key); el.innerHTML = v ? videoFrame(v) : ''; },
+  'video-bento'(el, d) { const vs = d.videos || []; if (vs.length < 3) { (el.closest('section') || el).hidden = true; return; } el.innerHTML = vs.map(videoTile).join(''); },
+  'video-frame'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key) || (d.videos || [])[0]; el.innerHTML = v ? videoFrame(v) : ''; },
   'bg-video'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key); el.innerHTML = v ? `<video class="bgvid" muted loop playsinline preload="none" data-src="${esc(v.file)}" aria-hidden="true"></video>` : ''; },
   'tech-marquee'(el, d) {
     const items = d.technologies.map(t => `<span>${esc(t.name)}</span>`).join('');

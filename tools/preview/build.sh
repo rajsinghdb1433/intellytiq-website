@@ -3,9 +3,9 @@
 set -euo pipefail
 OUT="$1"; ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 rm -rf "$OUT"; mkdir -p "$OUT"
-cp -r "$ROOT"/*.html "$ROOT"/assets "$ROOT"/data "$ROOT"/admin "$OUT"/
+cp -r "$ROOT"/*.html "$ROOT"/assets "$ROOT"/data "$ROOT"/admin "$ROOT"/Intellytiq-Videos "$OUT"/
 cp "$ROOT/tools/preview/demo.js" "$OUT/assets/js/demo.js"
-rm -f "$OUT/data/captcha.ttf" "$OUT/data/captcha-font-LICENSE.txt" "$OUT/admin/.htaccess"
+rm -rf "$OUT/Intellytiq-Videos/source"; rm -f "$OUT/data/captcha.ttf" "$OUT/data/captcha-font-LICENSE.txt" "$OUT/admin/.htaccess"
 cd "$OUT"
 mv index.html home.html; mv admin/index.html admin/home.html
 for f in *.html; do sed -i 's#<script src="assets/js/app.js" defer>#<script src="assets/js/demo.js"></script>\n<script src="assets/js/app.js" defer>#' "$f"; done
