@@ -3,3 +3,5 @@ storage/
 .DS_Store
 node_modules/
 uploads/
+__pycache__/
+*.pyc
