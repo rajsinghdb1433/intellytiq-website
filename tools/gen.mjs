@@ -20,9 +20,10 @@ const shell = ({ file, page, title, desc, body, extra = '' }) => `<!doctype html
 <title>${title}</title>
 <meta name="description" content="${desc}">
 <meta name="theme-color" content="#05060a">
-<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Intellytiq Solutions">
+<meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:type" content="website"><meta property="og:image" content="${SITE}/assets/img/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE}/assets/img/og-image.jpg"><meta property="og:site_name" content="Intellytiq Solutions">
 <link rel="canonical" href="${SITE}/${file === 'index.html' ? '' : file}">
 <link rel="icon" type="image/svg+xml" href="assets/img/logo-mark.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"><link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script src="assets/js/theme.js?v=${ver('assets/js/theme.js')}"></script>
 <link rel="stylesheet" href="assets/css/style.css?v=${ver('assets/css/style.css')}">
 <link rel="stylesheet" href="assets/css/extra.css?v=${ver('assets/css/extra.css')}">
