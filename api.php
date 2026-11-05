@@ -18,7 +18,7 @@ declare(strict_types=1);
 const COLLECTIONS = [
     'settings' => 'object', 'services' => 'array', 'technologies' => 'array', 'process' => 'array',
     'industries' => 'array', 'team' => 'array', 'posts' => 'array', 'projects' => 'array',
-    'careers' => 'array', 'testimonials' => 'array', 'faqs' => 'array', 'values' => 'array', 'timeline' => 'array', 'videos' => 'array',
+    'careers' => 'array', 'testimonials' => 'array', 'faqs' => 'array', 'values' => 'array', 'timeline' => 'array', 'videos' => 'array', 'companies' => 'array',
 ];
 const ADMIN_USER = 'admin';
 const DEFAULT_PASSWORD = 'admin';       // only works until it is changed; see need_auth()

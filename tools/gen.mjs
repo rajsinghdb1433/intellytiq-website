@@ -46,7 +46,7 @@ const phero = (h1, lead, crumb) => `<section class="phero"><canvas class="net"><
   <div class="crumbs rv"><a href="index.html">Home</a> / ${crumb}</div>
   <h1 class="rv" style="--d:.08s">${h1}</h1><p class="lead rv" style="--d:.16s">${lead}</p></div></section>`;
 
-const cta = (h = 'Let’s build your data advantage.', p = 'Hire us per day or for a fixed project, at rates below typical market prices, with guaranteed delivery. We reply within one business day.', vid = '') => `<section class="sec"><div class="wrap"><div class="cta-band rv">${vid ? `<span class="bgvid-slot" data-render="bg-video" data-key="${vid}"></span>` : ''}<h2>${h}</h2><p class="lead">${p}</p><div class="cta"><a class="btn primary" href="contact.html">Start a conversation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div></div></div></section>`;
+const cta = (h = 'Let’s build your data advantage.', p = 'Hire us per day or for a fixed project, at rates below typical market prices, with guaranteed delivery and 24×7×365 support. We reply fast, on any day of the year.', vid = '') => `<section class="sec"><div class="wrap"><div class="cta-band rv">${vid ? `<span class="bgvid-slot" data-render="bg-video" data-key="${vid}"></span>` : ''}<h2>${h}</h2><p class="lead">${p}</p><div class="cta"><a class="btn primary" href="contact.html">Start a conversation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div></div></div></section>`;
 
 const head = (eyebrow, h2, lead = '', center = true) => `<div class="head ${center ? 'center' : ''}"><div class="eyebrow rv">${eyebrow}</div><h2 class="rv" style="--d:.07s">${h2}</h2>${lead ? `<p class="lead rv" style="--d:.14s">${lead}</p>` : ''}</div>`;
 
@@ -54,14 +54,14 @@ const pages = [];
 const add = (p) => pages.push(p);
 
 /* ---------------- HOME ---------------- */
-add({ file: 'index.html', page: 'home', title: 'Intellytiq Solutions | Microsoft Fabric, Databricks, Snowflake & Azure Data Engineering', desc: 'Intellytiq Solutions delivers Microsoft Fabric, Databricks, Snowflake, MS SQL, data engineering, warehousing and Azure cloud expertise to companies worldwide, 100% remote.',
+add({ file: 'index.html', page: 'home', title: 'Intellytiq Solutions | Microsoft Fabric, Databricks, Snowflake & Azure Data Engineering', desc: 'Intellytiq Solutions delivers Microsoft Fabric, Databricks, Snowflake, MS SQL, data engineering, warehousing and Azure cloud expertise to companies worldwide, 100% remote, with 24×7×365 coverage.',
 body: `
 <section class="hero has-video"><div class="hero-media" aria-hidden="true"><video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/video/hero.jpg"><source src="assets/video/hero.mp4" type="video/mp4"></video></div><div class="halo"><i></i><i></i><i></i></div><canvas class="net"></canvas>
-  <div class="wrap"><div class="tag rv"><b></b> Open for remote engagements worldwide</div>
+  <div class="wrap"><div class="tag rv"><b></b> Available 24×7, 365 days a year · remote worldwide</div>
     <h1 class="rv" style="--d:.08s">Data platforms,<br>engineered for<span class="wordline"><span class="grad"><span class="rot" id="rot">Microsoft Fabric</span></span><span class="caret"></span></span></h1>
     <p class="lead rv" style="--d:.16s">Intellytiq Solutions gives companies the technical capability and senior skillsets to design, build and run modern data estates on Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure.</p>
     <div class="cta rv" style="--d:.24s"><a class="btn primary" href="contact.html">Book a free consultation ${ARROW}</a><a class="btn ghost" href="services.html">Explore services</a></div>
-    <ul class="assure rv" style="--d:.32s"><li>Per-day or project basis</li><li>Rates below typical market prices</li><li>Guaranteed delivery</li></ul></div>
+    <ul class="assure rv" style="--d:.32s"><li>Per-day or project basis</li><li>Rates below typical market prices</li><li>Guaranteed delivery</li><li>24×7 support, 365 days a year</li></ul></div>
   <div class="hero-art" aria-hidden="true"><img src="assets/img/lakehouse.svg" alt="" width="600" height="560"><div class="chip-f c1">Fabric</div><div class="chip-f c2">Databricks</div><div class="chip-f c3">Snowflake</div></div><div class="scrollcue" aria-hidden="true"></div></section>
 
 <div class="marq" data-render="tech-marquee" aria-label="Technologies we work with"></div>
@@ -72,6 +72,8 @@ body: `
   <p class="lead rv" style="--d:.14s;margin:28px auto 0">From a single pipeline to a full enterprise lakehouse, we embed senior engineers who ship, document and hand over, wherever you are in the world.</p>
   <div class="vslot" data-render="video-frame" data-key="cloud-mesh" style="margin-top:56px"></div></div></section>
 
+<section class="sec" style="padding-top:0"><div class="wrap center">${head('Our track record', 'Companies we have worked with')}</div><div class="marq" data-render="companies-strip" aria-label="Companies we have worked with"></div></section>
+
 <section class="sec" style="padding-top:0"><div class="wrap">
   ${head('Hire us your way', 'Flexible, affordable and <span class="grad">guaranteed.</span>', 'Pick the engagement that fits. Every option comes with rates below typical market prices and delivery you can count on.')}
   <div class="grid g3">
@@ -80,6 +82,15 @@ body: `
     <div class="card rv" style="--d:.2s"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></div><h3>Guaranteed delivery</h3><p>We commit to agreed milestones and acceptance criteria, with visible progress every week, so you know exactly where your project stands.</p></div>
   </div>
   <div class="center" style="margin-top:36px"><a class="btn primary" href="engagement.html">See engagement options ${ARROW}</a></div></div></section>
+
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="always dk rv">
+  <div class="al-big"><span class="live"><i></i> Live coverage</span><b>24<em>×</em>7<em>×</em>365</b></div>
+  <div class="al-txt"><h2>Always on. <span class="grad">Every hour of every day.</span></h2>
+  <p class="lead">Follow-the-sun engineers across time zones watch your platforms, pipelines and databases around the clock, including weekends and public holidays.</p>
+  <ul class="ticks"><li>Incident response at any hour, on any day of the year</li><li>Proactive monitoring that catches issues before your users do</li><li>One accountable team, with no handover gaps between time zones</li></ul>
+  <div style="margin-top:28px"><a class="btn primary" href="contact.html?topic=Managed%20support%2024%C3%977%C3%97365">Talk to us now ${ARROW}</a></div></div>
+</div></div></section>
+
 
 <section class="sec" style="padding-top:0"><div class="wide">
   ${head('What we do', 'One partner. Every layer of the data stack.')}
@@ -162,6 +173,7 @@ body: `${phero('We are <span class="grad">Intellytiq</span>.', 'A remote-first t
 <section class="sec alt"><div class="wrap">${head('Principles', 'What we stand for.')}<div class="grid g4" data-render="values"></div></div></section>
 <section class="sec"><div class="wrap"><div class="stats" data-render="stats"></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Journey', 'Our story so far.')}<div class="tl" data-render="timeline"></div></div></section>
+<section class="sec alt"><div class="wrap">${head('Experience', 'Companies and environments we have delivered in', 'A selection of the organisations where our team has delivered data and cloud work.')}<div class="grid g3" data-render="companies-grid"></div></div></section>
 <section class="sec"><div class="wrap">${head('Industries', 'Experience across sectors.')}<div class="grid g4" data-render="industries"></div></div></section>
 ${cta('Meet the people behind the platforms.', 'Say hello to our team, or tell us what you’re building.')}`});
 
@@ -246,7 +258,7 @@ body: `<section class="phero" style="padding-bottom:40px"><div class="wrap" styl
 /* ---------------- CONTACT ---------------- */
 add({ file: 'contact.html', page: 'contact', title: 'Contact Us | Intellytiq Solutions', desc: 'Contact Intellytiq Solutions for Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure consulting or remote IT talent.',
 body: `${phero('Let’s <span class="grad">talk</span>.', 'Tell us what you’re building. A senior engineer, not a salesperson, will respond within one business day.', 'Contact')}
-<section class="sec" style="padding-top:0"><div class="wrap"><div class="assure-bar rv"><div><b>Need someone for a day, a week or a whole project?</b><p>We work per-day and on a project basis, at rates below typical market prices, with guaranteed delivery. Tell us what you need.</p></div></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="assure-bar rv"><div><b>Need someone for a day, a week or a whole project?</b><p>We work per-day and on a project basis, at rates below typical market prices, with guaranteed delivery. We are available 24×7, 365 days a year. Tell us what you need.</p></div></div></div></section>
 <section class="sec" style="padding-top:20px"><div class="wrap contact">
   <div><div class="illus rv left" style="margin-bottom:26px"><img src="assets/img/globe.svg" alt="Globe with connected locations" loading="lazy"></div><div class="info" data-render="contactinfo"></div></div>
   <form class="form card rv" data-contact novalidate style="padding:clamp(24px,4vw,44px)"><h3 style="margin-bottom:6px">Send us a message</h3>
@@ -266,7 +278,7 @@ body: `${phero('Hire us by the day, or by the <span class="grad">project</span>.
 <div class="card plan hot rv"><div class="tag2">Most flexible</div><h3>Per-day engagement</h3><p>Book a senior engineer, architect or DBA by the day. Ideal for health checks, urgent fixes, short sprints and filling a gap while you hire.</p><ul class="ck"><li>Start within days, stop any time</li><li>No long-term commitment</li><li>Extend whenever you like</li><li>Transparent daily rate</li></ul><a class="btn primary" href="contact.html?topic=Remote%20IT%20Talent%20%26%20Staff%20Augmentation">Book by the day</a></div>
 <div class="card plan rv" style="--d:.08s"><div class="tag2">Project basis</div><h3>Fixed-scope project</h3><p>Hand us the whole project. Clear scope, milestones and price for migrations, platform builds and optimisation programmes.</p><ul class="ck"><li>Defined scope and milestones</li><li>Price agreed up front</li><li>Documentation and handover</li><li>Guaranteed delivery</li></ul><a class="btn ghost" href="contact.html?topic=Data%20Engineering">Scope a project</a></div>
 <div class="card plan rv" style="--d:.16s"><div class="tag2">Team</div><h3>Dedicated remote squad</h3><p>A cross-functional team of engineers and an architect embedded in your roadmap.</p><ul class="ck"><li>Time-zone aligned team</li><li>Scale up or down monthly</li><li>Delivery management included</li><li>Shared KPIs and weekly demos</li></ul><a class="btn ghost" href="contact.html?topic=Remote%20IT%20Talent%20%26%20Staff%20Augmentation">Build your squad</a></div>
-<div class="card plan rv" style="--d:.24s"><div class="tag2">Ongoing</div><h3>Managed support</h3><p>Managed 24×5 DBA and platform support on a retainer, with proactive monitoring.</p><ul class="ck"><li>Proactive monitoring</li><li>SLA-backed response</li><li>Monthly health reports</li><li>Cost optimisation reviews</li></ul><a class="btn ghost" href="contact.html?topic=MS%20SQL%20Server%20%26%20Azure%20SQL">Request support</a></div></div></div></section>
+<div class="card plan rv" style="--d:.24s"><div class="tag2">Ongoing</div><h3>Managed support</h3><p>Managed 24×7×365 DBA and platform support on a retainer, with proactive monitoring and incident response at any hour.</p><ul class="ck"><li>Proactive monitoring</li><li>24×7×365 SLA-backed response</li><li>Monthly health reports</li><li>Cost optimisation reviews</li></ul><a class="btn ghost" href="contact.html?topic=MS%20SQL%20Server%20%26%20Azure%20SQL">Request support</a></div></div></div></section>
 <section class="sec alt"><div class="wrap">${head('Why teams choose us', 'Less cost. More certainty.')}<div class="grid g3">
 <div class="card rv"><h3>Rates below typical market prices</h3><p>Senior skills without the usual premium. You get a clear estimate up front, so there are no surprises.</p></div>
 <div class="card rv" style="--d:.1s"><h3>Guaranteed delivery</h3><p>Agreed scope, milestones and acceptance criteria, with progress you can see every week. Guarantee terms are written into your agreement.</p></div>

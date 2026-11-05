@@ -158,6 +158,15 @@ const R = {
   'video-bento'(el, d) { const vs = d.videos || []; if (vs.length < 3) { (el.closest('section') || el).hidden = true; return; } el.innerHTML = vs.map(videoTile).join(''); },
   'video-frame'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key) || (d.videos || [])[0]; el.innerHTML = v ? videoFrame(v) : ''; },
   'bg-video'(el, d) { const v = (d.videos || []).find(x => x.key === el.dataset.key); el.innerHTML = v ? `<video class="bgvid" muted loop playsinline preload="none" data-src="${esc(v.file)}" aria-hidden="true"></video>` : ''; },
+  'companies-strip'(el, d) {
+    const cs = d.companies || []; if (!cs.length) { (el.closest('section') || el).hidden = true; return; }
+    const items = cs.map(c => `<span class="co">${photoUrl(c.image) ? `<img src="${esc(c.image)}" alt="" loading="lazy">` : ''}${esc(c.name)}</span>`).join('');
+    el.innerHTML = `<div class="tr">${items}${items}${cs.length < 6 ? items + items : ''}</div>`;
+  },
+  'companies-grid'(el, d) {
+    const cs = d.companies || []; if (!cs.length) { (el.closest('section') || el).hidden = true; return; }
+    el.innerHTML = cs.map((c, i) => `<article class="card rv" style="--d:${(i % 3) * .07}s">${photoUrl(c.image) ? `<div class="cologo"><img src="${esc(c.image)}" alt="${esc(c.name)}" loading="lazy"></div>` : ''}<h3 style="font-size:21px">${esc(c.name)}</h3>${c.industry ? `<span class="pill" style="align-self:flex-start;margin-top:10px">${esc(c.industry)}</span>` : ''}${(c.role || c.period) ? `<p style="margin-top:14px">${c.role ? `<b style="color:var(--text)">${esc(c.role)}</b>` : ''}${c.role && c.period ? ' · ' : ''}${esc(c.period || '')}</p>` : ''}${c.details ? `<p style="margin-top:10px">${esc(c.details)}</p>` : ''}${/^https?:\/\//.test(c.link || '') ? `<a class="link" style="margin-top:16px" href="${esc(c.link)}" target="_blank" rel="noopener noreferrer">Visit website ${ARROW}</a>` : ''}</article>`).join('');
+  },
   'tech-marquee'(el, d) {
     const items = d.technologies.map(t => `<span>${esc(t.name)}</span>`).join('');
     el.innerHTML = `<div class="tr">${items}${items}</div>`;

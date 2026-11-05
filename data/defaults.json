@@ -5,7 +5,7 @@
   "email": "support@intellytiqsolutions.com",
   "phone": "",
   "address": "Remote-first · Serving clients across the Americas, EMEA & APAC",
-  "hours": "Mon–Fri · 24×5 follow-the-sun coverage",
+  "hours": "24×7×365 · Follow-the-sun coverage, every day of the year",
   "linkedin": "",
   "github": "https://github.com/rajsinghdb1433",
   "twitter": "",
@@ -17,8 +17,8 @@
    },
    {
     "value": 24,
-    "suffix": "×5",
-    "label": "Follow-the-sun delivery"
+    "suffix": "×7",
+    "label": "Always-on delivery, 365 days a year"
    },
    {
     "value": 99,
@@ -148,14 +148,14 @@
    "icon": "server",
    "title": "MS SQL Server & Azure SQL",
    "summary": "Performance tuning, high availability, migrations and DBA-as-a-service for SQL Server, Azure SQL and Managed Instance.",
-   "body": "Our SQL specialists handle query and index tuning, Always On availability groups, backup and DR strategy, security hardening and zero-downtime migrations to Azure SQL Database or Managed Instance. We also provide proactive 24×5 DBA support.",
+   "body": "Our SQL specialists handle query and index tuning, Always On availability groups, backup and DR strategy, security hardening and zero-downtime migrations to Azure SQL Database or Managed Instance. We also provide proactive 24×7×365 DBA support.",
    "features": [
     "Performance tuning & indexing",
     "Always On & disaster recovery",
     "Azure SQL / Managed Instance migration",
     "T-SQL development & refactoring",
     "Security & compliance hardening",
-    "Managed DBA support"
+    "Managed DBA support, 24×7×365"
    ],
    "tags": [
     "T-SQL",
@@ -1033,6 +1033,10 @@
    "a": "Hire us per day for as short or long as you need, hand us a whole project on a fixed scope and price, build a dedicated remote squad, or add managed support on a retainer."
   },
   {
+   "q": "Are you available on weekends and public holidays?",
+   "a": "Yes. We provide 24×7 coverage, 365 days a year. Follow-the-sun engineers across time zones monitor and support your platforms every day, including weekends and public holidays, so incidents are handled at any hour with no handover gaps."
+  },
+  {
    "q": "Can I hire you for just a few days?",
    "a": "Yes. Many clients book a senior engineer on a per-day basis for a health check, a hard problem or a short sprint. There are no long-term commitments, and you can extend whenever you like."
   },
@@ -1115,5 +1119,6 @@
    "file": "Intellytiq-Videos/intellytiq-cloud-data-platform.mp4",
    "poster": "Intellytiq-Videos/intellytiq-cloud-data-platform.jpg"
   }
- ]
+ ],
+ "companies": []
 }
