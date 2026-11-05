@@ -1140,34 +1140,34 @@
   {
    "name": "Intellytiq Solutions Pty Ltd",
    "industry": "Data Engineering & Cloud Consulting",
-   "role": "Director",
+   "role": "Data engineering, cloud and digital strategy consulting",
    "period": "Dec 2024 to present · Sydney, Australia",
-   "details": "Founded and lead Intellytiq Solutions, a remote data engineering and cloud consultancy serving organisations worldwide. Responsible for digital strategy, solution architecture and delivery governance across Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure engagements, with flexible per-day and fixed-project models, guaranteed delivery and 24×7×365 support.",
+   "details": "A remote data engineering and cloud consultancy serving organisations worldwide. We provide digital strategy, solution architecture and delivery across Microsoft Fabric, Databricks, Snowflake, SQL Server and Azure, with flexible per-day and fixed-project models, guaranteed delivery and 24×7×365 support.",
    "link": "",
    "image": "assets/img/companies/intellytiq.svg"
   },
   {
    "name": "BAT",
    "industry": "Consumer Goods",
-   "role": "Senior Data Engineer",
+   "role": "Cloud data pipelines on Microsoft Fabric and Azure Data Factory",
    "period": "Feb 2024 to Dec 2024 · Global enterprise",
-   "details": "Designed and built cloud data pipelines on Microsoft Fabric and Azure Data Factory, moving enterprise data into a modern lakehouse and preparing it for analytics and reporting. Focused on reliable ingestion, transformation and performance tuning at global enterprise scale.",
+   "details": "Designed and built cloud data pipelines, moving enterprise data into a modern lakehouse and preparing it for analytics and reporting. Focused on reliable ingestion, transformation and performance tuning at global enterprise scale.",
    "link": "",
    "image": "assets/img/companies/bat.svg"
   },
   {
    "name": "TAL Australia",
    "industry": "Life Insurance & Financial Services",
-   "role": "Senior Data Engineer",
+   "role": "Data platform engineering on Azure Databricks, Data Factory and Microsoft Fabric",
    "period": "Feb 2020 to Feb 2024 · Sydney, Australia",
-   "details": "Four years engineering the insurer’s data platform. Built and optimised pipelines on Azure Databricks and Azure Data Factory, and later moved workloads onto Microsoft Fabric. Delivered trusted, well-modelled data for reporting and analytics, with a focus on quality, performance and cost.",
+   "details": "Four years building and optimising the insurer’s data platform, and later moving workloads onto Microsoft Fabric. Delivered trusted, well-modelled data for reporting and analytics, with a focus on quality, performance and cost.",
    "link": "",
    "image": "assets/img/companies/tal.svg"
   },
   {
    "name": "Bank of Queensland",
    "industry": "Banking",
-   "role": "Senior BI Developer",
+   "role": "Business intelligence, ETL and reporting",
    "period": "Sep 2019 to Feb 2020 · Sydney, Australia",
    "details": "Developed business intelligence solutions for a retail bank: data models, ETL and reporting that gave business teams reliable, self-service insight, while resolving data quality and performance issues across the reporting estate.",
    "link": "",
@@ -1176,7 +1176,7 @@
   {
    "name": "Deloitte",
    "industry": "Professional Services & Consulting",
-   "role": "Senior Technology Consultant",
+   "role": "Data and technology consulting",
    "period": "Mar 2018 to Sep 2019 · Sydney, Australia",
    "details": "Delivered technology and data consulting for client engagements: analysing requirements, solving complex data and integration problems, and shaping solutions with client stakeholders in a fast-paced consulting environment.",
    "link": "",
@@ -1185,18 +1185,18 @@
   {
    "name": "Temenos",
    "industry": "Banking Software",
-   "role": "Senior Data Migration Engineer",
+   "role": "Data migration, ETL and reporting for core banking (T24)",
    "period": "Feb 2017 to Feb 2018 · Greater Sydney",
-   "details": "Led data migration into the Temenos T24 core banking platform. Built ETL pipelines with SQL Server and SSIS, and delivered reporting through the Temenos Insight tool, Spotfire, Power BI and SSRS. Worked across SQL Server versions from 2000 to 2017.",
+   "details": "Delivered data migration into the Temenos T24 core banking platform, with ETL pipelines on SQL Server and SSIS and reporting through Temenos Insight, Spotfire, Power BI and SSRS. Worked across SQL Server versions from 2000 to 2017.",
    "link": "",
    "image": "assets/img/companies/temenos.svg"
   },
   {
    "name": "HCL Technologies",
-   "industry": "IT Services (client: CFS)",
-   "role": "Senior Data Engineer & Technical Lead, CFS IT",
+   "industry": "IT Services",
+   "role": "Business intelligence and data warehousing for CFS",
    "period": "Jun 2011 to Feb 2016 · Greater Sydney",
-   "details": "Nearly five years as senior data engineer and technical lead for CFS IT. Built business intelligence and data warehouse solutions on SQL Server with SSIS, SSRS and Power BI, covering ETL, master data (MDS) and SharePoint. Led and mentored a team through requirements, design and delivery.",
+   "details": "Nearly five years delivering business intelligence and data warehouse solutions on SQL Server with SSIS, SSRS and Power BI, covering ETL, master data (MDS) and SharePoint. Led and mentored a delivery team through requirements, design and delivery.",
    "link": "",
    "image": "assets/img/companies/hcl.svg"
   }
