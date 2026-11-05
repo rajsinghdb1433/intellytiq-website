@@ -280,7 +280,13 @@ function render_image($im, string $kind): array {
 
 /* ---------- outgoing email: authenticated SMTP (preferred) or PHP mail() fallback ---------- */
 function mail_clean(string $s): string { return trim(preg_replace('/[\r\n]+/', ' ', $s)); }
-function smtp_send(array $c, string $to, string $subject, string $body, string $replyTo, ?string &$err): bool {
+function mail_mime(string $body, ?string $html, string &$ctype): string {
+    if ($html === null || $html === '') { $ctype = "text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit"; return $body; }
+    $b = 'iq' . bin2hex(random_bytes(10)); $ctype = "multipart/alternative; boundary=\"$b\"";
+    $enc = fn(string $s): string => rtrim(chunk_split(base64_encode($s), 76, "\n"));
+    return "--$b\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: base64\n\n" . $enc($body) . "\n--$b\nContent-Type: text/html; charset=UTF-8\nContent-Transfer-Encoding: base64\n\n" . $enc($html) . "\n--$b--";
+}
+function smtp_send(array $c, string $to, string $subject, string $body, string $replyTo, ?string &$err, ?string $html = null): bool {
     $host = (string)($c['host'] ?? ''); $port = (int)($c['port'] ?? 465); $sec = (string)($c['secure'] ?? 'ssl');
     $user = (string)($c['user'] ?? ''); $pass = (string)($c['pass'] ?? '');
     $from = filter_var($c['from'] ?? '', FILTER_VALIDATE_EMAIL) ? $c['from'] : $user;
@@ -310,8 +316,9 @@ function smtp_send(array $c, string $to, string $subject, string $body, string $
         $domain = substr(strrchr($from, '@') ?: '@localhost', 1);
         $hdr = "From: \"Intellytiq Website\" <$from>\r\nTo: <$to>\r\n" . ($replyTo !== '' ? "Reply-To: <" . mail_clean($replyTo) . ">\r\n" : '')
              . 'Subject: =?UTF-8?B?' . base64_encode(mail_clean($subject)) . "?=\r\nDate: " . date('r') . "\r\nMessage-ID: <" . bin2hex(random_bytes(8)) . "@$domain>\r\n"
-             . "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n";
-        $msg = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $body)); $msg = str_replace("\n", "\r\n", $msg);
+             . "MIME-Version: 1.0\r\n";
+        $ct = ''; $payload = mail_mime($body, $html, $ct); $hdr .= "Content-Type: $ct\r\n";
+        $msg = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $payload)); $msg = str_replace("\n", "\r\n", $msg);
         fwrite($fp, $hdr . "\r\n" . $msg . "\r\n.\r\n");
         if (!$step('', [250])) return false;
         @fwrite($fp, "QUIT\r\n");
@@ -327,18 +334,49 @@ function site_settings(): array {
     return read_json('content.json', [])['settings'] ?? read_json_file($root . '/data/defaults.json')['settings'] ?? [];
 }
 function read_json_file(string $path): array { $d = json_decode((string)@file_get_contents($path), true); return is_array($d) ? $d : []; }
+
+/** Branded HTML email (table layout + inline CSS so it renders in Outlook, Gmail and Apple Mail). Every value is escaped. */
+function mail_html(string $kicker, string $title, array $rows, string $message = '', string $cta = '', string $ctaUrl = '', string $note = ''): string {
+    $e = fn(string $s): string => htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $site = 'https://' . (preg_match('/^[a-z0-9.-]+$/i', main_domain()) && main_domain() !== 'localhost' ? main_domain() : 'intellytiqsolutions.com');
+    $rowsH = '';
+    foreach ($rows as $k => $v) {
+        if ((string)$v === '') continue;
+        $val = $e((string)$v);
+        if ($k === 'Email' && filter_var($v, FILTER_VALIDATE_EMAIL)) $val = '<a href="mailto:' . $e((string)$v) . '" style="color:#4f46e5;text-decoration:none;font-weight:600">' . $val . '</a>';
+        $rowsH .= '<tr><td style="padding:14px 0;border-top:1px solid #eef0f6;width:110px;font:600 11px/16px Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8b90a7;vertical-align:top">' . $e((string)$k) . '</td><td style="padding:14px 0;border-top:1px solid #eef0f6;font:500 15px/22px Arial,Helvetica,sans-serif;color:#151833">' . $val . '</td></tr>';
+    }
+    $msgH = $message === '' ? '' : '<tr><td style="padding:6px 36px 4px"><div style="font:600 11px/16px Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8b90a7;padding-bottom:10px">Message</div><div style="background:#f6f7fd;border-left:4px solid #6366f1;border-radius:0 14px 14px 0;padding:20px 22px;font:400 16px/26px Arial,Helvetica,sans-serif;color:#23264a">' . nl2br($e($message), false) . '</div></td></tr>';
+    $btn = ($cta !== '' && $ctaUrl !== '') ? '<tr><td style="padding:26px 36px 8px"><table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr><td style="border-radius:999px;background:#4f46e5;background-image:linear-gradient(135deg,#22d3ee,#6366f1 55%,#a855f7)"><a href="' . $e($ctaUrl) . '" style="display:inline-block;padding:14px 30px;font:700 15px/20px Arial,Helvetica,sans-serif;color:#ffffff;text-decoration:none;border-radius:999px">' . $e($cta) . ' &rarr;</a></td></tr></table></td></tr>' : '';
+    $noteH = $note === '' ? '' : '<tr><td style="padding:18px 36px 0;font:400 13px/20px Arial,Helvetica,sans-serif;color:#8b90a7">' . $e($note) . '</td></tr>';
+    return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>' . $e($title) . '</title></head>'
+    . '<body style="margin:0;padding:0;background:#eceef8"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">' . $e($kicker . ': ' . $title) . '</div>'
+    . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#eceef8"><tr><td align="center" style="padding:32px 14px">'
+    . '<table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px -20px rgba(40,40,120,.35)">'
+    . '<tr><td style="background:#0a0c22;background-image:linear-gradient(135deg,#0a0c22 0%,#1b1f5e 60%,#3b2a8c 100%);padding:34px 36px 30px">'
+    . '<table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr><td style="vertical-align:middle"><img src="' . $site . '/assets/img/icon-192.png" width="44" height="44" alt="IQ" style="display:block;border:0;border-radius:12px"></td>'
+    . '<td style="padding-left:14px;vertical-align:middle;font:800 21px/22px Arial,Helvetica,sans-serif;color:#ffffff;letter-spacing:-.01em">Intellytiq<div style="font:600 10px/14px Arial,Helvetica,sans-serif;letter-spacing:.32em;color:#a9b0ff;padding-top:3px">SOLUTIONS</div></td></tr></table>'
+    . '<div style="padding-top:26px;font:700 11px/16px Arial,Helvetica,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#67e8f9">' . $e($kicker) . '</div>'
+    . '<div style="padding-top:8px;font:800 28px/34px Arial,Helvetica,sans-serif;color:#ffffff;letter-spacing:-.02em">' . $e($title) . '</div></td></tr>'
+    . '<tr><td style="height:4px;line-height:4px;font-size:0;background:#6366f1;background-image:linear-gradient(90deg,#22d3ee,#6366f1,#a855f7,#ec4899)">&nbsp;</td></tr>'
+    . ($rowsH !== '' ? '<tr><td style="padding:14px 36px 8px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">' . $rowsH . '</table></td></tr>' : '')
+    . $msgH . $btn . $noteH
+    . '<tr><td style="padding:30px 36px 32px"><div style="border-top:1px solid #eef0f6;padding-top:20px;font:400 12.5px/20px Arial,Helvetica,sans-serif;color:#8b90a7">Sent automatically from the <a href="' . $site . '" style="color:#4f46e5;text-decoration:none;font-weight:600">Intellytiq Solutions</a> website. Reply to this email to answer the sender directly.<br>Data engineering &amp; cloud, delivered remotely &middot; 24&times;7&times;365</div></td></tr>'
+    . '</table></td></tr></table></body></html>';
+}
 /** Returns ['ok'=>bool,'via'=>'smtp'|'mail','error'=>string|null,'to'=>string] */
-function send_notification(string $subject, string $body, string $replyTo): array {
+function send_notification(string $subject, string $body, string $replyTo, ?string $html = null): array {
     $cfg = read_json('config.json', [])['smtp'] ?? []; $settings = site_settings();
     $to = filter_var($cfg['to'] ?? '', FILTER_VALIDATE_EMAIL) ? $cfg['to'] : ($settings['email'] ?? '');
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return ['ok' => false, 'via' => 'none', 'error' => 'No valid notification email address is set (Admin > Email)', 'to' => (string)$to];
     if (!empty($cfg['host']) && !empty($cfg['user'])) {
-        $err = null; $ok = smtp_send($cfg, $to, $subject, $body, $replyTo, $err);
+        $err = null; $ok = smtp_send($cfg, $to, $subject, $body, $replyTo, $err, $html);
         return ['ok' => $ok, 'via' => 'smtp', 'error' => $ok ? null : $err, 'to' => $to];
     }
     $from = filter_var($settings['email'] ?? '', FILTER_VALIDATE_EMAIL) ? $settings['email'] : ('no-reply@' . main_domain());
-    $headers = "From: Intellytiq Website <$from>\r\nReply-To: " . mail_clean($replyTo) . "\r\nContent-Type: text/plain; charset=UTF-8";
-    $ok = @mail($to, '=?UTF-8?B?' . base64_encode(mail_clean($subject)) . '?=', $body, $headers, '-f' . $from);
+    $ct = ''; $payload = mail_mime($body, $html, $ct);
+    $headers = "From: Intellytiq Website <$from>\r\nReply-To: " . mail_clean($replyTo) . "\r\nMIME-Version: 1.0\r\nContent-Type: $ct";
+    $ok = @mail($to, '=?UTF-8?B?' . base64_encode(mail_clean($subject)) . '?=', $payload, $headers, '-f' . $from);
     return ['ok' => $ok, 'via' => 'mail', 'error' => $ok ? 'Handed to the server mail queue. Delivery is not confirmed; set up SMTP under Admin > Email for reliable delivery.' : 'The server rejected the message', 'to' => $to];
 }
 
@@ -416,7 +454,8 @@ switch ($a) {
         if (!captcha_check($d)) captcha_fail();
         $row = ['id' => bin2hex(random_bytes(5)), 'at' => gmdate('c'), 'name' => $name, 'email' => $email,
                 'company' => clean((string)($d['company'] ?? ''), 160), 'topic' => clean((string)($d['topic'] ?? ''), 120), 'message' => $msg, 'ip' => ip()];
-        $mail = send_notification('[Website] New enquiry from ' . mail_clean($name), "Name: $name\nEmail: $email\nCompany: {$row['company']}\nTopic: {$row['topic']}\n\n$msg\n\n-- Sent from the Intellytiq website contact form", $email);
+        $html = mail_html('New website enquiry', 'From ' . $name, ['Name' => $name, 'Email' => $email, 'Company' => $row['company'], 'Topic' => $row['topic'], 'Received' => gmdate('D j M Y, H:i') . ' UTC'], $msg, 'Reply to ' . strtok($name, ' '), 'mailto:' . $email . '?subject=' . rawurlencode('Re: your enquiry to Intellytiq Solutions'), 'Quick tip: just hit Reply. The sender’s address is already set.');
+        $mail = send_notification('[Website] New enquiry from ' . mail_clean($name), "Name: $name\nEmail: $email\nCompany: {$row['company']}\nTopic: {$row['topic']}\n\n$msg\n\n-- Sent from the Intellytiq website contact form", $email, $html);
         $row['mail'] = ['ok' => $mail['ok'], 'via' => $mail['via'], 'error' => $mail['error'], 'to' => $mail['to']];
         $all = read_json('messages.json', []); array_unshift($all, $row); write_json('messages.json', array_slice($all, 0, 1000));
         out(['ok' => true]);
@@ -622,7 +661,7 @@ switch ($a) {
         if ($method !== 'POST') out(['error' => 'POST only'], 405);
         need_auth();
         throttle('mailtest', 8, 900);
-        out(send_notification('Test email from the Intellytiq website', "This is a test message.\n\nIf you can read this, enquiries from the contact form will reach this mailbox.\nSent: " . gmdate('c'), ''));
+        out(send_notification('Test email from the Intellytiq website', "This is a test message.\n\nIf you can read this, enquiries from the contact form will reach this mailbox.\nSent: " . gmdate('c'), '', mail_html('Email test', 'Your email is working', ['Status' => 'Delivered', 'Sent' => gmdate('D j M Y, H:i') . ' UTC'], 'If you can read this, enquiries from the contact form will reach this mailbox. Every message from the website will arrive in this layout.')));
     }
 
     default: out(['error' => 'Not found'], 404);
