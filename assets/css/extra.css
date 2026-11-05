@@ -198,3 +198,11 @@ footer .cap-slot{margin-top:10px;max-width:340px}
 .marq .co img{height:30px;width:auto;border-radius:6px;background:#fff;padding:3px}
 .cologo{margin:-34px -34px 20px;height:110px;display:grid;place-items:center;background:#fff;border-bottom:1px solid var(--line);padding:18px}
 .cologo img{max-height:70px;max-width:70%;object-fit:contain}
+
+/* ---- technology logos ---- */
+.marq .tm{display:inline-flex;align-items:center;gap:12px}
+.tlogo{height:30px;width:30px;object-fit:contain;flex:none;vertical-align:middle}
+.tlogo.sm{height:16px;width:16px;margin-right:6px;vertical-align:-3px}
+.tile .mono.has-img{background:#fff;box-shadow:0 8px 22px -10px rgba(0,0,0,.45)}
+.cards li .tlogo.sm,.card ul li .tlogo.sm{display:inline-block}
+.tlogo.big{width:44px;height:44px}.ico.has-logo{background:#fff!important}.stick .ico .tlogo.big{width:52px;height:52px}

@@ -218,7 +218,7 @@ function clean_value($v, string $key = '', int $depth = 0) {
     $s = mb_substr($s, 0, 8000);
     if (in_array($key, ['c1', 'c2'], true)) return preg_match('/^#[0-9a-f]{3,8}$/i', $s) ? $s : '#6366f1';
     if ($key === 'color') return preg_match('/^[#a-zA-Z0-9(),.%\s\-]{1,200}$/', $s) && !preg_match('/url\s*\(|expression|javascript|;|\{|\}/i', $s) ? $s : 'linear-gradient(135deg,#22d3ee,#6366f1)';
-    if ($key === 'photo' || $key === 'image') return preg_match('#^(uploads/(team|media)/[a-f0-9]{16,40}\.(jpg|png|webp)|assets/img/companies/[a-z0-9-]{2,30}\.svg)$#', $s) ? $s : '';
+    if ($key === 'photo' || $key === 'image') return preg_match('#^(uploads/(team|media)/[a-f0-9]{16,40}\.(jpg|png|webp)|assets/img/(companies|tech)/[a-z0-9-]{2,30}\.svg)$#', $s) ? $s : '';
     if ($key === 'videoFile') return preg_match('#^uploads/media/[a-f0-9]{16,40}\.(mp4|webm)$#', $s) ? $s : '';
     if ($key === 'file' || $key === 'poster') return preg_match('#^[A-Za-z0-9_\-./]{1,200}$#', $s) && strpos($s, '..') === false && preg_match('/\.(mp4|webm|jpg|jpeg|png|webp)$/i', $s) ? $s : '';
     if ($key === 'link') return preg_match('#^(https?://[^\s"\'<>]+|[a-z0-9_\-./?=&\#%]+)$#i', $s) ? $s : '';

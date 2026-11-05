@@ -254,7 +254,8 @@
     "Real-time operational dashboards",
     "Unified customer 360 reporting",
     "Fast Power BI on very large data"
-   ]
+   ],
+   "image": "assets/img/tech/microsoft-fabric.svg"
   },
   {
    "name": "Databricks",
@@ -277,7 +278,8 @@
     "Streaming analytics and change data capture",
     "Machine learning platforms",
     "Consolidating several warehouses into one lakehouse"
-   ]
+   ],
+   "image": "assets/img/tech/databricks.svg"
   },
   {
    "name": "Snowflake",
@@ -300,7 +302,8 @@
     "Cross-company data sharing",
     "Cost reduction programmes",
     "Self-service analytics at scale"
-   ]
+   ],
+   "image": "assets/img/tech/snowflake.svg"
   },
   {
    "name": "MS SQL Server",
@@ -323,7 +326,8 @@
     "Upgrades and cloud migrations",
     "High-availability and backup strategy",
     "Licensing and cost review"
-   ]
+   ],
+   "image": "assets/img/tech/ms-sql-server.svg"
   },
   {
    "name": "Azure Data Factory",
@@ -346,7 +350,8 @@
     "SaaS and ERP data ingestion",
     "Legacy SSIS migration",
     "Event-driven file processing"
-   ]
+   ],
+   "image": "assets/img/tech/azure-data-factory.svg"
   },
   {
    "name": "Azure Synapse",
@@ -369,7 +374,8 @@
     "Ad hoc lake exploration",
     "Large-scale reporting",
     "Synapse to Fabric migration"
-   ]
+   ],
+   "image": "assets/img/tech/azure-synapse.svg"
   },
   {
    "name": "Delta Lake",
@@ -392,7 +398,8 @@
     "Auditable history and rollback",
     "Streaming and batch on one table",
     "Avoiding vendor lock-in"
-   ]
+   ],
+   "image": "assets/img/tech/delta-lake.svg"
   },
   {
    "name": "Apache Spark",
@@ -415,7 +422,8 @@
     "Near-real-time pipelines",
     "Feature engineering for machine learning",
     "Cutting job runtime and cost"
-   ]
+   ],
+   "image": "assets/img/tech/apache-spark.svg"
   },
   {
    "name": "Power BI",
@@ -438,7 +446,8 @@
     "Rescuing slow reports",
     "Self-service BI roll-out",
     "Customer-facing embedded reports"
-   ]
+   ],
+   "image": "assets/img/tech/power-bi.svg"
   },
   {
    "name": "dbt",
@@ -461,7 +470,8 @@
     "Replacing stored-procedure sprawl",
     "Data quality you can prove",
     "Faster, safer analytics changes"
-   ]
+   ],
+   "image": "assets/img/tech/dbt.svg"
   },
   {
    "name": "Python",
@@ -484,7 +494,8 @@
     "Data quality and validation tools",
     "Forecasting and ML models",
     "Automating manual reporting"
-   ]
+   ],
+   "image": "assets/img/tech/python.svg"
   },
   {
    "name": "Apache Kafka",
@@ -507,7 +518,8 @@
     "IoT and telemetry ingestion",
     "Change data capture",
     "Event-driven microservices"
-   ]
+   ],
+   "image": "assets/img/tech/apache-kafka.svg"
   },
   {
    "name": "Terraform",
@@ -530,7 +542,8 @@
     "Repeatable dev, test and production",
     "Disaster-recovery rebuilds",
     "Audit-friendly change control"
-   ]
+   ],
+   "image": "assets/img/tech/terraform.svg"
   },
   {
    "name": "Azure DevOps",
@@ -553,7 +566,8 @@
     "Database DevOps",
     "Multi-team delivery",
     "An audit trail for every change"
-   ]
+   ],
+   "image": "assets/img/tech/azure-devops.svg"
   },
   {
    "name": "Microsoft Purview",
@@ -576,7 +590,8 @@
     "Data discovery",
     "Impact analysis",
     "Sensitive data protection"
-   ]
+   ],
+   "image": "assets/img/tech/microsoft-purview.svg"
   },
   {
    "name": "Unity Catalog",
@@ -599,7 +614,8 @@
     "Multi-workspace access control",
     "Regulated data protection",
     "Secure data sharing"
-   ]
+   ],
+   "image": "assets/img/tech/unity-catalog.svg"
   }
  ],
  "process": [

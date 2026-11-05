@@ -31,9 +31,12 @@ const LOGO = `<img src="assets/img/logo-mark.svg" alt="" width="44" height="44">
 
 /* ---------- data ---------- */
 let DATA = null;
+/* built-in brand logos: used for any technology that has no logo of its own (e.g. content saved before logos existed) */
+const BRAND_LOGO = {'microsoft fabric': 'microsoft-fabric', 'databricks': 'databricks', 'snowflake': 'snowflake', 'ms sql server': 'ms-sql-server', 'azure data factory': 'azure-data-factory', 'azure synapse': 'azure-synapse', 'delta lake': 'delta-lake', 'apache spark': 'apache-spark', 'power bi': 'power-bi', 'dbt': 'dbt', 'python': 'python', 'apache kafka': 'apache-kafka', 'terraform': 'terraform', 'azure devops': 'azure-devops', 'microsoft purview': 'microsoft-purview', 'unity catalog': 'unity-catalog'};
+const withLogos = j => { (j.technologies || []).forEach(t => { const k = BRAND_LOGO[String(t.name || '').toLowerCase()]; if (k && !t.image) t.image = `assets/img/tech/${k}.svg`; }); return j; };
 const load = async () => {
   for (const url of ['api.php?a=content', 'data/defaults.json']) {
-    try { const r = await fetch(url, {cache: 'no-cache'}); if (r.ok) { const j = await r.json(); if (j && j.services) return (DATA = j); } } catch (e) {}
+    try { const r = await fetch(url, {cache: 'no-cache'}); if (r.ok) { const j = await r.json(); if (j && j.services) return (DATA = withLogos(j)); } } catch (e) {}
   }
   return (DATA = {settings: {}, services: [], posts: [], team: [], technologies: []});
 };
@@ -75,13 +78,17 @@ const cover = (p, i = 0) => {
   return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(p.title)}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 85% 22%)"/><stop offset="1" stop-color="hsl(${h2} 80% 38%)"/></linearGradient><radialGradient id="${id}r" cx=".75" cy=".2" r=".7"><stop offset="0" stop-color="hsl(${h2} 100% 70%)" stop-opacity=".55"/><stop offset="1" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/><rect width="400" height="250" fill="url(#${id}r)"/><g stroke="#fff" stroke-opacity=".22">${lines}</g><g fill="#fff" fill-opacity=".8">${nodes}</g><circle cx="${60 + r() * 280}" cy="${40 + r() * 170}" r="${50 + r() * 40}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/></svg>`;
 };
 const fmtDate = d => { try { return new Date(d).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'}); } catch (e) { return d; } };
-const mediaPath = u => (/^uploads\/(team|media)\/[a-f0-9]{16,40}\.(jpg|png|webp|mp4|webm)$/.test(u || '') || /^assets\/img\/companies\/[a-z0-9-]{2,30}\.svg$/.test(u || '') || (window.__IQ_DEMO && /^data:(image|video)\/[a-z0-9.+-]+;base64,[A-Za-z0-9+\/=]+$/i.test(u || ''))) ? u : '';
+const mediaPath = u => (/^uploads\/(team|media)\/[a-f0-9]{16,40}\.(jpg|png|webp|mp4|webm)$/.test(u || '') || /^assets\/img\/(companies|tech)\/[a-z0-9-]{2,30}\.svg$/.test(u || '') || (window.__IQ_DEMO && /^data:(image|video)\/[a-z0-9.+-]+;base64,[A-Za-z0-9+\/=]+$/i.test(u || ''))) ? u : '';
 const isVideoUrl = u => /\.(mp4|webm)$|^data:video\//i.test(u || '');
 const photoUrl = u => isVideoUrl(u) ? '' : mediaPath(u);
 const mimg = (u, alt = '', cls = '') => { const m = photoUrl(u); return m ? `<img ${cls ? `class="${cls}" ` : ''}src="${esc(m)}" alt="${esc(alt)}" loading="lazy">` : ''; };
 const mvid = (u, poster) => { const m = mediaPath(u); return m && isVideoUrl(m) ? `<video class="uvideo" controls playsinline preload="metadata" ${photoUrl(poster) ? `poster="${esc(poster)}"` : ''} src="${esc(m)}"></video>` : ''; };
 const cimg = u => photoUrl(u) ? `<div class="cimg"><img src="${esc(u)}" alt="" loading="lazy"></div>` : '';
-const svcTop = s => photoUrl(s.image) ? cimg(s.image) : `<div class="ico">${icon(s.icon)}</div>`;
+/* brand logo lookup: matches a technology (or a tag/service title) to its logo */
+const TECH_ALIAS = {'spark': 'apache spark', 'kafka': 'apache kafka', 'sql server': 'ms sql server', 'azure sql': 'ms sql server', 't-sql': 'ms sql server', 'databricks lakehouse': 'databricks', 'snowflake data cloud': 'snowflake', 'ms sql server & azure sql': 'ms sql server', 'onelake': 'microsoft fabric', 'direct lake': 'microsoft fabric', 'purview': 'microsoft purview', 'adls gen2': 'azure synapse', 'dax': 'power bi', 'snowpipe': 'snowflake', 'snowpark': 'snowflake'};
+const techLogo = (name, d) => { const k = String(name || '').trim().toLowerCase(), t = (d.technologies || []).find(x => x.name.toLowerCase() === (TECH_ALIAS[k] || k)); return t && photoUrl(t.image) ? t : null; };
+const logoImg = (t, cls = 'tlogo') => `<img class="${cls}" src="${esc(t.image)}" alt="" title="${esc(t.name)}" loading="lazy">`;
+const svcTop = s => { if (photoUrl(s.image)) return cimg(s.image); const l = techLogo(s.title, DATA); return l ? `<div class="ico has-logo">${logoImg(l, 'tlogo big')}</div>` : `<div class="ico">${icon(s.icon)}</div>`; };
 const initials = n => n.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
 /* ---------- layout ---------- */
@@ -139,7 +146,7 @@ const R = {
   'services-bento'(el, d) {
     const spans = ['span3', 'span3', 'span2', 'span2', 'span2', 'span4', 'span2', 'span3', 'span3'];
     const n = +el.dataset.limit || d.services.length;
-    el.innerHTML = d.services.slice(0, n).map((s, i) => `<a class="card ${spans[i % spans.length]} rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}">${svcTop(s)}<h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><ul>${(s.tags || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul></a>`).join('');
+    el.innerHTML = d.services.slice(0, n).map((s, i) => `<a class="card ${spans[i % spans.length]} rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}">${svcTop(s)}<h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><ul>${(s.tags || []).map(t => { const l = techLogo(t, d); return `<li>${l ? logoImg(l, 'tlogo sm') : ''}${esc(t)}</li>`; }).join('')}</ul></a>`).join('');
   },
   'services-grid'(el, d) {
     el.innerHTML = d.services.map((s, i) => `<a class="card rv" style="--d:${(i % 3) * .08}s" href="service.html?s=${esc(s.slug)}">${svcTop(s)}<h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><span class="link" style="margin-top:20px">Explore ${ARROW}</span></a>`).join('');
@@ -150,6 +157,7 @@ const R = {
     $('#svcTitle').textContent = s.title; $('#svcSummary').textContent = s.summary; $('#svcCrumb').textContent = s.title;
     el.innerHTML = `<div class="story"><div class="stick rv left"><div class="ico card" style="width:84px;height:84px;padding:0;display:grid;place-items:center;background:var(--grad)">${icon(s.icon).replace('<svg', '<svg style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.7"')}</div><h2 style="margin:26px 0 16px">What we deliver</h2><p class="lead">${esc(s.body)}</p><div class="cta" style="display:flex;gap:12px;margin-top:30px;flex-wrap:wrap"><a class="btn primary" href="contact.html?topic=${encodeURIComponent(s.title)}">Discuss this service ${ARROW}</a></div></div>
     <div>${(s.features || []).map((f, i) => `<div class="card rv" style="margin-bottom:16px;--d:${i * .05}s;display:flex;gap:18px;align-items:center;padding:24px 28px"><b class="grad" style="font-size:26px;font-family:var(--mono)">${String(i + 1).padStart(2, '0')}</b><h3 style="font-size:20px;margin:0">${esc(f)}</h3></div>`).join('')}</div></div>`;
+    const tl = techLogo(s.title, d), ic0 = $('.stick .ico', el); if (ic0 && tl && !photoUrl(s.image)) { ic0.style.background = '#fff'; ic0.innerHTML = logoImg(tl, 'tlogo big'); }
     const ic = $('.stick .ico', el); if (ic && photoUrl(s.image)) ic.outerHTML = `<div class="cimg" style="margin:0 0 6px;border-radius:24px;aspect-ratio:16/10"><img src="${esc(s.image)}" alt="${esc(s.title)}"></div>`;
     const sm = $('#svcMedia'); if (sm) { const vv = (d.videos || []).find(x => x.key === s.video) || (d.videos || [])[0]; sm.innerHTML = vv ? videoFrame(vv) : ''; }
     const others = d.services.filter(x => x.slug !== s.slug).slice(0, 3);
@@ -168,7 +176,7 @@ const R = {
     el.innerHTML = cs.map((c, i) => `<article class="card rv" style="--d:${(i % 3) * .07}s">${photoUrl(c.image) ? `<div class="cologo"><img src="${esc(c.image)}" alt="${esc(c.name)}" loading="lazy"></div>` : ''}<h3 style="font-size:21px">${esc(c.name)}</h3>${c.industry ? `<span class="pill" style="align-self:flex-start;margin-top:10px">${esc(c.industry)}</span>` : ''}${(c.role || c.period) ? `<p style="margin-top:14px">${c.role ? `<b style="color:var(--text)">${esc(c.role)}</b>` : ''}${c.role && c.period ? ' · ' : ''}${esc(c.period || '')}</p>` : ''}${c.details ? `<p style="margin-top:10px">${esc(c.details)}</p>` : ''}${/^https?:\/\//.test(c.link || '') ? `<a class="link" style="margin-top:16px" href="${esc(c.link)}" target="_blank" rel="noopener noreferrer">Visit website ${ARROW}</a>` : ''}</article>`).join('');
   },
   'tech-marquee'(el, d) {
-    const items = d.technologies.map(t => `<span>${esc(t.name)}</span>`).join('');
+    const items = d.technologies.map(t => `<span class="tm">${photoUrl(t.image) ? logoImg(t, 'tlogo') : ''}${esc(t.name)}</span>`).join('');
     el.innerHTML = `<div class="tr">${items}${items}</div>`;
   },
   'tech-tiles'(el, d) {
